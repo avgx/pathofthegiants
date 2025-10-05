@@ -1,5 +1,22 @@
 import Foundation
 
+public struct Auth: Codable, Sendable {
+    public let data: AuthData
+
+    enum CodingKeys: String, CodingKey {
+        case data = "Data"
+    }
+}
+
+public struct AuthData: Codable, Sendable {
+    public let userID, token: String
+
+    enum CodingKeys: String, CodingKey {
+        case userID = "UserId"
+        case token = "Token"
+    }
+}
+
 public struct Trial: Codable, Sendable {
     public let data: TrialData
 
@@ -8,7 +25,6 @@ public struct Trial: Codable, Sendable {
     }
 }
 
-// MARK: - DataClass
 public struct TrialData: Codable, Identifiable, Sendable {
     public let id: Int
     public let name, description, image: String
@@ -34,7 +50,6 @@ public struct TrialData: Codable, Identifiable, Sendable {
     }
 }
 
-// MARK: - Practice
 public struct Practice: Codable, Identifiable, Sendable {
     public let id: Int
     public let name, briefDescription, description, image: String

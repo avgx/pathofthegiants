@@ -6,6 +6,14 @@ import Models
 public enum Api {
     public static let baseURL: URL = URL(string: "https://pathofthegiants.ru")!
     
+    
+    public static func accountLogin(user: String, password: String) -> Request<Auth> {
+        return Request(path: "/Account/Login/", method: .post, query: [
+            ("login", user),
+            ("password", password)
+        ])
+    }
+    
     public static func modulesTrial() -> Request<Trial> {
         return Request(path: "/Modules/Trial")
     }
