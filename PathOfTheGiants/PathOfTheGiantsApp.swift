@@ -1,11 +1,5 @@
-//
-//  PathOfTheGiantsApp.swift
-//  PathOfTheGiants
-//
-//  Created by Alexey Govorovsky on 05.10.2025.
-//
-
 import SwiftUI
+import UI
 
 @main
 struct PathOfTheGiantsApp: App {
