@@ -1,16 +1,21 @@
 import SwiftUI
+import Env
 
 public struct ContentView: View {
+    @StateObject var currentAccount = CurrentAccount.shared
     public init() {}
     
     public var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
+        Group {
+            if currentAccount.isTrial {
+                TrialScreen()
+            } else if currentAccount.account != nil {
+                MainScreen()
+            } else {
+                LoginScreen()
+            }
         }
-        .padding()
+        .environmentObject(currentAccount)
     }
 }
 

@@ -21,6 +21,7 @@ let package = Package(
         .package(name: "Models", path: "../Models"),
         .package(name: "Env", path: "../Env"),
         .package(name: "Api", path: "../Api"),
+        .package(url: "https://github.com/avgx/ButtonKit", branch: "main"),
     ],
     targets: [
         // Targets are the basic building blocks of a package, defining a module or a test suite.
@@ -28,7 +29,7 @@ let package = Package(
         .target(
             name: "UI",
             dependencies: [
-                "Models", "Env", "Api"
+                "Models", "Env", "Api", "ButtonKit"
             ]
         ),
     ]
