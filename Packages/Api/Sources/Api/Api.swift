@@ -14,6 +14,10 @@ public enum Api {
         ])
     }
     
+    public static func accountInfo() -> Request<AccountInfo> {
+        return Request(path: "/Account/Info")
+    }
+    
     public static func modulesTrial() -> Request<Trial> {
         return Request(path: "/Modules/Trial")
     }

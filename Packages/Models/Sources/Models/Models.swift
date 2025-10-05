@@ -17,6 +17,26 @@ public struct AuthData: Codable, Sendable {
     }
 }
 
+public struct AccountInfo: Codable, Sendable {
+    public let data: AccountInfoData
+
+    enum CodingKeys: String, CodingKey {
+        case data = "Data"
+    }
+}
+
+public struct AccountInfoData: Codable, Sendable {
+    public let userID, email, nickname: String
+    public let subscriptionLevel: Int
+    
+    enum CodingKeys: String, CodingKey {
+        case userID = "UserId"
+        case email = "Email"
+        case nickname = "Nickname"
+        case subscriptionLevel = "SubscriptionLevel"
+    }
+}
+
 public struct Trial: Codable, Sendable {
     public let data: TrialData
 
