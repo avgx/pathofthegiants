@@ -6,10 +6,14 @@ struct PracticeCard: View {
     let practice: Practice
     
     var body: some View {
-        VStack(alignment: .leading) {
-            Text(practice.name)
-            Text(practice.briefDescription)
-                .font(.footnote)
+        HStack(spacing: 16) {
+            PracticeImage(practice: practice)
+                .frame(width: 44, height: 44)
+            VStack(alignment: .leading) {
+                Text(practice.name)
+                Text(practice.briefDescription)
+                    .font(.footnote)
+            }
         }
     }
 }

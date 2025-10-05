@@ -5,7 +5,7 @@ import Models
 struct DouView: View {
     var body: some View {
         NavigationStack {
-            ContentUnavailableView("道はありません", systemImage: "xmark")
+            ContentUnavailableView("нужно api", systemImage: "exclamationmark.triangle")
                 .navigationTitle("Путь")
                 .toolbarTitleDisplayMode(.inlineLarge)
         }

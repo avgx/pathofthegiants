@@ -36,7 +36,7 @@ public class CurrentAccount: ObservableObject {
         
         let auth = try await http.send(Api.accountLogin(user: user, password: pass))
         
-        let http2 = HttpClient5(baseURL: Api.baseURL, authorization: .bearer(auth.value.data.token))
+        let http2 = HttpClient5(baseURL: Api.baseURL, authorization: .bearer(auth.value.data.token), sessionConfiguration: .withCache)
         let infoResponse = try await http2.send(Api.accountInfo())
         let practicesResponse = try await http2.send(Api.practices())
         
@@ -49,12 +49,20 @@ public class CurrentAccount: ObservableObject {
     
     /// Подключиться `попробовать` без аккаунта
     public func setTrial() async throws {
-        let http = HttpClient5(baseURL: Api.baseURL)
+        let http = HttpClient5(baseURL: Api.baseURL, sessionConfiguration: .withCache)
         
         let trialResponse = try await http.send(Api.modulesTrial())
         self.trial = trialResponse.value
         
         self.http = http
         isTrial = true
+    }
+    
+    public func fetchImage(for practice: Practice) async throws -> UIImage {
+        guard let http else { return UIImage() }
+        
+        let imageData = try await http.send(Api.file(name: practice.image))
+        let image = UIImage(data: imageData.data) ?? UIImage()
+        return image
     }
 }
