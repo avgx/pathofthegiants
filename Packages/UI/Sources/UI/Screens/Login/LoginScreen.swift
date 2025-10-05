@@ -2,20 +2,28 @@ import SwiftUI
 import Env
 import ButtonKit
 
-public struct LoginScreen: View {
+struct LoginScreen: View {
     @EnvironmentObject var currentAccount: CurrentAccount
     
     @State var user: String = ""
     @State var pass: String = ""
     
-    public init() {}
-    
-    public var body: some View {
+    var body: some View {
         NavigationStack {
             Form {
                 Section {
-                    TextField("user", text: $user)
-                    TextField("pass", text: $pass)
+                    TextField("user", text: $user, prompt: Text("user"))
+                        .autocorrectionDisabled()
+                        .textInputAutocapitalization(.never)
+                        .textContentType(.emailAddress)
+                        .keyboardType(.default)
+                        .submitLabel(.next)
+                    SecureField("password", text: $pass, prompt: Text("password"))
+                        .autocorrectionDisabled()
+                        .textInputAutocapitalization(.never)
+                        .textContentType(.password)
+                        .keyboardType(.default)
+                        .submitLabel(.done)
                 }
                     
                 loginButton
@@ -48,7 +56,7 @@ public struct LoginScreen: View {
     }
     
     @ViewBuilder
-    public var loginButton: some View {
+    var loginButton: some View {
         Section {
             AsyncButton(action: {
                 try await currentAccount.setAccount(user: user, pass: pass)
@@ -71,7 +79,7 @@ public struct LoginScreen: View {
     }
     
     @ViewBuilder
-    public var trialButton: some View {
+    var trialButton: some View {
         Section {
             AsyncButton(action: {
                 try await currentAccount.setTrial()
