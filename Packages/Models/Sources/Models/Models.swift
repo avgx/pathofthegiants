@@ -37,6 +37,14 @@ public struct AccountInfoData: Codable, Sendable {
     }
 }
 
+public struct Practices: Codable, Sendable {
+    public let data: [Practice]
+
+    enum CodingKeys: String, CodingKey {
+        case data = "Data"
+    }
+}
+
 public struct Trial: Codable, Sendable {
     public let data: TrialData
 

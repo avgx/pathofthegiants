@@ -41,4 +41,7 @@ import Models
     let http2 = HttpClient5(baseURL: Api.baseURL, authorization: .bearer(auth.value.data.token))
     let info = try await http2.send(Api.accountInfo())
     print(info.value)
+    
+    let practices = try await http2.send(Api.practices())
+    print(practices.value)
 }
