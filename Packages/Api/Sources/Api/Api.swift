@@ -9,4 +9,8 @@ public enum Api {
     public static func modulesTrial() -> Request<Trial> {
         return Request(path: "/Modules/Trial")
     }
+    
+    public static func file(name: String) -> Request<Data> {
+        return Request(path: "/Files/\(name)")
+    }
 }
