@@ -19,6 +19,7 @@ let package = Package(
     ],
     dependencies: [
         .package(name: "Models", path: "../Models"),
+        .package(url: "https://github.com/avgx/Get", branch: "main"),
     ],
     targets: [
         // Targets are the basic building blocks of a package, defining a module or a test suite.
@@ -26,9 +27,12 @@ let package = Package(
         .target(
             name: "Api",
             dependencies: [
-                "Models"
+                "Models", "Get"
             ]
         ),
-
+        .testTarget(
+            name: "ApiTests",
+            dependencies: ["Models", "Api", "Get"]
+        ),
     ]
 )
