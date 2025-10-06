@@ -10,17 +10,17 @@ struct TrialScreen: View {
                 if let trial = currentAccount.trial {
                     TrialListView(trialData: trial.data)
                 } else {
-                    ContentUnavailableView("Trial", systemImage: "magnifyingglass")
+                    ContentUnavailableView("ничего нет", systemImage: "magnifyingglass")
                 }
             }
-            .navigationTitle("Trial")
+            .navigationTitle("Вне Пути")
             .toolbarTitleDisplayMode(.inlineLarge)
             .toolbar {
                 ToolbarItemGroup(placement: .topBarTrailing) {
                     Button(action: {
                         currentAccount.disconnect()
                     }) {
-                        Text("logout")
+                        Text("Выход")
                     }
                 }
             }

@@ -6,7 +6,7 @@ struct DouView: View {
     var body: some View {
         NavigationStack {
             ContentUnavailableView("нужно api", systemImage: "exclamationmark.triangle")
-                .navigationTitle("Путь")
+                .navigationTitle("Пути")
                 .toolbarTitleDisplayMode(.inlineLarge)
         }
         .navigationViewStyle(.stack)

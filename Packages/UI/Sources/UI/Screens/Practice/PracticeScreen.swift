@@ -25,8 +25,8 @@ struct PracticeScreen: View {
         ZStack(alignment: .center) {
             PracticeImage(practice: practice)
                 .aspectRatio(contentMode: .fill)
-                .blur(radius: 16)
-                .opacity(0.2)
+                .blur(radius: 12)
+                .opacity(0.33)
             
             PracticeImage(practice: practice)
                 .frame(width: 160, height: 160)

@@ -5,45 +5,23 @@ import ButtonKit
 struct LoginScreen: View {
     @EnvironmentObject var currentAccount: CurrentAccount
     
+    @AppStorage("user") var savedUser = ""
+    
     @State var user: String = ""
     @State var pass: String = ""
     
     var body: some View {
         NavigationStack {
-            Form {
-                Section {
-                    TextField("user", text: $user, prompt: Text("user"))
-                        .autocorrectionDisabled()
-                        .textInputAutocapitalization(.never)
-                        .textContentType(.emailAddress)
-                        .keyboardType(.default)
-                        .submitLabel(.next)
-                    SecureField("password", text: $pass, prompt: Text("password"))
-                        .autocorrectionDisabled()
-                        .textInputAutocapitalization(.never)
-                        .textContentType(.password)
-                        .keyboardType(.default)
-                        .submitLabel(.done)
-                }
-                    
-                loginButton
-                
-                Section {
-                    HStack(spacing: 16) {
-                        Spacer()
-                        Text("or")
-                        Spacer()
+            VStack {
+                form
+                    .onAppear {
+                        user = savedUser
                     }
-                    .compositingGroup()
-                }
-                .listRowBackground(Color.clear)
-                .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
-                .listRowSeparator(.hidden)
-                
-                trialButton
-                
+                    .onDisappear {
+                        savedUser = user
+                    }
             }
-            .scrollContentBackground(.hidden) // This hides the default form background                    
+            .scrollContentBackground(.hidden) // This hides the default form background
             .background(
                 Image("bgMain")
                     .resizable()
@@ -52,15 +30,61 @@ struct LoginScreen: View {
             )
             .navigationTitle("Путь великанов")
             .toolbarTitleDisplayMode(.inlineLarge)
-            .toolbar {
-                ToolbarItemGroup(placement: .topBarTrailing) {
-                    Button("Help", systemImage: "questionmark", action: { })
-                    
-                }
-            }
+            //            .toolbar {
+            //                ToolbarItemGroup(placement: .topBarTrailing) {
+            //                    Button("Help", systemImage: "questionmark", action: { })
+            //
+            //                }
+            //            }
             
         }
         .navigationViewStyle(.stack)
+    }
+    
+    @ViewBuilder
+    var form: some View {
+        List {
+            Section {
+                TextField("email", text: $user, prompt: Text("email"))
+                    .autocorrectionDisabled()
+                    .textInputAutocapitalization(.never)
+                    .textContentType(.emailAddress)
+                    .keyboardType(.default)
+                    .submitLabel(.next)
+                SecureField("password", text: $pass, prompt: Text("пароль"))
+                    .autocorrectionDisabled()
+                    .textInputAutocapitalization(.never)
+                    .textContentType(.password)
+                    .keyboardType(.default)
+                    .submitLabel(.done)
+            } header: {
+                HStack {
+                    Spacer()
+                    Image("logo")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 100, height: 100)
+                    Spacer()
+                }
+            }
+            
+            loginButton
+            
+            //            Section {
+            //                HStack(spacing: 16) {
+            //                    Spacer()
+            //                    Text("or")
+            //                    Spacer()
+            //                }
+            //                .compositingGroup()
+            //            }
+            //            .listRowBackground(Color.clear)
+            //            .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
+            //            .listRowSeparator(.hidden)
+            
+            trialButton
+            
+        }
     }
     
     @ViewBuilder
@@ -71,7 +95,7 @@ struct LoginScreen: View {
             }, label: {
                 HStack {
                     Spacer()
-                    Text("Login")
+                    Text("Войти")
                     Spacer()
                 }
                 .compositingGroup()
@@ -94,7 +118,7 @@ struct LoginScreen: View {
             }, label: {
                 HStack {
                     Spacer()
-                    Text("Trial")
+                    Text("Практики вне Пути")
                     Spacer()
                 }
                 .compositingGroup()
@@ -103,6 +127,21 @@ struct LoginScreen: View {
             .allowsHitTestingWhenLoading(false)
             .asyncButtonStyle(.overlay)
             .buttonStyle(.borderedProminent)
+        } header: {
+            HStack(spacing: 16) {
+                Spacer()
+                Text("или посмотреть")
+                Spacer()
+            }
+            .compositingGroup()
+            .padding(.bottom, 16)
+        } footer: {
+            HStack(spacing: 16) {
+                Spacer()
+                Text("Эти практики доступны без регистрации.")
+                    .foregroundStyle(.secondary)
+                Spacer()
+            }
         }
         .listRowBackground(Color.accentColor)
         .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))

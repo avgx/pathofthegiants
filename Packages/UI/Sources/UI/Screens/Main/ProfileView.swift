@@ -38,7 +38,7 @@ struct ProfileView: View {
                     Button(action: {
                         currentAccount.disconnect()
                     }) {
-                        Text("logout")
+                        Text("Выход")
                     }
                 }
             }
