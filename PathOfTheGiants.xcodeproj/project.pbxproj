@@ -18,9 +18,22 @@
 		31F42C8B2E92FC6700C04458 /* UI */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = UI; path = Packages/UI; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		31F42CE42E93EF7900C04458 /* Exceptions for "PathOfTheGiants" folder in "PathOfTheGiants" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 31F42C732E92FAF900C04458 /* PathOfTheGiants */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		31F42C762E92FAF900C04458 /* PathOfTheGiants */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				31F42CE42E93EF7900C04458 /* Exceptions for "PathOfTheGiants" folder in "PathOfTheGiants" target */,
+			);
 			path = PathOfTheGiants;
 			sourceTree = "<group>";
 		};
@@ -278,6 +291,7 @@
 				DEVELOPMENT_TEAM = 52V86X2HKH;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = PathOfTheGiants/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Путь великанов";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -311,6 +325,7 @@
 				DEVELOPMENT_TEAM = 52V86X2HKH;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = PathOfTheGiants/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Путь великанов";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;

@@ -7,19 +7,10 @@ struct PracticeScreen: View {
     @Environment(\.dismiss) private var dismiss
     @EnvironmentObject var currentAccount: CurrentAccount
     
+    @StateObject private var audioPlayer = AudioPlayer.shared
+    @State private var isLoaded = false
+    
     let practice: Practice
-    
-    @State private var isPlaying = false
-    @State private var refreshTime = UUID()
-    
-    func togglePlayPause() {
-        if isPlaying {
-            AudioPlayer.shared.pause()
-        } else {
-            AudioPlayer.shared.play()
-        }
-        isPlaying.toggle()
-    }
     
     var body: some View {
         ZStack(alignment: .center) {
@@ -47,39 +38,58 @@ struct PracticeScreen: View {
                     .lineLimit(4)
                     .minimumScaleFactor(0.3)
                     .font(.footnote)
+                    .fontWeight(.light)
+                    .foregroundStyle(.secondary)
                     .frame(width: 200)
-                
+
+                // Progress bar
                 VStack {
-                    let current = AudioPlayer.shared.currentTime ?? 0
-                    let total = AudioPlayer.shared.duration ?? 0
-                    ProgressView(value: current, total: total)
+                    Slider(
+                        value: Binding(
+                            get: { audioPlayer.currentTime },
+                            set: { audioPlayer.seek(to: $0) }
+                        ),
+                        in: 0...audioPlayer.duration
+                    )
+                    .disabled(audioPlayer.duration == 0)
+                    
                     HStack {
-                        Text("\(Int(current))")
+                        Text(formatTime(audioPlayer.currentTime))
+                            .font(.caption)
                         Spacer()
-                        Text("\(Int(total))")
+                        Text(formatTime(audioPlayer.currentTime - audioPlayer.duration))
+                            .font(.caption)
                     }
-                    .font(.footnote)
                 }
-                .id(refreshTime)
                 .frame(width: 240)
-                .task(id: refreshTime) {
-                    try? await Task.sleep(nanoseconds: NSEC_PER_SEC)
-                    refreshTime = UUID()
-                }
-                .padding()
                 
-                Button(action: togglePlayPause) {
-                    Image(systemName: isPlaying ? "pause.fill" : "play.fill")
-                        .font(.largeTitle)
-                        .foregroundColor(.white)
+                // Control buttons
+                HStack(spacing: 40) {
+                    Button(action: {
+                        audioPlayer.seek(to: audioPlayer.currentTime - 15)
+                    }) {
+                        Image(systemName: "gobackward.15")
+                            .font(.title2)
+                    }
+                    .disabled(audioPlayer.currentTime <= 0)
+                    
+                    Button(action: {
+                        audioPlayer.togglePlayPause()
+                    }) {
+                        Image(systemName: audioPlayer.isPlaying ? "pause.circle.fill" : "play.circle.fill")
+                            .font(.system(size: 50))
+                    }
+                    
+                    
+                    Button(action: {
+                        audioPlayer.seek(to: audioPlayer.currentTime + 15)
+                    }) {
+                        Image(systemName: "goforward.15")
+                            .font(.title2)
+                    }
+                    .disabled(audioPlayer.currentTime >= audioPlayer.duration)
                 }
-                .padding()
-                .background(
-                    Circle()
-                        .fill(Color.accentColor)
-                        .frame(width: 100, height: 100)
-                )
-                
+                .disabled(!isLoaded)
             }
             .padding()
         }
@@ -94,20 +104,29 @@ struct PracticeScreen: View {
             }
         }
         .task { @MainActor in
+            guard !isLoaded else { return }
             guard let mp3Data = try? await currentAccount.fetchAudio(for: practice) else {
-                //TODO: disable
+                //TODO: выдать сообщение об ошибке.
                 return
             }
             
-            AudioPlayer.shared.setup(mp3Data: mp3Data)
-            //TODO: обновить currentTime и duration
-            print(AudioPlayer.shared.duration)
+            let image = try? await currentAccount.fetchImage(for: practice)
             
-            togglePlayPause()
+            audioPlayer.setupWithMetadata(mp3Data: mp3Data, title: practice.name, artist: "Путь великанов", album: practice.group, artwork: image)
+
+            isLoaded = true
+            
+            audioPlayer.play()
         }
         .onDisappear {
-            AudioPlayer.shared.stop()
+            audioPlayer.stop()
+            audioPlayer.cleanupCurrentPlayback()
         }
     }
     
+    private func formatTime(_ time: TimeInterval) -> String {
+        let minutes = Int(time) / 60
+        let seconds = Int(abs(time)) % 60
+        return String(format: "%d:%02d", minutes, seconds)
+    }
 }
