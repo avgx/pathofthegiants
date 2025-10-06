@@ -4,6 +4,7 @@ import Models
 
 struct PracticeCard: View {
     let practice: Practice
+    @State var fullscreen = false
     
     var body: some View {
         HStack(spacing: 16) {
@@ -14,6 +15,15 @@ struct PracticeCard: View {
                 Text(practice.briefDescription)
                     .font(.footnote)
             }
+        }
+        .onTapGesture {
+            fullscreen.toggle()
+        }
+        .fullScreenCover(isPresented: $fullscreen) {
+            NavigationStack {
+                PracticeScreen(practice: practice)
+            }
+            .navigationViewStyle(.stack)
         }
     }
 }

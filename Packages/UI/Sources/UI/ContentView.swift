@@ -12,7 +12,7 @@ public struct ContentView: View {
             } else if currentAccount.account != nil {
                 MainScreen()
             } else {
-                LoginScreen()
+                LoginScreen()                    
             }
         }
         .environmentObject(currentAccount)

@@ -65,4 +65,11 @@ public class CurrentAccount: ObservableObject {
         let image = UIImage(data: imageData.data) ?? UIImage()
         return image
     }
+    
+    public func fetchAudio(for practice: Practice) async throws -> Data? {
+        guard let http else { return nil }
+        
+        let audioData = try await http.send(Api.file(name: practice.audio))
+        return audioData.data
+    }
 }

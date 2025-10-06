@@ -43,6 +43,13 @@ struct LoginScreen: View {
                 trialButton
                 
             }
+            .scrollContentBackground(.hidden) // This hides the default form background                    
+            .background(
+                Image("bgMain")
+                    .resizable()
+                    .aspectRatio(contentMode: .fill)
+                    .ignoresSafeArea()
+            )
             .navigationTitle("Путь великанов")
             .toolbarTitleDisplayMode(.inlineLarge)
             .toolbar {
@@ -51,6 +58,7 @@ struct LoginScreen: View {
                     
                 }
             }
+            
         }
         .navigationViewStyle(.stack)
     }
