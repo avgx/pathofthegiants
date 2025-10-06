@@ -12,6 +12,7 @@ public class CurrentAccount: ObservableObject {
     @Published public private(set) var accountInfo: AccountInfo?
     @Published public private(set) var practices: Practices?
     @Published public private(set) var trial: Trial?
+    @Published public private(set) var regular: Regular?
     
     public static let shared = CurrentAccount()
     
@@ -27,6 +28,7 @@ public class CurrentAccount: ObservableObject {
         account = nil
         accountInfo = nil
         trial = nil
+        regular = nil
         practices = nil
     }
     
@@ -39,7 +41,9 @@ public class CurrentAccount: ObservableObject {
         let http2 = HttpClient5(baseURL: Api.baseURL, authorization: .bearer(auth.value.data.token), sessionConfiguration: .withCache)
         let infoResponse = try await http2.send(Api.accountInfo())
         let practicesResponse = try await http2.send(Api.practices())
+        let regularResponse = try await http2.send(Api.modulesRegular())
         
+        self.regular = regularResponse.value
         self.accountInfo = infoResponse.value
         self.practices = practicesResponse.value
         
