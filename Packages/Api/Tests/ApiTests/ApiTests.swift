@@ -30,6 +30,21 @@ import Models
     #expect(p20audioPlayer.duration == 296)
 }
 
+@Test func exampleRegular() async throws {
+    let username = ProcessInfo.processInfo.environment["USER"]!
+    let password = ProcessInfo.processInfo.environment["PASSWORD"]!
+    let http = HttpClient5(baseURL: Api.baseURL)
+    
+    let auth = try await http.send(Api.accountLogin(user: username, password: password))
+    print(auth.value)
+    
+    let http2 = HttpClient5(baseURL: Api.baseURL, authorization: .bearer(auth.value.data.token))
+    
+    let modules = try await http2.send(Api.modulesRegular())
+    
+    print(modules.value)
+}
+
 @Test func exampleLogin() async throws {
     let username = ProcessInfo.processInfo.environment["USER"]!
     let password = ProcessInfo.processInfo.environment["PASSWORD"]!

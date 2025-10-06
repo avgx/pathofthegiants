@@ -45,15 +45,23 @@ public struct Practices: Codable, Sendable {
     }
 }
 
-public struct Trial: Codable, Sendable {
-    public let data: TrialData
+public struct Regular: Codable, Sendable {
+    public let data: [ModuleData]
 
     enum CodingKeys: String, CodingKey {
         case data = "Data"
     }
 }
 
-public struct TrialData: Codable, Identifiable, Sendable {
+public struct Trial: Codable, Sendable {
+    public let data: ModuleData
+
+    enum CodingKeys: String, CodingKey {
+        case data = "Data"
+    }
+}
+
+public struct ModuleData: Codable, Identifiable, Sendable {
     public let id: Int
     public let name, description, image: String
     public let opened, trial: Bool

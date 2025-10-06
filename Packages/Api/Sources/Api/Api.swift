@@ -18,6 +18,10 @@ public enum Api {
         return Request(path: "/Account/Info")
     }
     
+    public static func modulesRegular() -> Request<Regular> {
+        return Request(path: "/Modules/Regular")
+    }
+    
     public static func modulesTrial() -> Request<Trial> {
         return Request(path: "/Modules/Trial")
     }
