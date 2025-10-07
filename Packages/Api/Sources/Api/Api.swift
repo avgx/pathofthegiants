@@ -30,6 +30,10 @@ public enum Api {
         return Request(path: "/Practices")
     }
     
+    public static func stats() -> Request<UserStats> {
+        return Request(path: "/UserStats")
+    }
+    
     public static func file(name: String) -> Request<Data> {
         return Request(path: "/Files/\(name)")
     }

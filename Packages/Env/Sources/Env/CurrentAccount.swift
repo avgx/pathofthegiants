@@ -62,10 +62,10 @@ public class CurrentAccount: ObservableObject {
         isTrial = true
     }
     
-    public func fetchImage(for practice: Practice) async throws -> UIImage {
+    public func fetchImage(for image: String) async throws -> UIImage {
         guard let http else { return UIImage() }
         
-        let imageData = try await http.send(Api.file(name: practice.image))
+        let imageData = try await http.send(Api.file(name: image))
         let image = UIImage(data: imageData.data) ?? UIImage()
         return image
     }
@@ -75,5 +75,12 @@ public class CurrentAccount: ObservableObject {
         
         let audioData = try await http.send(Api.file(name: practice.audio))
         return audioData.data
+    }
+    
+    public func fetchStats() async throws -> UserStatsData? {
+        guard let http else { return nil }
+        
+        let statsData = try await http.send(Api.stats())
+        return statsData.value.data
     }
 }

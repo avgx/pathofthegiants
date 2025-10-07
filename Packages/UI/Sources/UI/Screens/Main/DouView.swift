@@ -11,10 +11,10 @@ struct DouView: View {
                 if let modules = currentAccount.regular {
                     ModuleListView(modules: modules.data)
                 } else {
-                    ContentUnavailableView("Пути скрыты", systemImage: "exclamationmark.triangle")
+                    ContentUnavailableView("Путь скрыт", systemImage: "exclamationmark.triangle")
                 }
             }
-            .navigationTitle("Пути")
+            .navigationTitle("Путь великанов")
             .toolbarTitleDisplayMode(.inlineLarge)
         }
         .navigationViewStyle(.stack)

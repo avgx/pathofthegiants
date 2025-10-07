@@ -110,7 +110,7 @@ struct PracticeScreen: View {
                 return
             }
             
-            let image = try? await currentAccount.fetchImage(for: practice)
+            let image = try? await currentAccount.fetchImage(for: practice.image)
             
             audioPlayer.setupWithMetadata(mp3Data: mp3Data, title: practice.name, artist: "Путь великанов", album: practice.group, artwork: image)
 

@@ -121,11 +121,10 @@
 				};
 			};
 			buildConfigurationList = 31F42C6F2E92FAF900C04458 /* Build configuration list for PBXProject "PathOfTheGiants" */;
-			developmentRegion = en;
+			developmentRegion = ru;
 			hasScannedForEncodings = 0;
 			knownRegions = (
-				en,
-				Base,
+				ru,
 			);
 			mainGroup = 31F42C6B2E92FAF900C04458;
 			minimizedProjectReferenceProxies = 1;

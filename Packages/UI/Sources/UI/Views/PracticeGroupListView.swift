@@ -2,11 +2,12 @@ import SwiftUI
 import Env
 import Models
 
-struct PracticeListView: View {
+struct PracticeGroupListView: View {
     let practices: [Practice]
     let subtitle: String?
     
     var body: some View {
+        let groups = Array(Set(practices.map { $0.group })).sorted()
         List {
             if let subtitle {
                 Section {
@@ -20,14 +21,19 @@ struct PracticeListView: View {
                 .listRowBackground(Color.clear)
             }
             
-            Section {
-                ForEach(practices) { practice in
-                    PracticeCard(practice: practice)
+            ForEach(groups, id: \.self) { group in
+                Section {
+                    let groupPractices = practices.filter({ $0.group == group })
+                    ForEach(groupPractices) { practice in
+                        PracticeCard(practice: practice)
+                    }
+                } header: {
+                    Text(group)
                 }
+                .listRowBackground(
+                    Rectangle().fill(.ultraThinMaterial)
+                )
             }
-            .listRowBackground(
-                Rectangle().fill(.ultraThinMaterial)
-            )
         }
         .listSectionSpacing(.compact)
         .environment(\.defaultMinListHeaderHeight, 0) // Убираем отступы заголовков секций
@@ -35,4 +41,3 @@ struct PracticeListView: View {
         .padding(.top, -32) // Отрицательный паддинг чтобы придвинуть к навигации
     }
 }
-

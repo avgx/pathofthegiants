@@ -6,7 +6,7 @@ struct MainScreen: View {
     
     var body: some View {
         TabView {
-            Tab("Пути", systemImage: "map") {
+            Tab("Путь", systemImage: /*"figure.walk"*/"road.lanes") {
                 DouView()
             }
             Tab("Сундук", systemImage: "bag") {

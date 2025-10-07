@@ -2,10 +2,10 @@ import SwiftUI
 import Env
 import Models
 
-struct PracticeImage: View {
+struct ModuleImage: View {
     @EnvironmentObject var currentAccount: CurrentAccount
     
-    let practice: Practice
+    let module: ModuleData
     @State var image: UIImage?
     
     var body: some View {
@@ -18,9 +18,8 @@ struct PracticeImage: View {
                 ProgressView()
             }
         }
-        .clipShape(Circle())
         .task {
-            let image = try? await currentAccount.fetchImage(for: practice.image)
+            let image = try? await currentAccount.fetchImage(for: module.image)
             self.image = image ?? UIImage()
         }
     }

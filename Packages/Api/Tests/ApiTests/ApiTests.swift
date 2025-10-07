@@ -59,4 +59,7 @@ import Models
     
     let practices = try await http2.send(Api.practices())
     print(practices.value)
+    
+    let stats = try await http2.send(Api.stats())
+    print(stats.value)
 }

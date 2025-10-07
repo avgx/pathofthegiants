@@ -23,6 +23,10 @@ public struct AccountInfo: Codable, Sendable {
     enum CodingKeys: String, CodingKey {
         case data = "Data"
     }
+    
+    public init(data: AccountInfoData) {
+        self.data = data
+    }
 }
 
 public struct AccountInfoData: Codable, Sendable {
@@ -34,6 +38,31 @@ public struct AccountInfoData: Codable, Sendable {
         case email = "Email"
         case nickname = "Nickname"
         case subscriptionLevel = "SubscriptionLevel"
+    }
+    
+    public init(userID: String, email: String, nickname: String, subscriptionLevel: Int) {
+        self.userID = userID
+        self.email = email
+        self.nickname = nickname
+        self.subscriptionLevel = subscriptionLevel
+    }
+}
+
+public struct UserStats: Codable, Sendable {
+    public let data: UserStatsData
+
+    enum CodingKeys: String, CodingKey {
+        case data = "Data"
+    }
+}
+
+public struct UserStatsData: Codable, Sendable {
+    public let totalPractices, totalPracticeTime, maximumConsecutiveDaysForPractices: Int
+
+    enum CodingKeys: String, CodingKey {
+        case totalPractices = "TotalPractices"
+        case totalPracticeTime = "TotalPracticeTime"
+        case maximumConsecutiveDaysForPractices = "MaximumConsecutiveDaysForPractices"
     }
 }
 
@@ -86,6 +115,12 @@ public struct ModuleData: Codable, Identifiable, Sendable {
     }
 }
 
+extension ModuleData: Hashable {
+    public static func == (lhs: ModuleData, rhs: ModuleData) -> Bool {
+        return lhs.id == rhs.id
+    }
+}
+
 public struct Practice: Codable, Identifiable, Sendable {
     public let id: Int
     public let name, briefDescription, description, image: String
@@ -108,5 +143,11 @@ public struct Practice: Codable, Identifiable, Sendable {
         case complication = "Complication"
         case subscriptionLevel = "SubscriptionLevel"
         case whenCreated = "WhenCreated"
+    }
+}
+
+extension Practice: Hashable {
+    public static func == (lhs: Practice, rhs: Practice) -> Bool {
+        return lhs.id == rhs.id
     }
 }
