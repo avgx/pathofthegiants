@@ -3,13 +3,17 @@ import Env
 
 public struct ContentView: View {
     @StateObject var currentAccount = CurrentAccount.shared
+    @State var initialLoadComplete: Bool = false
+    
     public init() {}
     
     public var body: some View {
         Group {
-            if currentAccount.isTrial {
+            if !initialLoadComplete {
+                SplashScreen(complete: $initialLoadComplete)
+            } else if currentAccount.isTrial {
                 TrialScreen()
-            } else if currentAccount.account != nil {
+            } else if currentAccount.token != nil {
                 MainScreen()
             } else {
                 LoginScreen()                    
@@ -18,6 +22,8 @@ public struct ContentView: View {
         .environmentObject(currentAccount)
     }
 }
+
+
 
 #Preview {
     ContentView()

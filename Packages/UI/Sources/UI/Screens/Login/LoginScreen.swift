@@ -22,21 +22,9 @@ struct LoginScreen: View {
                     }
             }
             .scrollContentBackground(.hidden) // This hides the default form background
-            .background(
-                Image("bgMain")
-                    .resizable()
-                    .aspectRatio(contentMode: .fill)
-                    .ignoresSafeArea()
-            )
+            .background(MainBackground())
             .navigationTitle("Путь великанов")
             .toolbarTitleDisplayMode(.inlineLarge)
-            //            .toolbar {
-            //                ToolbarItemGroup(placement: .topBarTrailing) {
-            //                    Button("Help", systemImage: "questionmark", action: { })
-            //
-            //                }
-            //            }
-            
         }
         .navigationViewStyle(.stack)
     }
@@ -69,19 +57,6 @@ struct LoginScreen: View {
             }
             
             loginButton
-            
-            //            Section {
-            //                HStack(spacing: 16) {
-            //                    Spacer()
-            //                    Text("or")
-            //                    Spacer()
-            //                }
-            //                .compositingGroup()
-            //            }
-            //            .listRowBackground(Color.clear)
-            //            .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
-            //            .listRowSeparator(.hidden)
-            
             trialButton
             
         }
@@ -92,6 +67,7 @@ struct LoginScreen: View {
         Section {
             AsyncButton(action: {
                 try await currentAccount.setAccount(user: user, pass: pass)
+                try await currentAccount.connect()
             }, label: {
                 HStack {
                     Spacer()

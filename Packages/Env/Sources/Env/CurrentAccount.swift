@@ -8,7 +8,7 @@ import Get
 public class CurrentAccount: ObservableObject {
     
     @Published public private(set) var isTrial: Bool = false
-    @Published public private(set) var account: Auth?
+    @Published public private(set) var token: AuthToken?
     @Published public private(set) var accountInfo: AccountInfo?
     @Published public private(set) var practices: Practices?
     @Published public private(set) var trial: Trial?
@@ -25,7 +25,8 @@ public class CurrentAccount: ObservableObject {
     /// Отключиться
     public func disconnect() {
         isTrial = false
-        account = nil
+        token = nil
+        AuthToken.delete()
         accountInfo = nil
         trial = nil
         regular = nil
@@ -37,8 +38,15 @@ public class CurrentAccount: ObservableObject {
         let http = HttpClient5(baseURL: Api.baseURL)
         
         let auth = try await http.send(Api.accountLogin(user: user, password: pass))
+        auth.value.data.token.save()
+    }
+    
+    public func connect() async throws {
+        guard let token = AuthToken.load() else {
+            throw AppError.tokenNotFound
+        }
         
-        let http2 = HttpClient5(baseURL: Api.baseURL, authorization: .bearer(auth.value.data.token), sessionConfiguration: .withCache)
+        let http2 = HttpClient5(baseURL: Api.baseURL, authorization: .bearer(token), sessionConfiguration: .withCache)
         let infoResponse = try await http2.send(Api.accountInfo())
         let practicesResponse = try await http2.send(Api.practices())
         let regularResponse = try await http2.send(Api.modulesRegular())
@@ -48,7 +56,7 @@ public class CurrentAccount: ObservableObject {
         self.practices = practicesResponse.value
         
         self.http = http2
-        self.account = auth.value        
+        self.token = token
     }
     
     /// Подключиться `попробовать` без аккаунта

@@ -20,6 +20,7 @@ let package = Package(
     dependencies: [
         .package(name: "Models", path: "../Models"),
         .package(name: "Api", path: "../Api"),
+        .package(url: "https://github.com/avgx/keychain-swift", branch: "master"),
     ],
     targets: [
         // Targets are the basic building blocks of a package, defining a module or a test suite.
@@ -27,7 +28,8 @@ let package = Package(
         .target(
             name: "Env",
             dependencies: [
-                "Models", "Api"
+                "Models", "Api",
+                .product(name: "KeychainSwift", package: "keychain-swift"),
             ]
         ),
 

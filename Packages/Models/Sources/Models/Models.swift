@@ -8,8 +8,11 @@ public struct Auth: Codable, Sendable {
     }
 }
 
+public typealias AuthToken = String
+
 public struct AuthData: Codable, Sendable {
-    public let userID, token: String
+    public let userID: String
+    public let token: AuthToken
 
     enum CodingKeys: String, CodingKey {
         case userID = "UserId"

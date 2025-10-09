@@ -20,7 +20,7 @@ struct TrialScreen: View {
                     Button(action: {
                         currentAccount.disconnect()
                     }) {
-                        Text("Выход")
+                        Text("Закрыть")
                     }
                 }
             }
