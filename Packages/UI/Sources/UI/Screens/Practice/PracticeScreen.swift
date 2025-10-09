@@ -26,9 +26,9 @@ struct PracticeScreen: View {
                 Text(practice.name)
                     .font(.title)
                 VStack {
-                    Text(practice.group)
-                    Text("Сложность \(practice.complication)/5")
-                    Text(practice.pose)
+                    Label(practice.group, systemImage: "ellipsis.bubble")
+                    Label("Сложность \(practice.complication)/5", systemImage: "brain.head.profile")
+                    Label(practice.pose, systemImage: "figure.mind.and.body")
                 }
                 .font(.footnote)
                 

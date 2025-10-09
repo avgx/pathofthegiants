@@ -58,13 +58,25 @@ public struct UserStats: Codable, Sendable {
 
 public struct UserStatsData: Codable, Sendable {
     public let totalPractices, totalPracticeTime, maximumConsecutiveDaysForPractices: Int
-
+    public let favoritePractice: FavoritePractice
+    
     enum CodingKeys: String, CodingKey {
         case totalPractices = "TotalPractices"
         case totalPracticeTime = "TotalPracticeTime"
         case maximumConsecutiveDaysForPractices = "MaximumConsecutiveDaysForPractices"
+        case favoritePractice = "FavoritePractice"
     }
 }
+
+public struct FavoritePractice: Codable, Sendable {
+    public let practiceID, listeningCount: Int
+
+    enum CodingKeys: String, CodingKey {
+        case practiceID = "PracticeId"
+        case listeningCount = "ListeningCount"
+    }
+}
+
 
 public struct Practices: Codable, Sendable {
     public let data: [Practice]

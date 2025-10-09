@@ -13,7 +13,7 @@ struct MainScreen: View {
                 BagView()
             }
             Tab("Профиль", systemImage: "person") {
-                ProfileView()
+                ProfileScreen()
             }
         }
     }

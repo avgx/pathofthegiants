@@ -31,7 +31,8 @@ public enum Api {
     }
     
     public static func stats() -> Request<UserStats> {
-        return Request(path: "/UserStats")
+        //force no cache
+        return Request(path: "/UserStats", query: [("_", "\(Date().timeIntervalSinceReferenceDate)")])
     }
     
     public static func file(name: String) -> Request<Data> {
