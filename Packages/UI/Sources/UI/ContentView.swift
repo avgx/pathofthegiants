@@ -2,7 +2,8 @@ import SwiftUI
 import Env
 
 public struct ContentView: View {
-    @StateObject var currentAccount = CurrentAccount.shared
+    @StateObject private var themeManager = ThemeManager.shared
+    @StateObject private var currentAccount = CurrentAccount.shared
     @State var initialLoadComplete: Bool = false
     
     public init() {}
@@ -20,6 +21,8 @@ public struct ContentView: View {
             }
         }
         .environmentObject(currentAccount)
+        .environmentObject(themeManager)
+        .preferredColorScheme(themeManager.selectedTheme)
     }
 }
 

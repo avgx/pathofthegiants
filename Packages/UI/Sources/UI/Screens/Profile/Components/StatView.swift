@@ -9,10 +9,13 @@ struct StatView: View {
             Text(value)
                 .font(.title3)
                 .fontWeight(.bold)
+                .lineLimit(1)
             
             Text(title)
                 .font(.caption)
                 .foregroundStyle(.secondary)
+                .lineLimit(1)
+                .minimumScaleFactor(0.5)
         }
     }
 }

@@ -3,7 +3,7 @@ import Env
 import Models
 
 @MainActor
-struct ProfileInfo: View {
+struct ProfileHeaderView: View {
     enum Constants {
         static let headerHeight: CGFloat = 200
         static let avatarHeight: CGFloat = 80

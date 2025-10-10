@@ -2,19 +2,7 @@ import SwiftUI
 import Env
 import Models
 
-enum Profile: String, Codable, Identifiable, Sendable {
-    case account
-    case notifications
-    case appleHealth
-    case gameCenter
-    case displaySettings
-    case help
-    case info
-    
-    var id: String {
-        rawValue
-    }
-}
+
 
 struct ProfileScreen: View {
     @EnvironmentObject var currentAccount: CurrentAccount
@@ -64,31 +52,18 @@ struct ProfileScreen: View {
             
             
             Section {
-                NavigationLink(value: Profile.notifications) {
-                    Label("Уведомления", systemImage: "bell.badge")
-                }
-                NavigationLink(value: Profile.appleHealth) {
-                    Label("Apple Health", systemImage: "brain.head.profile")
-                }
-                NavigationLink(value: Profile.gameCenter) {
-                    Label("Game Center", systemImage: "laurel.leading.laurel.trailing")
-                }
+                Profile.notifications.navigationLink
+                Profile.appleHealth.navigationLink
+                Profile.gameCenter.navigationLink
             }
             
             Section {
-                NavigationLink(value: Profile.displaySettings) {
-                    Label("Оформление", systemImage: "wand.and.sparkles")
-                }
+                Profile.displaySettings.navigationLink
             }
             
             Section {
-                NavigationLink(value: Profile.help) {
-                    Label("Помощь", systemImage: "questionmark.circle")
-                }
-                
-                NavigationLink(value: Profile.info) {
-                    Label("О приложении", systemImage: "info.circle")
-                }
+                Profile.help.navigationLink
+                Profile.info.navigationLink
             }
         }
         .refreshable {
@@ -117,32 +92,18 @@ struct ProfileScreen: View {
                 })
             }
             ToolbarItemGroup(placement: .topBarTrailing) {
-                NavigationLink(value: Profile.account) {
-                    Label("Аккаунт", systemImage: "pencil")
-                }
+                Profile.account.navigationLink
             }
         }
         .navigationDestination(for: Profile.self, destination: { feature in
-            VStack {
-                Text("\(feature.rawValue)")
-                Spacer()
-                if case .account = feature {
-                    Button(role: .destructive, action: {
-                        currentAccount.disconnect()
-                    }) {
-                        Label("Выход", systemImage: "rectangle.portrait.and.arrow.forward")
-                    }
-                    .buttonStyle(.borderedProminent)
-                }
-            }
-            .navigationTitle("\(feature.rawValue)")
+            feature.destination
         })
     }
     
     @ViewBuilder
     var info: some View {
         if let info = currentAccount.accountInfo {
-            ProfileInfo(info: info, stat: stat)
+            ProfileHeaderView(info: info, stat: stat)
         } else {
             ContentUnavailableView("Нет данных", systemImage: "exclamationmark.triangle").padding()
         }
