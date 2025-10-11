@@ -92,3 +92,15 @@ public class CurrentAccount: ObservableObject {
         return statsData.value.data
     }
 }
+
+extension CurrentAccount: AudioPlayerDelegate {
+    public func audioPlayerListenedTime(duration: TimeInterval) {
+        print("CurrentAccount audioPlayerListenedTime \(duration)")
+    }
+    
+    public func audioPlayerDidFinishPlaying(duration: TimeInterval) {
+        print("CurrentAccount audioPlayerDidFinishPlaying \(duration)")
+    }
+    
+    
+}

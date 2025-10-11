@@ -4,6 +4,7 @@ import Env
 public struct ContentView: View {
     @StateObject private var themeManager = ThemeManager.shared
     @StateObject private var currentAccount = CurrentAccount.shared
+    @StateObject private var audioPlayer = AudioPlayer.shared
     @State var initialLoadComplete: Bool = false
     
     public init() {}
@@ -21,8 +22,15 @@ public struct ContentView: View {
             }
         }
         .environmentObject(currentAccount)
+        .environmentObject(audioPlayer)
         .environmentObject(themeManager)
         .preferredColorScheme(themeManager.selectedTheme)
+        .onAppear {
+            audioPlayer.delegate = currentAccount
+        }
+        .onDisappear {
+            audioPlayer.delegate = nil
+        }
     }
 }
 

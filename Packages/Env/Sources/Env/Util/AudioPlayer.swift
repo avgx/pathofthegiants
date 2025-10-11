@@ -4,8 +4,15 @@ import MediaPlayer
 import Combine
 import SwiftUI
 
+@MainActor 
+public protocol AudioPlayerDelegate: AnyObject {
+    func audioPlayerListenedTime(duration: TimeInterval)
+    func audioPlayerDidFinishPlaying(duration: TimeInterval)
+}
+                                        
 @MainActor
 public class AudioPlayer: NSObject, ObservableObject {
+    public weak var delegate: (any AudioPlayerDelegate)?
     
     // MARK: - Singleton
     public static let shared = AudioPlayer()
@@ -16,9 +23,17 @@ public class AudioPlayer: NSObject, ObservableObject {
     @Published public private(set) var duration: TimeInterval = 0
     @Published public private(set) var playbackState: PlaybackState = .stopped {
         didSet {
-            print("AudioPlayer playbackState \(playbackState)")
+            switch playbackState {
+            case .playing:
+                startPlaybackTracking()
+            case .paused, .stopped:
+                stopPlaybackTracking()
+            case .loading:
+                break
+            }
         }
     }
+    private var lastPlaybackStartTime: TimeInterval?
     
     // MARK: - Private Properties
     private var audioPlayer: AVAudioPlayer?
@@ -106,9 +121,12 @@ public class AudioPlayer: NSObject, ObservableObject {
     public func seek(to time: TimeInterval) {
         guard let player = audioPlayer else { return }
         
+    
+        stopPlaybackTracking()
         player.currentTime = min(max(time, 0), duration)
         currentTime = player.currentTime
         updateNowPlayingInfo()
+        startPlaybackTracking()
     }
     
     public func togglePlayPause() {
@@ -284,6 +302,29 @@ public class AudioPlayer: NSObject, ObservableObject {
         timer = nil
     }
     
+    private func startPlaybackTracking() {
+        guard let player = audioPlayer else { return }
+        
+        lastPlaybackStartTime = player.currentTime
+    }
+    
+    private func stopPlaybackTracking() {
+        guard let startTime = lastPlaybackStartTime else { return }
+        guard let player = audioPlayer else { return }
+        
+        let playbackSessionTime = (player.currentTime != 0 ? player.currentTime : player.duration) - startTime
+        lastPlaybackStartTime = nil
+        
+        if playbackSessionTime > 0.5 {
+            // Отправляем время воспроизведения
+            delegate?.audioPlayerListenedTime(duration: playbackSessionTime)
+        }
+    }
+    
+    private func notifyDidFinish() {
+        delegate?.audioPlayerDidFinishPlaying(duration: self.duration)
+    }
+    
     private func updateNowPlayingInfo() {
         nowPlayingQueue.async { [weak self] in
             guard let self = self else { return }
@@ -366,6 +407,7 @@ extension AudioPlayer: AVAudioPlayerDelegate {
             playbackState = .stopped
             stopProgressTimer()
             updateNowPlayingInfo()
+            notifyDidFinish()
         }
     }
     
@@ -438,6 +480,3 @@ extension AudioPlayer {
         }
     }
 }
-
-// MARK: - SwiftUI View for Testing/Demo
-

@@ -6,8 +6,7 @@ import Models
 struct PracticeScreen: View {
     @Environment(\.dismiss) private var dismiss
     @EnvironmentObject var currentAccount: CurrentAccount
-    
-    @StateObject private var audioPlayer = AudioPlayer.shared
+    @EnvironmentObject var audioPlayer: AudioPlayer
     @State private var isLoaded = false
     
     let practice: Practice
@@ -116,7 +115,7 @@ struct PracticeScreen: View {
 
             isLoaded = true
             
-            audioPlayer.play()
+            //audioPlayer.play()
         }
         .onDisappear {
             audioPlayer.stop()
@@ -125,8 +124,9 @@ struct PracticeScreen: View {
     }
     
     private func formatTime(_ time: TimeInterval) -> String {
-        let minutes = Int(time) / 60
+        let sign = time < 0 ? "-" : ""
+        let minutes = Int(abs(time)) / 60
         let seconds = Int(abs(time)) % 60
-        return String(format: "%d:%02d", minutes, seconds)
+        return String(format: "\(sign)%d:%02d", minutes, seconds)
     }
 }
