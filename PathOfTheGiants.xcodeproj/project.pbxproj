@@ -22,6 +22,10 @@
 		31F42CE42E93EF7900C04458 /* Exceptions for "PathOfTheGiants" folder in "PathOfTheGiants" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
+				Config/Config.xcconfig,
+				Config/Custom.xcconfig,
+				Config/Debug.xcconfig,
+				Config/Release.xcconfig,
 				Info.plist,
 			);
 			target = 31F42C732E92FAF900C04458 /* PathOfTheGiants */;
