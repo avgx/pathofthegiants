@@ -77,4 +77,11 @@ public enum Api {
     public static func file(name: String) -> Request<Data> {
         return Request(path: "/Files/\(name)")
     }
+    
+    public static func bgMain() -> Request<Data> {
+        return Request(path: "/bgMain.png")
+    }
+    public static func bgSecond() -> Request<Data> {
+        return Request(path: "/bgSecond.png")
+    }
 }

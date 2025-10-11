@@ -70,6 +70,14 @@ public class CurrentAccount: ObservableObject {
         isTrial = true
     }
     
+    public func fetchBgMain() async throws -> UIImage {
+        let http = HttpClient5(baseURL: Api.baseURL, sessionConfiguration: .withCache)
+        
+        let imageData = try await http.send(Api.bgMain())
+        let image = UIImage(data: imageData.data) ?? UIImage()
+        return image
+    }
+    
     public func fetchImage(for image: String) async throws -> UIImage {
         guard let http else { return UIImage() }
         

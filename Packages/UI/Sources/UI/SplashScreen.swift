@@ -12,7 +12,10 @@ struct SplashScreen: View {
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .onAppear {
             Task {
+                bgMain = try? await currentAccount.fetchBgMain()
+                
                 try? await currentAccount.connect()
+                
                 withAnimation {
                     complete = true
                 }
