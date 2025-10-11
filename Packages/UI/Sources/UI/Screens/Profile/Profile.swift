@@ -2,9 +2,10 @@ import SwiftUI
 
 enum Profile: String, Codable, Identifiable, Sendable {
     case account
+    case statistics
     case notifications
     case appleHealth
-    case gameCenter
+//    case gameCenter
     case displaySettings
     case help
     case info
@@ -25,12 +26,14 @@ extension Profile {
         switch self {
         case .account:
             "pencil"
+        case .statistics:
+            "chart.line.uptrend.xyaxis"
         case .notifications:
             "bell.badge"
         case .appleHealth:
             "brain.head.profile"
-        case .gameCenter:
-            "laurel.leading.laurel.trailing"
+//        case .gameCenter:
+//            "laurel.leading.laurel.trailing"
         case .displaySettings:
             "wand.and.sparkles"
         case .help:
@@ -44,12 +47,14 @@ extension Profile {
         switch self {
         case .account:
             "Аккаунт"
+        case .statistics:
+            "Статистика"
         case .notifications:
             "Уведомления"
         case .appleHealth:
             "Apple Health"
-        case .gameCenter:
-            "Game Center"
+//        case .gameCenter:
+//            "Game Center"
         case .displaySettings:
             "Оформление"
         case .help:
@@ -74,12 +79,14 @@ extension Profile {
             switch self {
             case .account:
                 AccountView()
+            case .statistics:
+                StatisticsView()
             case .notifications:
                 NotificationsView()
             case .appleHealth:
                 AppleHealthView()
-            case .gameCenter:
-                GameCenterView()
+//            case .gameCenter:
+//                GameCenterView()
             case .displaySettings:
                 DisplaySettingsView()
             case .help:

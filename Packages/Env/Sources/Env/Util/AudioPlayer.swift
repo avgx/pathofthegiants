@@ -14,7 +14,11 @@ public class AudioPlayer: NSObject, ObservableObject {
     @Published public private(set) var isPlaying = false
     @Published public private(set) var currentTime: TimeInterval = 0
     @Published public private(set) var duration: TimeInterval = 0
-    @Published public private(set) var playbackState: PlaybackState = .stopped
+    @Published public private(set) var playbackState: PlaybackState = .stopped {
+        didSet {
+            print("AudioPlayer playbackState \(playbackState)")
+        }
+    }
     
     // MARK: - Private Properties
     private var audioPlayer: AVAudioPlayer?

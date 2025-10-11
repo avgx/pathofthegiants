@@ -52,9 +52,10 @@ struct ProfileScreen: View {
             
             
             Section {
-                Profile.notifications.navigationLink
+                Profile.statistics.navigationLink
                 Profile.appleHealth.navigationLink
-                Profile.gameCenter.navigationLink
+//                Profile.gameCenter.navigationLink
+                Profile.notifications.navigationLink
             }
             
             Section {
