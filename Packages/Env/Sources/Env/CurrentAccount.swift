@@ -13,6 +13,7 @@ public class CurrentAccount: ObservableObject {
     @Published public private(set) var practices: Practices?
     @Published public private(set) var trial: Trial?
     @Published public private(set) var regular: Regular?
+    @Published public var currentPractice: Practice?
     
     public static let shared = CurrentAccount()
     
@@ -104,10 +105,23 @@ public class CurrentAccount: ObservableObject {
 extension CurrentAccount: AudioPlayerDelegate {
     public func audioPlayerListenedTime(duration: TimeInterval) {
         print("CurrentAccount audioPlayerListenedTime \(duration)")
+        guard let http else { return }
+        guard let currentPractice else { return }
+        
+        Task {
+            _ = try? await http.send(Api.postProgress(practiceId: currentPractice.id, seconds: duration))
+        }
     }
     
     public func audioPlayerDidFinishPlaying(duration: TimeInterval) {
         print("CurrentAccount audioPlayerDidFinishPlaying \(duration)")
+        
+        guard let http else { return }
+        guard let currentPractice else { return }
+        
+        Task {
+            _ = try? await http.send(Api.postCompleted(practiceId: currentPractice.id, seconds: duration))
+        }
     }
     
     

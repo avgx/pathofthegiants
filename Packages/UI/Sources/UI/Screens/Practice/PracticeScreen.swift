@@ -115,11 +115,12 @@ struct PracticeScreen: View {
 
             isLoaded = true
             
-            //audioPlayer.play()
+            currentAccount.currentPractice = practice
         }
         .onDisappear {
             audioPlayer.stop()
             audioPlayer.cleanupCurrentPlayback()
+            currentAccount.currentPractice = nil
         }
     }
     
