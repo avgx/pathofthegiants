@@ -91,6 +91,14 @@ public class CurrentAccount: ObservableObject {
         let statsData = try await http.send(Api.stats())
         return statsData.value.data
     }
+    
+    public func update(nickname: String) async throws {
+        guard let http else { return }
+        
+        _ = try await http.send(Api.profile(nickname: nickname))
+        
+        self.accountInfo = try await http.send(Api.accountInfo()).value
+    }
 }
 
 extension CurrentAccount: AudioPlayerDelegate {

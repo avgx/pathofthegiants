@@ -42,7 +42,9 @@ extension Profile {
                         .keyboardType(.default)
                         .submitLabel(.done)
                         .onSubmit {
-                            print("TODO: POST new \(nickname)")
+                            Task {
+                                try? await currentAccount.update(nickname: nickname)
+                            }
                         }
                 } header: {
                     Text("Псевдоним")
