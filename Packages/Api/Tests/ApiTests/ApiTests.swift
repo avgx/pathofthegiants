@@ -57,9 +57,16 @@ import Models
     let info = try await http2.send(Api.accountInfo())
     print(info.value)
     
+    _ = try await http2.send(Api.profile(nickname: info.value.data.nickname + "1"))
+    
     let practices = try await http2.send(Api.practices())
     print(practices.value)
     
     let stats = try await http2.send(Api.stats())
     print(stats.value)
+    
+    _ = try await http2.send(Api.postProgress(practiceId: stats.value.data.favoritePractice.practiceID, seconds: 3.14))
+    
+    let p = practices.value.data.first!
+    _ = try await http2.send(Api.postCompleted(practiceId: p.id, seconds: Double(p.audioDuration)))
 }
