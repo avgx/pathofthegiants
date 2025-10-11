@@ -4,7 +4,6 @@ import Api
 import Get
 
 @MainActor
-//@Observable
 public class CurrentAccount: ObservableObject {
     
     @Published public private(set) var isTrial: Bool = false
@@ -107,6 +106,20 @@ extension CurrentAccount: AudioPlayerDelegate {
         print("CurrentAccount audioPlayerListenedTime \(duration)")
         guard let http else { return }
         guard let currentPractice else { return }
+        
+        var progress = 0
+        switch SettingsManager.shared.statisticsUpdate {
+        case .seconds:
+            progress = Int(duration)
+        case .minutes:
+            progress = Int(duration / 60) * 60
+        case .complete:
+            if abs(currentPractice.audioDuration - Int(duration)) < 1 {
+                progress = Int(duration)
+            }
+        }
+        
+        guard progress > 0 else { return }
         
         Task {
             _ = try? await http.send(Api.postProgress(practiceId: currentPractice.id, seconds: duration))

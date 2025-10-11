@@ -52,6 +52,7 @@ struct ProfileScreen: View {
             
             
             Section {
+                Profile.player.navigationLink
                 Profile.statistics.navigationLink
                 Profile.appleHealth.navigationLink
 //                Profile.gameCenter.navigationLink

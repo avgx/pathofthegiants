@@ -218,6 +218,12 @@ public class AudioPlayer: NSObject, ObservableObject {
         remoteCommandCenter.skipBackwardCommand.isEnabled = true
     }
     
+    public func setSeekEnabled(_ value: Bool) {
+        remoteCommandCenter.changePlaybackPositionCommand.isEnabled = value
+        remoteCommandCenter.skipForwardCommand.isEnabled = value
+        remoteCommandCenter.skipBackwardCommand.isEnabled = value
+    }
+    
     private func setupNotifications() {
         NotificationCenter.default
             .publisher(for: AVAudioSession.interruptionNotification)

@@ -1,19 +1,20 @@
 import SwiftUI
+import Env
 
 extension Profile {
     struct StatisticsView: View {
+        @EnvironmentObject var settingsManager: SettingsManager
         
         var body: some View {
             List {
                 Section {
-                    Text("Подсчет времени практики")
-                    
-                    Text("каждую секунду")
-                    Text("каждую минуту")
-                    Text("когда 90% практики пройдено")
-                    Text("только практику целиком")
-//                    Text("разрешить перемотку")
-//                    Text("сохранять прогресс")
+                    Picker("Учитывать", systemImage: "clock", selection: $settingsManager.statisticsUpdate) {
+                        ForEach(SettingsManager.StatisticsUpdate.allCases) { x in
+                            Text(x.description).tag(x)
+                        }
+                    }                    
+                } header: {
+                    Text("Практика")
                 }
             }
         }

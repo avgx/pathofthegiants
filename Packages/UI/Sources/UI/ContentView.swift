@@ -3,6 +3,7 @@ import Env
 
 public struct ContentView: View {
     @StateObject private var themeManager = ThemeManager.shared
+    @StateObject private var settingsManager = SettingsManager.shared
     @StateObject private var currentAccount = CurrentAccount.shared
     @StateObject private var audioPlayer = AudioPlayer.shared
     @State var initialLoadComplete: Bool = false
@@ -24,6 +25,7 @@ public struct ContentView: View {
         .environmentObject(currentAccount)
         .environmentObject(audioPlayer)
         .environmentObject(themeManager)
+        .environmentObject(settingsManager)
         .preferredColorScheme(themeManager.selectedTheme)
         .onAppear {
             audioPlayer.delegate = currentAccount

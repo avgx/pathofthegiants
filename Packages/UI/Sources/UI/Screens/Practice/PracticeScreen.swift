@@ -6,6 +6,7 @@ import Models
 struct PracticeScreen: View {
     @Environment(\.dismiss) private var dismiss
     @EnvironmentObject var currentAccount: CurrentAccount
+    @EnvironmentObject var settingsManager: SettingsManager
     @EnvironmentObject var audioPlayer: AudioPlayer
     @State private var isLoaded = false
     
@@ -50,7 +51,7 @@ struct PracticeScreen: View {
                         ),
                         in: 0...audioPlayer.duration
                     )
-                    .disabled(audioPlayer.duration == 0)
+                    .disabled(audioPlayer.duration == 0 || !settingsManager.playerSeekEnabled)
                     
                     HStack {
                         Text(formatTime(audioPlayer.currentTime))
@@ -64,13 +65,15 @@ struct PracticeScreen: View {
                 
                 // Control buttons
                 HStack(spacing: 40) {
-                    Button(action: {
-                        audioPlayer.seek(to: audioPlayer.currentTime - 15)
-                    }) {
-                        Image(systemName: "gobackward.15")
-                            .font(.title2)
+                    if settingsManager.playerSeekEnabled {
+                        Button(action: {
+                            audioPlayer.seek(to: audioPlayer.currentTime - 15)
+                        }) {
+                            Image(systemName: "gobackward.15")
+                                .font(.title2)
+                        }
+                        .disabled(audioPlayer.currentTime <= 0)
                     }
-                    .disabled(audioPlayer.currentTime <= 0)
                     
                     Button(action: {
                         audioPlayer.togglePlayPause()
@@ -79,14 +82,15 @@ struct PracticeScreen: View {
                             .font(.system(size: 50))
                     }
                     
-                    
-                    Button(action: {
-                        audioPlayer.seek(to: audioPlayer.currentTime + 15)
-                    }) {
-                        Image(systemName: "goforward.15")
-                            .font(.title2)
+                    if settingsManager.playerSeekEnabled {
+                        Button(action: {
+                            audioPlayer.seek(to: audioPlayer.currentTime + 15)
+                        }) {
+                            Image(systemName: "goforward.15")
+                                .font(.title2)
+                        }
+                        .disabled(audioPlayer.currentTime >= audioPlayer.duration)
                     }
-                    .disabled(audioPlayer.currentTime >= audioPlayer.duration)
                 }
                 .disabled(!isLoaded)
             }

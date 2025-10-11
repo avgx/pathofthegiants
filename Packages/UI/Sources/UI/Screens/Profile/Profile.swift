@@ -2,6 +2,7 @@ import SwiftUI
 
 enum Profile: String, Codable, Identifiable, Sendable {
     case account
+    case player
     case statistics
     case notifications
     case appleHealth
@@ -26,6 +27,8 @@ extension Profile {
         switch self {
         case .account:
             "pencil"
+        case .player:
+            "play"
         case .statistics:
             "chart.line.uptrend.xyaxis"
         case .notifications:
@@ -47,6 +50,8 @@ extension Profile {
         switch self {
         case .account:
             "Аккаунт"
+        case .player:
+            "Проигрыватель"
         case .statistics:
             "Статистика"
         case .notifications:
@@ -79,6 +84,8 @@ extension Profile {
             switch self {
             case .account:
                 AccountView()
+            case .player:
+                PlayerView()
             case .statistics:
                 StatisticsView()
             case .notifications:
