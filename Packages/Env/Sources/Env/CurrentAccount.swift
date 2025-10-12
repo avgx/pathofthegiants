@@ -131,6 +131,8 @@ extension CurrentAccount: AudioPlayerDelegate {
         
         Task {
             _ = try? await http.send(Api.postProgress(practiceId: currentPractice.id, seconds: duration))
+            
+            try? await saveHealthKitSession(duration: duration)
         }
     }
     
@@ -146,4 +148,26 @@ extension CurrentAccount: AudioPlayerDelegate {
     }
     
     
+}
+
+extension CurrentAccount {
+    public func saveHealthKitSession(duration: TimeInterval) async throws {
+        
+        guard SettingsManager.shared.appleHealthEnabled else { return }
+        
+        let endDate = Date()
+        let startDate = endDate.addingTimeInterval(-duration)
+        // Сохранение сессии
+        do {
+            let success = try await HealthKitManager.shared.saveMindfulSession(
+                startDate: startDate,
+                endDate: endDate
+            )
+            if success {
+                print("Сессия успешно сохранена")
+            }
+        } catch {
+            print("Ошибка сохранения: \(error.localizedDescription)")
+        }
+    }
 }

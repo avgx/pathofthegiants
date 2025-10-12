@@ -15,6 +15,12 @@ public class SettingsManager: ObservableObject {
         }
     }
     
+    @Published public var appleHealthEnabled = true {
+        didSet {
+            storage.appleHealthEnabled = appleHealthEnabled
+        }
+    }
+    
     private var storage = Storage()
     
     public static let shared = SettingsManager()
@@ -22,6 +28,7 @@ public class SettingsManager: ObservableObject {
     private init() {
         statisticsUpdate = storage.statisticsUpdate
         playerSeekEnabled = storage.playerSeekEnabled
+        appleHealthEnabled = storage.appleHealthEnabled
     }
 }
 
@@ -29,6 +36,7 @@ extension SettingsManager {
     struct Storage {
         @AppStorage("settings.statisticsUpdate") var statisticsUpdate: StatisticsUpdate = .seconds
         @AppStorage("settings.playerSeekEnabled") var playerSeekEnabled: Bool = true
+        @AppStorage("settings.appleHealthEnabled") var appleHealthEnabled: Bool = false
     }
 }
 

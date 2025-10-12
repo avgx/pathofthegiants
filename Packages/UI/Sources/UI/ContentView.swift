@@ -6,6 +6,7 @@ public struct ContentView: View {
     @StateObject private var settingsManager = SettingsManager.shared
     @StateObject private var currentAccount = CurrentAccount.shared
     @StateObject private var audioPlayer = AudioPlayer.shared
+    @StateObject private var healthKitManager = HealthKitManager.shared
     @State var initialLoadComplete: Bool = false
     
     public init() {}
@@ -26,6 +27,7 @@ public struct ContentView: View {
         .environmentObject(audioPlayer)
         .environmentObject(themeManager)
         .environmentObject(settingsManager)
+        .environmentObject(healthKitManager)
         .preferredColorScheme(themeManager.selectedTheme)
         .onAppear {
             audioPlayer.delegate = currentAccount
