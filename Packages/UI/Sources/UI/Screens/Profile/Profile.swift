@@ -34,7 +34,7 @@ extension Profile {
         case .notifications:
             "bell.badge"
         case .appleHealth:
-            "brain.head.profile"
+            "heart.text.clipboard" //"circle.hexagonpath" //"brain.head.profile"
 //        case .gameCenter:
 //            "laurel.leading.laurel.trailing"
         case .displaySettings:

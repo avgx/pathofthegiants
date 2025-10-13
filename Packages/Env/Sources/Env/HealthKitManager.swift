@@ -8,8 +8,8 @@ public class HealthKitManager: ObservableObject {
     
     private init() { }
     
-    public func authorizationStatusAuthorized() async -> Bool {
-        return false
+    public func authorizationStatusSharingDenied() async -> Bool {
+        return true
     }
     
     public func requestAuthorization() async -> Bool {
@@ -35,13 +35,15 @@ public class HealthKitManager: ObservableObject {
     
     private init() { }
     
-    public func authorizationStatusAuthorized() async -> Bool {
+    /// В случае `.sharingDenied` нет смысла делать requestAuthorization.
+    /// Уже запрещено и новый диалог не появится.
+    public func authorizationStatusSharingDenied() async -> Bool {
         guard HKHealthStore.isHealthDataAvailable(), let mindfulType = self.mindfulType else {
-            return false
+            return true
         }
         
         let status = healthStore.authorizationStatus(for: mindfulType)
-        return status == .sharingAuthorized
+        return status == .sharingDenied
     }
     
     // Запрос авторизации на чтение и запись данных осознанности

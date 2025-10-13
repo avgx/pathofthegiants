@@ -68,7 +68,7 @@ public class AudioPlayer: NSObject, ObservableObject {
         cleanupCurrentPlayback()
         
         do {
-            try AVAudioSession.sharedInstance().setCategory(.playback, mode: .default)
+            //try AVAudioSession.sharedInstance().setCategory(.playback, mode: .default)
             try AVAudioSession.sharedInstance().setActive(true)
             
             audioPlayer = try AVAudioPlayer(data: mp3Data)
@@ -140,7 +140,7 @@ public class AudioPlayer: NSObject, ObservableObject {
     // MARK: - Private Methods
     private func setupAudioSession() {
         do {
-            try AVAudioSession.sharedInstance().setCategory(.playback, mode: .default, options: [.allowBluetooth, .allowAirPlay])
+            try AVAudioSession.sharedInstance().setCategory(.playback, mode: .default, options: [.allowBluetoothA2DP, .allowAirPlay])
             try AVAudioSession.sharedInstance().setActive(true)
         } catch {
             print("Failed to setup audio session: \(error)")

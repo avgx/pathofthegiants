@@ -3,32 +3,51 @@ import Env
 
 extension Profile {
     struct AppleHealthView: View {
+        @Environment(\.scenePhase) var scenePhase
         @EnvironmentObject var settingsManager: SettingsManager
         @EnvironmentObject private var healthKitManager: HealthKitManager
         
-        @State var enabled = false
+        @State var isSharingDenied = false
         
+        
+#if targetEnvironment(simulator)
+        var body: some View {
+            ContentUnavailableView("HealthKit недоступен в симуляторе", systemImage: "exclamationmark.triangle")
+        }
+        
+#else
         var body: some View {
             List {
-                Section {
-                    Toggle("Сохранение", isOn: $settingsManager.appleHealthEnabled)
-                } footer: {
-                    Text("Сохранение количества прослушанных минут медитации в Apple Health для отслеживания этих данных в приложении Здоровье")
-                }
-            }
-            .onAppear {
-                if settingsManager.appleHealthEnabled {
-                    Task {
-                        let isAuthorized = await healthKitManager.authorizationStatusAuthorized()
-                        if isAuthorized {
-                            print("Доступ к HealthKit предоставлен")
-                        } else {
-                            print("Доступа к HealthKit нет")
+                if isSharingDenied {
+                    Section {
+                        Button(action: { openAppSettings() }) {
+                            Text("Открыть Настройки")
                         }
+                    } header: {
+                        Text("Доступ к HealthKit запрещен")
+                    } footer: {
+                        Text("Чтобы использовать эту функцию, разрешите приложению записывать данные о здоровье в Настройках → Конфиденциальность и безопасность → Здоровье")
+                    }
+                } else {
+                    Section {
+                        Toggle("Сохранение", isOn: $settingsManager.appleHealthEnabled)
+                    } footer: {
+                        Text("Сохранение количества прослушанных минут медитации в Apple Health для отслеживания этих данных в приложении Здоровье")
                     }
                 }
             }
-            .onChange(of: enabled) { _, newValue in
+            .onChange(of: scenePhase) { _, newValue in
+                switch newValue {
+                case .active:
+                    checkAuthorizationStatus()
+                default:
+                    break
+                }
+            }
+            .onAppear {
+                checkAuthorizationStatus()
+            }
+            .onChange(of: settingsManager.appleHealthEnabled) { _, newValue in
                 if newValue {
                     // Запрашиваем авторизацию
                     Task {
@@ -41,6 +60,27 @@ extension Profile {
                         }
                     }
                 }
+            }
+        }
+#endif
+        func checkAuthorizationStatus() {
+            if settingsManager.appleHealthEnabled {
+                Task { @MainActor in
+                    isSharingDenied = await healthKitManager.authorizationStatusSharingDenied()
+                    if isSharingDenied {
+                        print("Доступ к HealthKit запрещен")
+                    } else {
+                        print("Доступ к HealthKit разрешен или неопределен")
+                    }
+                }
+            }
+        }
+        
+        func openAppSettings() {
+            guard let settingsUrl = URL(string: UIApplication.openSettingsURLString) else { return }
+            
+            if UIApplication.shared.canOpenURL(settingsUrl) {
+                UIApplication.shared.open(settingsUrl)
             }
         }
     }
