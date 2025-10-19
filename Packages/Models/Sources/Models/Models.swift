@@ -61,7 +61,7 @@ public struct UserStats: Codable, Sendable {
 
 public struct UserStatsData: Codable, Sendable {
     public let totalPractices, totalPracticeTime, maximumConsecutiveDaysForPractices: Int
-    public let favoritePractice: FavoritePractice
+    public let favoritePractice: FavoritePractice?
     
     enum CodingKeys: String, CodingKey {
         case totalPractices = "TotalPractices"
