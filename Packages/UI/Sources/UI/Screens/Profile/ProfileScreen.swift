@@ -45,6 +45,8 @@ struct ProfileScreen: View {
                     } else {
                         Text("Пока отсутствует")
                     }
+                } else {
+                    Text("Пока отсутствует")
                 }
             } header: {
                 Text("Любимая практика")

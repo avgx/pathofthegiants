@@ -70,6 +70,13 @@ public class CurrentAccount: ObservableObject {
         isTrial = true
     }
     
+    /// Зарегистрировать аккаунт
+    public func signup(user: String, pass: String) async throws {
+        let http = HttpClient5(baseURL: Api.baseURL, sessionConfiguration: .withCache)
+
+        _ = try await http.send(Api.accountSignup(user: user, password: pass))
+    }
+    
     public func fetchBgMain() async throws -> UIImage {
         let http = HttpClient5(baseURL: Api.baseURL, sessionConfiguration: .withCache)
         

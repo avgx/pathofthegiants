@@ -2,34 +2,34 @@ import SwiftUI
 import Env
 import ButtonKit
 
-struct LoginScreen: View {
+struct SignupScreen: View {
+    @Environment(\.dismiss) private var dismiss
+    @Environment(\.isPresented) var isPresented
     @EnvironmentObject var currentAccount: CurrentAccount
-    
-    @AppStorage("user") var savedUser = ""
     
     @State var user: String = ""
     @State var pass: String = ""
-    
-    @State var signup = false
     
     var body: some View {
         NavigationStack {
             VStack {
                 form
-                    .onAppear {
-                        user = savedUser
-                    }
-                    .onDisappear {
-                        savedUser = user
-                    }
             }
-            .scrollContentBackground(.hidden) // This hides the default form background
-            .background(MainBackground())
-            .navigationTitle("Путь великанов")
-            .toolbarTitleDisplayMode(.inlineLarge)
-            .sheet(isPresented: $signup, content: {
-                SignupScreen()
-            })
+            //.scrollContentBackground(.hidden) // This hides the default form background
+            //.background(MainBackground())
+            .navigationTitle("Регистрация")
+            .toolbarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItemGroup(placement: .cancellationAction) {
+                    if isPresented {
+                        Button {
+                            dismiss()
+                        } label: {
+                            Image(systemName: "xmark")
+                        }
+                    }
+                }
+            }
         }
         .navigationViewStyle(.stack)
     }
@@ -61,38 +61,23 @@ struct LoginScreen: View {
                 }
             }
             
-            loginButton
+            signupButton
             
-            
-            Section {
-                HStack {
-                    Spacer()
-                    Text("Нет аккаунта?")
-                        .font(.footnote)
-                    
-                    Button(action: { signup.toggle() }) {
-                        Text("Зарегистрироваться")
-                            .minimumScaleFactor(0.7)
-                    }
-                    Spacer()
-                }
-            }
-            .listRowBackground(Color.clear)
-            .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
-            .listRowSeparator(.hidden)
+            trialButton
         }
     }
     
     @ViewBuilder
-    var loginButton: some View {
+    var signupButton: some View {
         Section {
             AsyncButton(action: {
-                try await currentAccount.setAccount(user: user, pass: pass)
-                try await currentAccount.connect()
+                try await currentAccount.signup(user: user, pass: pass)
+                
+                dismiss()
             }, label: {
                 HStack {
                     Spacer()
-                    Text("Войти")
+                    Text("Зарегистрироваться")
                     Spacer()
                 }
                 .compositingGroup()
@@ -107,10 +92,46 @@ struct LoginScreen: View {
         .listRowSeparator(.hidden)
     }
     
-    
+    @ViewBuilder
+    var trialButton: some View {
+        Section {
+            AsyncButton(action: {
+                try await currentAccount.setTrial()
+            }, label: {
+                HStack {
+                    Spacer()
+                    Text("Практики вне Пути")
+                    Spacer()
+                }
+                .compositingGroup()
+            })
+            .throwableButtonStyle(.shake)
+            .allowsHitTestingWhenLoading(false)
+            .asyncButtonStyle(.overlay)
+            .buttonStyle(.borderedProminent)
+        } header: {
+            HStack(spacing: 16) {
+                Spacer()
+                Text("или посмотреть")
+                Spacer()
+            }
+            .compositingGroup()
+            .padding(.bottom, 16)
+        } footer: {
+            HStack(spacing: 16) {
+                Spacer()
+                Text("Эти практики доступны без регистрации.")
+                    .foregroundStyle(.secondary)
+                Spacer()
+            }
+        }
+        .listRowBackground(Color.accentColor)
+        .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
+        .listRowSeparator(.hidden)
+    }
 }
 
 #Preview {
-    LoginScreen()
+    SignupScreen()
         .environmentObject(CurrentAccount.shared)
 }

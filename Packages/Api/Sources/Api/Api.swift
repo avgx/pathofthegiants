@@ -6,11 +6,38 @@ import Models
 public enum Api {
     public static let baseURL: URL = URL(string: "https://pathofthegiants.ru")!
     
-    
+    //TODO: обработать ошибки
+    /// 404 Not Found
+    /// 403
+    /// {"Error":{"Code":"RequireConfirmedEmailClientException"}}
+    /// 400
+    /// {"Error":{"Code":"InvalidPasswordClientException"}}
     public static func accountLogin(user: String, password: String) -> Request<Auth> {
         return Request(path: "/Account/Login/", method: .post, query: [
             ("login", user),
             ("password", password)
+        ])
+    }
+    
+    //TODO: обработать ошибки
+    /// {"Error":{"Code":"InvalidParamsClientException","Data":{"Field":["email"]}}}
+    /// {"Error":{"Code":"InvalidParamsClientException","Data":{"Field":["password"]}}}
+    /// {"Error":{"Code":"DuplicateEmail","Data":{"Description":"Email 'aaa@gmail.com' is already taken."}}}
+    public static func accountSignup(user: String, password: String) -> Request<String> {
+        return Request(path: "/Account/Signup/", method: .post, query: [
+            ("login", user),
+            ("password", password)
+        ])
+    }
+    
+    //TODO: POST /Account/SendEmailConfirmation?login=aa%40aa.aa&password=zzz
+    //{"Error":{"Code":"NotFoundClientException"}}
+    
+    /// Подтверждение email
+    public static func confirmEmail(user: String, token: String) -> Request<String> {
+        return Request(path: "/Account/ConfirmEmail", method: .get, query: [
+            ("email", user),
+            ("token", token)
         ])
     }
     
@@ -22,6 +49,13 @@ public enum Api {
     public static func profile(nickname: String) -> Request<Void> {
         return Request(path: "/Profile/Nickname", method: .post, query: [("nickname", nickname)])
     }
+    
+    //TODO: POST /Profile/Avatar
+//    curl -X 'POST' \
+//      'https://pathofthegiants.ru/Profile/Avatar' \
+//      -H 'accept: text/plain' \
+//      -H 'Content-Type: multipart/form-data' \
+//      -F 'file=@Simulator.png;type=image/png'
     
     public static func modulesRegular() -> Request<Regular> {
         return Request(path: "/Modules/Regular")
