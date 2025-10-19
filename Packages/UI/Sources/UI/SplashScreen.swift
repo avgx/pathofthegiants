@@ -10,6 +10,12 @@ struct SplashScreen: View {
             ProgressView()
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .background(
+            Image("path")
+                .resizable()
+                .aspectRatio(contentMode: .fill)
+                .ignoresSafeArea()
+        )
         .onAppear {
             Task {
                 bgMain = try? await currentAccount.fetchBgMain()

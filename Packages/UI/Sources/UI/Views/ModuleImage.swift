@@ -5,7 +5,7 @@ import Models
 struct ModuleImage: View {
     @EnvironmentObject var currentAccount: CurrentAccount
     
-    let module: ModuleData
+    let moduleImage: String
     @State var image: UIImage?
     
     var body: some View {
@@ -19,7 +19,7 @@ struct ModuleImage: View {
             }
         }
         .task {
-            let image = try? await currentAccount.fetchImage(for: module.image)
+            let image = try? await currentAccount.fetchImage(for: moduleImage)
             self.image = image ?? UIImage()
         }
     }

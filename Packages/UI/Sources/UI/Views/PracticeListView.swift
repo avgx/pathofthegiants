@@ -5,9 +5,23 @@ import Models
 struct PracticeListView: View {
     let practices: [Practice]
     let subtitle: String?
+    let image: String?
     
     var body: some View {
         List {
+            if let image {
+                Section {
+                    ZStack {
+                        Color.clear
+                            .frame(maxWidth: .infinity)
+                            .background(ModuleImage(moduleImage: image))
+                    }
+                    .aspectRatio(16.0/9.0, contentMode: .fill)
+                    .listRowInsets(.init(top: 0, leading: 0, bottom: 0, trailing: 0))
+                }
+                .listSectionSpacing(.compact)
+            }
+            
             if let subtitle {
                 Section {
                     Text(subtitle)

@@ -36,7 +36,7 @@ struct ModuleCard: View {
             .background(.regularMaterial)
         }
         .frame(maxWidth: .infinity)
-        .background(ModuleImage(module: module))
+        .background(ModuleImage(moduleImage: module.image))
     }
     
     @ViewBuilder
