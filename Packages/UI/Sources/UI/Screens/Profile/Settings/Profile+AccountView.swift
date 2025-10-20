@@ -64,11 +64,10 @@ extension Profile {
                                         .font(.subheadline)
                                         .fontWeight(.semibold)
                                         .padding(16)
-                                        //.glassEffect()
+                                        .glassEffect()
                                         .clipShape(.circle)
                                         .padding(8)
                                 }
-                                .buttonStyle(.glass)
                             })
                         Spacer()
                     }
