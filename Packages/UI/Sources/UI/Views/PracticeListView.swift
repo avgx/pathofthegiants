@@ -3,13 +3,15 @@ import Env
 import Models
 
 struct PracticeListView: View {
+    @EnvironmentObject var settingsManager: SettingsManager
+    
     let practices: [Practice]
     let subtitle: String?
     let image: String?
     
     var body: some View {
         List {
-            if let image {
+            if let image, settingsManager.moduleImage {
                 Section {
                     ZStack {
                         Color.clear

@@ -21,6 +21,18 @@ public class SettingsManager: ObservableObject {
         }
     }
     
+    @Published public var moduleBackground = true {
+        didSet {
+            storage.moduleBackground = moduleBackground
+        }
+    }
+    
+    @Published public var moduleImage = true {
+        didSet {
+            storage.moduleImage = moduleImage
+        }
+    }
+    
     private var storage = Storage()
     
     public static let shared = SettingsManager()
@@ -29,14 +41,18 @@ public class SettingsManager: ObservableObject {
         statisticsUpdate = storage.statisticsUpdate
         playerSeekEnabled = storage.playerSeekEnabled
         appleHealthEnabled = storage.appleHealthEnabled
+        moduleBackground = storage.moduleBackground
+        moduleImage = storage.moduleImage
     }
 }
 
 extension SettingsManager {
     struct Storage {
-        @AppStorage("settings.statisticsUpdate") var statisticsUpdate: StatisticsUpdate = .seconds
-        @AppStorage("settings.playerSeekEnabled") var playerSeekEnabled: Bool = true
-        @AppStorage("settings.appleHealthEnabled") var appleHealthEnabled: Bool = false
+        @AppStorage("settings.statisticsUpdate")    var statisticsUpdate: StatisticsUpdate = .seconds
+        @AppStorage("settings.playerSeekEnabled")   var playerSeekEnabled: Bool = true
+        @AppStorage("settings.appleHealthEnabled")  var appleHealthEnabled: Bool = false
+        @AppStorage("settings.moduleBackground")    var moduleBackground: Bool = true
+        @AppStorage("settings.moduleImage")         var moduleImage: Bool = true
     }
 }
 

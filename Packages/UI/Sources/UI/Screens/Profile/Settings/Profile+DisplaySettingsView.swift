@@ -1,8 +1,10 @@
 import SwiftUI
+import Env
 
 extension Profile {
     struct DisplaySettingsView: View {
         @EnvironmentObject var themeManager: ThemeManager
+        @EnvironmentObject var settingsManager: SettingsManager
         
         var body: some View {
             List {
@@ -25,6 +27,13 @@ extension Profile {
                         }
                     }
                     .pickerStyle(.menu)
+                }
+                
+                Section {
+                    Toggle("Фон", isOn: $settingsManager.moduleBackground)
+                    Toggle("Изображение перед списком практик", isOn: $settingsManager.moduleImage)
+                } header: {
+                    Text("Модуль")
                 }
             }
         }
