@@ -35,18 +35,21 @@ public struct AccountInfo: Codable, Sendable {
 public struct AccountInfoData: Codable, Sendable {
     public let userID, email, nickname: String
     public let subscriptionLevel: Int
+    public let avatar: String?
     
     enum CodingKeys: String, CodingKey {
         case userID = "UserId"
         case email = "Email"
         case nickname = "Nickname"
+        case avatar = "Avatar"
         case subscriptionLevel = "SubscriptionLevel"
     }
     
-    public init(userID: String, email: String, nickname: String, subscriptionLevel: Int) {
+    public init(userID: String, email: String, nickname: String, subscriptionLevel: Int, avatar: String? = nil) {
         self.userID = userID
         self.email = email
         self.nickname = nickname
+        self.avatar = avatar
         self.subscriptionLevel = subscriptionLevel
     }
 }

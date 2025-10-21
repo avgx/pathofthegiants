@@ -56,6 +56,9 @@ public enum Api {
 //      -H 'accept: text/plain' \
 //      -H 'Content-Type: multipart/form-data' \
 //      -F 'file=@Simulator.png;type=image/png'
+    public static func profileAvatar() -> Request<Void> {
+        return Request(path: "/Profile/Avatar", method: .post)
+    }
     
     public static func modulesRegular() -> Request<Regular> {
         return Request(path: "/Modules/Regular")
@@ -108,8 +111,8 @@ public enum Api {
         )
     }
     
-    public static func file(name: String) -> Request<Data> {
-        return Request(path: "/Files/\(name)")
+    public static func file(name: String, forceNetwork: Bool = false) -> Request<Data> {
+        return Request(path: "/Files/\(name)", query: forceNetwork ? [("_", "\(Date().timeIntervalSinceReferenceDate)")] : nil)
     }
     
     public static func bgMain() -> Request<Data> {

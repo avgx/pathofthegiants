@@ -85,10 +85,10 @@ public class CurrentAccount: ObservableObject {
         return image
     }
     
-    public func fetchImage(for image: String) async throws -> UIImage {
+    public func fetchImage(for image: String, forceNetwork: Bool = false) async throws -> UIImage {
         guard let http else { return UIImage() }
         
-        let imageData = try await http.send(Api.file(name: image))
+        let imageData = try await http.send(Api.file(name: image, forceNetwork: forceNetwork))
         let image = UIImage(data: imageData.data) ?? UIImage()
         return image
     }
@@ -113,6 +113,58 @@ public class CurrentAccount: ObservableObject {
         _ = try await http.send(Api.profile(nickname: nickname))
         
         self.accountInfo = try await http.send(Api.accountInfo()).value
+    }
+    
+    public func update(avatar: UIImage) async throws {
+        guard let http else { return }
+        guard let jpeg = avatar.jpegData(compressionQuality: 0.9) else { return }
+        
+        let r = Api.profileAvatar()
+        var request = try await http.makeURLRequest(for: r)
+        
+        var formData = MultipartFormData()
+        
+        formData.addFile(named: "file", data: jpeg, mimeType: "image/jpeg", forField: "file")
+        let body = formData.makeBody()
+        request.httpBody = body
+        request.setValue(formData.contentType, forHTTPHeaderField: "Content-Type")
+        request.setValue("text/plain", forHTTPHeaderField: "Accept")
+        
+        let (data, httpResponse) = try await http.session.dataTask(for: request)
+        print(httpResponse)
+        print(String(data:data, encoding: .ascii))
+        self.accountInfo = try await http.send(Api.accountInfo()).value
+    }
+}
+
+struct MultipartFormData {
+    private let boundary = "__MULTIPART_BOUNDARY__"
+    private var data = Data()
+    
+    var contentType: String {
+        "multipart/form-data; boundary=\(boundary)"
+    }
+    
+    mutating func addString(_ value: String, forField field: String) {
+        var fieldString = "--\(boundary)\r\n"
+        fieldString += "Content-Disposition: form-data; name=\"\(field)\"\r\n\r\n"
+        fieldString += "\(value)\r\n"
+        data.append(fieldString.data(using: .utf8)!)
+    }
+    
+    mutating func addFile(named name: String, data fileData: Data, mimeType: String, forField field: String) {
+        var fieldString = "--\(boundary)\r\n"
+        fieldString += "Content-Disposition: form-data; name=\"\(field)\"; filename=\"\(name)\"\r\n"
+        fieldString += "Content-Type: \(mimeType)\r\n\r\n"
+        data.append(fieldString.data(using: .utf8)!)
+        data.append(fileData)
+        data.append("\r\n".data(using: .utf8)!)
+    }
+    
+    mutating func makeBody() -> Data {
+        let terminator = "--\(boundary)--"
+        data.append(terminator.data(using: .utf8)!)
+        return data
     }
 }
 

@@ -46,6 +46,10 @@ extension Profile {
                 .onChange(of: selectedImage) { _, newImage in
                     if let newImage = newImage {
                         selectedImage = newImage
+                        
+                        Task {
+                            try? await currentAccount.update(avatar: newImage)
+                        }
                     }
                 }
         }

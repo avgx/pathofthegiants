@@ -4,6 +4,8 @@ import Models
 
 @MainActor
 struct ProfileHeaderView: View {
+    @EnvironmentObject var currentAccount: CurrentAccount
+    
     enum Constants {
         static let headerHeight: CGFloat = 200
         static let avatarHeight: CGFloat = 80
@@ -11,6 +13,7 @@ struct ProfileHeaderView: View {
     
     let info: AccountInfo
     let stat: UserStatsData?
+    @State var avatarImage: UIImage?
     
     var body: some View {
         VStack(alignment: .leading) {
@@ -62,15 +65,36 @@ struct ProfileHeaderView: View {
     
     @ViewBuilder
     var avatar: some View {
-        Image("avatar4")
-            .resizable()
-            .aspectRatio(1.0, contentMode: .fit)
-            .clipShape(.circle)
-            .frame(height: Constants.avatarHeight)
-            .shadow(color: .black.opacity(0.2), radius: 8, x: 0, y: 4)
-            .overlay(
-                Circle()
-                    .stroke(Color.white, lineWidth: 4)
-            )
+        Group {
+            if let avatarImage {
+                Image(uiImage: avatarImage)
+                    .resizable()
+                    .aspectRatio(1.0, contentMode: .fit)
+                    .clipShape(.circle)
+                    .frame(height: Constants.avatarHeight)
+                    .shadow(color: .black.opacity(0.2), radius: 8, x: 0, y: 4)
+                    .overlay(
+                        Circle()
+                            .stroke(Color.white, lineWidth: 4)
+                    )
+            } else {
+                Image("avatar3")
+                    .resizable()
+                    .aspectRatio(1.0, contentMode: .fit)
+                    .clipShape(.circle)
+                    .frame(height: Constants.avatarHeight)
+                    .shadow(color: .black.opacity(0.2), radius: 8, x: 0, y: 4)
+                    .overlay(
+                        Circle()
+                            .stroke(Color.white, lineWidth: 4)
+                    )
+            }
+        }
+        .task {
+            if let avatarFile = info.data.avatar {
+                //TODO: тут нужно по умному сбросить кэш. пока тупо форсим загрузку
+                self.avatarImage = try? await currentAccount.fetchImage(for: avatarFile, forceNetwork: true)
+            }
+        }
     }
 }
