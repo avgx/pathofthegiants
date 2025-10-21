@@ -183,6 +183,6 @@ extension UIImage {
             return nil
         }
         
-        return UIImage(cgImage: croppedCGImage, scale: self.scale, orientation: .up)
+        return UIImage(cgImage: croppedCGImage, scale: self.scale, orientation: self.imageOrientation)
     }
 }
