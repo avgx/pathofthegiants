@@ -5,6 +5,8 @@ import Models
 struct ModuleListView: View {
     let modules: [ModuleData]
     
+    @Namespace private var namespace
+    
     var body: some View {
         List {
             Section {
@@ -27,6 +29,7 @@ struct ModuleListView: View {
                     }
                     .aspectRatio(16.0/9.0, contentMode: .fill)
                     .listRowInsets(.init(top: 0, leading: 0, bottom: 0, trailing: 0))
+                    .matchedTransitionSource(id: module.id, in: namespace)
                 }
                 .listSectionSpacing(.compact)
             }
@@ -37,6 +40,7 @@ struct ModuleListView: View {
         .padding(.top, -32) // Отрицательный паддинг чтобы придвинуть к навигации
         .navigationDestination(for: ModuleData.self, destination: { module in
             ModuleScreen(module: module)
+                .navigationTransition(.zoom(sourceID: module.id, in: namespace))
         })
     }
 }
