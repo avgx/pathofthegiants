@@ -29,7 +29,8 @@ struct ModuleListView: View {
                     }
                     .aspectRatio(16.0/9.0, contentMode: .fill)
                     .listRowInsets(.init(top: 0, leading: 0, bottom: 0, trailing: 0))
-                    .matchedTransitionSource(id: module.id, in: namespace)
+                    //иногда Transition сбоит. нужно исследовать
+                    //.matchedTransitionSource(id: module.id, in: namespace)
                 }
                 .listSectionSpacing(.compact)
             }
@@ -40,7 +41,8 @@ struct ModuleListView: View {
         .padding(.top, -32) // Отрицательный паддинг чтобы придвинуть к навигации
         .navigationDestination(for: ModuleData.self, destination: { module in
             ModuleScreen(module: module)
-                .navigationTransition(.zoom(sourceID: module.id, in: namespace))
+                //иногда Transition сбоит. нужно исследовать
+                //.navigationTransition(.zoom(sourceID: module.id, in: namespace))
         })
     }
 }
