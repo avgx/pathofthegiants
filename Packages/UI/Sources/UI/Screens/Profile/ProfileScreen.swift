@@ -79,16 +79,7 @@ struct ProfileScreen: View {
             if showTitle {
                 ToolbarItem(placement: .title, content: {
                     HStack {
-                    Image("avatar4")
-                        .resizable()
-                        .aspectRatio(1.0, contentMode: .fit)
-                        .clipShape(.circle)
-                        .frame(height: 44)
-                        .shadow(color: .black.opacity(0.2), radius: 8, x: 0, y: 4)
-                        .overlay(
-                            Circle()
-                                .stroke(Color.white, lineWidth: 4)
-                        )
+                        AvatarView(height: 44)
                         if let nickname = currentAccount.accountInfo?.data.nickname {
                             Text("@\(nickname)")
                         }

@@ -22,7 +22,7 @@ struct ProfileHeaderView: View {
                     VStack(alignment: .leading) {
                         Spacer()
                         HStack {
-                            avatar
+                            AvatarView(height: Constants.avatarHeight)
                                 .offset(y: 40)
                             Spacer()
                         }
@@ -62,32 +62,5 @@ struct ProfileHeaderView: View {
             .fontWeight(.bold)
     }
     
-    @ViewBuilder
-    var avatar: some View {
-        Group {
-            if let avatarImage = currentAccount.avatarImage {
-                Image(uiImage: avatarImage)
-                    .resizable()
-                    .aspectRatio(1.0, contentMode: .fit)
-                    .clipShape(.circle)
-                    .frame(height: Constants.avatarHeight)
-                    .shadow(color: .black.opacity(0.2), radius: 8, x: 0, y: 4)
-                    .overlay(
-                        Circle()
-                            .stroke(Color.white, lineWidth: 4)
-                    )
-            } else {
-                Image("avatar3")
-                    .resizable()
-                    .aspectRatio(1.0, contentMode: .fit)
-                    .clipShape(.circle)
-                    .frame(height: Constants.avatarHeight)
-                    .shadow(color: .black.opacity(0.2), radius: 8, x: 0, y: 4)
-                    .overlay(
-                        Circle()
-                            .stroke(Color.white, lineWidth: 4)
-                    )
-            }
-        }
-    }
+    
 }
