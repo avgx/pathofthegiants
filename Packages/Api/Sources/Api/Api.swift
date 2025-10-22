@@ -111,8 +111,12 @@ public enum Api {
         )
     }
     
-    public static func file(name: String, forceNetwork: Bool = false) -> Request<Data> {
-        return Request(path: "/Files/\(name)", query: forceNetwork ? [("_", "\(Date().timeIntervalSinceReferenceDate)")] : nil)
+    public static func file(name: String) -> Request<Data> {
+        return Request(path: "/Files/\(name)")
+    }
+    
+    public static func fileForceReload(name: String) -> Request<Data> {
+        return Request(path: "/Files/\(name)", query: [("_", "\(Date().timeIntervalSinceReferenceDate)")])
     }
     
     public static func bgMain() -> Request<Data> {

@@ -9,6 +9,7 @@ public class CurrentAccount: ObservableObject {
     @Published public private(set) var isTrial: Bool = false
     @Published public private(set) var token: AuthToken?
     @Published public private(set) var accountInfo: AccountInfo?
+    @Published public private(set) var avatarImage: UIImage?
     @Published public private(set) var practices: Practices?
     @Published public private(set) var trial: Trial?
     @Published public private(set) var regular: Regular?
@@ -57,6 +58,10 @@ public class CurrentAccount: ObservableObject {
         
         self.http = http2
         self.token = token
+        
+        if let avatarFile = infoResponse.value.data.avatar {
+            self.avatarImage = try? await fetchAvatar(for: avatarFile)
+        }
     }
     
     /// Подключиться `попробовать` без аккаунта
@@ -85,12 +90,28 @@ public class CurrentAccount: ObservableObject {
         return image
     }
     
-    public func fetchImage(for image: String, forceNetwork: Bool = false) async throws -> UIImage {
+    public func fetchImage(for image: String) async throws -> UIImage {
         guard let http else { return UIImage() }
         
-        let imageData = try await http.send(Api.file(name: image, forceNetwork: forceNetwork))
+        let imageData = try await http.send(Api.file(name: image))
         let image = UIImage(data: imageData.data) ?? UIImage()
         return image
+    }
+    
+    public func fetchAvatar(for image: String) async throws -> UIImage {
+        guard let http else { return UIImage() }
+        
+        let imageData = try await http.send(Api.fileForceReload(name: image))
+        let image = UIImage(data: imageData.data) ?? UIImage()
+        return image
+    }
+    
+    
+    public func clearCached(image: String) async throws {
+        guard let http else { return }
+        
+        let req = try await http.makeURLRequest(for: Api.file(name: image))
+        URLCache.imageCache.removeCachedResponse(for: req)
     }
     
     public func fetchAudio(for practice: Practice) async throws -> Data? {
@@ -131,8 +152,10 @@ public class CurrentAccount: ObservableObject {
         request.setValue("text/plain", forHTTPHeaderField: "Accept")
         
         let (data, httpResponse) = try await http.session.dataTask(for: request)
-        print(httpResponse)
-        print(String(data:data, encoding: .ascii))
+        if let image = String(data:data, encoding: .ascii) {
+            try? await clearCached(image: image)
+            self.avatarImage = try? await fetchAvatar(for: image)
+        }
         self.accountInfo = try await http.send(Api.accountInfo()).value
     }
 }

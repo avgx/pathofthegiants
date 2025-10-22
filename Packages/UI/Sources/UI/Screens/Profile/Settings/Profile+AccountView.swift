@@ -14,7 +14,7 @@ extension Profile {
         }
         
         @State var nickname = ""
-        @State var avatarS = "avatar4"
+        @State var avatarS = ""
         
         @State private var selectedItem: PhotosPickerItem?
         @State private var selectedImage: UIImage?
@@ -41,6 +41,13 @@ extension Profile {
                 .onChange(of: selectedItem) { _, newItem in
                     Task {
                         await loadImage(from: newItem)
+                    }
+                }
+                .onChange(of: avatarS) { _, newString in
+                    Task {
+                        if let newImage = UIImage(named: newString) {
+                            try? await currentAccount.update(avatar: newImage)
+                        }
                     }
                 }
                 .onChange(of: selectedImage) { _, newImage in
@@ -103,8 +110,19 @@ extension Profile {
         
         @ViewBuilder
         var avatar: some View {
-            if let selectedImage {
-                Image(uiImage: selectedImage)
+            if let avatarImage = currentAccount.avatarImage {
+                Image(uiImage: avatarImage)
+                    .resizable()
+                    .aspectRatio(1.0, contentMode: .fit)
+                    .clipShape(.circle)
+                    .frame(height: Constants.avatarHeight)
+                    .shadow(color: .black.opacity(0.2), radius: 8, x: 0, y: 4)
+                    .overlay(
+                        Circle()
+                            .stroke(Color.white, lineWidth: 4)
+                    )
+            } else if !avatarS.isEmpty {
+                Image(avatarS)
                     .resizable()
                     .aspectRatio(1.0, contentMode: .fit)
                     .clipShape(.circle)
@@ -115,7 +133,7 @@ extension Profile {
                             .stroke(Color.white, lineWidth: 4)
                     )
             } else {
-                Image(avatarS)
+                Image("avatar3")
                     .resizable()
                     .aspectRatio(1.0, contentMode: .fit)
                     .clipShape(.circle)

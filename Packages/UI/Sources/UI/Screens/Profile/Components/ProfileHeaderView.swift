@@ -13,7 +13,6 @@ struct ProfileHeaderView: View {
     
     let info: AccountInfo
     let stat: UserStatsData?
-    @State var avatarImage: UIImage?
     
     var body: some View {
         VStack(alignment: .leading) {
@@ -66,7 +65,7 @@ struct ProfileHeaderView: View {
     @ViewBuilder
     var avatar: some View {
         Group {
-            if let avatarImage {
+            if let avatarImage = currentAccount.avatarImage {
                 Image(uiImage: avatarImage)
                     .resizable()
                     .aspectRatio(1.0, contentMode: .fit)
@@ -88,12 +87,6 @@ struct ProfileHeaderView: View {
                         Circle()
                             .stroke(Color.white, lineWidth: 4)
                     )
-            }
-        }
-        .task {
-            if let avatarFile = info.data.avatar {
-                //TODO: тут нужно по умному сбросить кэш. пока тупо форсим загрузку
-                self.avatarImage = try? await currentAccount.fetchImage(for: avatarFile, forceNetwork: true)
             }
         }
     }
