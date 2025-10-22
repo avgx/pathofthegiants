@@ -21,6 +21,18 @@ public class SettingsManager: ObservableObject {
         }
     }
     
+    @Published public var notificationTimeEnabled = true {
+        didSet {
+            storage.notificationTimeEnabled = notificationTimeEnabled
+        }
+    }
+    
+    @Published public var notificationTime: Date {
+        didSet {
+            storage.notificationTime = notificationTime
+        }
+    }
+    
     @Published public var moduleBackground = true {
         didSet {
             storage.moduleBackground = moduleBackground
@@ -41,6 +53,8 @@ public class SettingsManager: ObservableObject {
         statisticsUpdate = storage.statisticsUpdate
         playerSeekEnabled = storage.playerSeekEnabled
         appleHealthEnabled = storage.appleHealthEnabled
+        notificationTimeEnabled = storage.notificationTimeEnabled
+        notificationTime = storage.notificationTime
         moduleBackground = storage.moduleBackground
         moduleImage = storage.moduleImage
     }
@@ -48,11 +62,21 @@ public class SettingsManager: ObservableObject {
 
 extension SettingsManager {
     struct Storage {
-        @AppStorage("settings.statisticsUpdate")    var statisticsUpdate: StatisticsUpdate = .seconds
-        @AppStorage("settings.playerSeekEnabled")   var playerSeekEnabled: Bool = true
-        @AppStorage("settings.appleHealthEnabled")  var appleHealthEnabled: Bool = false
-        @AppStorage("settings.moduleBackground")    var moduleBackground: Bool = true
-        @AppStorage("settings.moduleImage")         var moduleImage: Bool = true
+        @AppStorage("settings.statisticsUpdate")        var statisticsUpdate: StatisticsUpdate = .seconds
+        @AppStorage("settings.playerSeekEnabled")       var playerSeekEnabled: Bool = true
+        @AppStorage("settings.appleHealthEnabled")      var appleHealthEnabled: Bool = false
+        @AppStorage("settings.notificationTimeEnabled") var notificationTimeEnabled: Bool = false
+        @AppStorage("settings.notificationTime")        var notificationTime: Date = defaultTime
+        @AppStorage("settings.moduleBackground")        var moduleBackground: Bool = true
+        @AppStorage("settings.moduleImage")             var moduleImage: Bool = true
+        
+        static let defaultTime: Date = {
+            let calendar = Calendar.current
+            var components = calendar.dateComponents([.hour, .minute], from: Date())
+            components.hour = 22
+            components.minute = 0
+            return calendar.date(from: components) ?? Date()
+        }()
     }
 }
 
