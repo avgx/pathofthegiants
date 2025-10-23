@@ -144,7 +144,8 @@ public struct Practice: Codable, Identifiable, Sendable {
     public let name, briefDescription, description, image: String
     public let audio: String
     public let audioDuration: Int
-    public let group, pose: String
+    public let group: PracticeGroup
+    public let pose: String
     public let complication, subscriptionLevel: Int
     public let whenCreated: String
 
@@ -164,8 +165,44 @@ public struct Practice: Codable, Identifiable, Sendable {
     }
 }
 
+extension Practice {
+    public typealias PracticeGroup = String
+}
+
 extension Practice: Hashable {
     public static func == (lhs: Practice, rhs: Practice) -> Bool {
         return lhs.id == rhs.id
+    }
+}
+
+extension Practice.PracticeGroup {
+    public var groupOrder: Int {
+        Practice.Group.order(for: self)
+    }
+}
+
+extension Practice {
+    public enum Group : String, Codable, CaseIterable, Identifiable, Sendable {
+        case visualization = "Визуализация"
+        case sensations = "Ощущения"
+        case breathingExercises = "Дыхательное упражнение"
+        case backgroundMusic = "Фоновая музыка"
+        case objectMeditation = "Медитация на предмете"
+        case goals = "Цели"
+        case thoughtObservation = "Наблюдение за мыслями"
+        case gratitude = "Благодарность"
+        case stories = "Истории"
+        
+        public var id: String { self.rawValue }
+        
+        /// Порядковый номер для сортировки
+        public var order: Int {
+            return Self.allCases.firstIndex(of: self) ?? Self.allCases.count
+        }
+        
+        /// Получить порядковый номер для строки (если строка не соответствует enum, возвращает максимальное значение)
+        public static func order(for groupString: String) -> Int {
+            return Self.allCases.map({ $0.rawValue }).firstIndex(of: groupString) ?? Self.allCases.count
+        }
     }
 }

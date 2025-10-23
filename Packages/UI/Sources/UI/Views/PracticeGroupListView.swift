@@ -6,8 +6,12 @@ struct PracticeGroupListView: View {
     let practices: [Practice]
     let subtitle: String?
     
+    @State var groups: [String] = []
+    
     var body: some View {
-        let groups = Array(Set(practices.map { $0.group })).sorted()
+//        let groups = Array(Set(practices.map { $0.group }))
+//            .sorted(using: KeyPathComparator(\.groupOrder, order: .forward))
+        
         List {
             if let subtitle {
                 Section {
@@ -23,7 +27,9 @@ struct PracticeGroupListView: View {
             
             ForEach(groups, id: \.self) { group in
                 Section {
-                    let groupPractices = practices.filter({ $0.group == group })
+                    let groupPractices = practices
+                        .filter({ $0.group == group })
+                        .sorted(using: KeyPathComparator(\.whenCreated, order: .forward))
                     ForEach(groupPractices) { practice in
                         PracticeCard(practice: practice)
                     }
@@ -39,5 +45,9 @@ struct PracticeGroupListView: View {
         .environment(\.defaultMinListHeaderHeight, 0) // Убираем отступы заголовков секций
         .environment(\.defaultMinListRowHeight, 0) // Убираем минимальную высоту рядов
         .padding(.top, -32) // Отрицательный паддинг чтобы придвинуть к навигации
+        .onAppear {
+            self.groups = Array(Set(practices.map { $0.group }))
+                .sorted(using: KeyPathComparator(\.groupOrder, order: .forward))
+        }
     }
 }
