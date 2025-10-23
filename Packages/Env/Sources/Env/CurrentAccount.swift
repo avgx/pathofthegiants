@@ -39,6 +39,10 @@ public class CurrentAccount: ObservableObject {
         let http = HttpClient5(baseURL: Api.baseURL)
         
         let auth = try await http.send(Api.accountLogin(user: user, password: pass))
+        guard let jwt = JwtToken(jwtString: auth.value.data.token) else {
+            throw AppError.tokenNotFound
+        }
+        print(jwt.detailedInfo())
         auth.value.data.token.save()
     }
     
@@ -46,6 +50,11 @@ public class CurrentAccount: ObservableObject {
         guard let token = AuthToken.load() else {
             throw AppError.tokenNotFound
         }
+        
+        guard let jwt = JwtToken(jwtString: token) else {
+            throw AppError.tokenNotFound
+        }
+        print(jwt.detailedInfo())
         
         let http2 = HttpClient5(baseURL: Api.baseURL, authorization: .bearer(token), sessionConfiguration: .withCache)
         let infoResponse = try await http2.send(Api.accountInfo())
@@ -119,6 +128,13 @@ public class CurrentAccount: ObservableObject {
         
         let audioData = try await http.send(Api.file(name: practice.audio))
         return audioData.data
+    }
+    
+    public func fetchAudioUrl(for practice: Practice) async throws -> URL? {
+        guard let http else { return nil }
+        
+        let audioUrl = try await http.makeURLRequest(for: Api.file(name: practice.audio))
+        return audioUrl.url
     }
     
     public func fetchStats() async throws -> UserStatsData? {
