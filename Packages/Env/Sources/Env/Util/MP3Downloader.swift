@@ -170,6 +170,11 @@ public actor MP3Downloader: NSObject, URLSessionDownloadDelegate {
         return FileManager.default.fileExists(atPath: fileURL.path) ? fileURL : nil
     }
     
+    public func fileExistsInCache(fileName: String) -> URL? {
+        let fileURL = cacheDirectory.appendingPathComponent(fileName)
+        return FileManager.default.fileExists(atPath: fileURL.path) ? fileURL : nil
+    }
+    
     /// Получает локальный URL для файла (не проверяет существование)
     public func localURL(for url: URL) -> URL {
         let fileName = url.lastPathComponent
@@ -200,6 +205,16 @@ public actor MP3Downloader: NSObject, URLSessionDownloadDelegate {
             } catch {
                 return total
             }
+        }
+    }
+    
+    public func cacheDetails() throws -> [URL: Int64] {
+        let fileManager = FileManager.default
+        let contents = try fileManager.contentsOfDirectory(at: cacheDirectory, includingPropertiesForKeys: [.fileSizeKey])
+        
+        return contents.reduce(into: [:]) { res, fileURL in
+            let resources = try? fileURL.resourceValues(forKeys: [.fileSizeKey])
+            res[fileURL] = Int64(resources?.fileSize ?? 0)
         }
     }
     

@@ -113,6 +113,7 @@ public class AudioPlayer: NSObject, ObservableObject {
         audioPlayer?.currentTime = 0
         isPlaying = false
         currentTime = 0
+        duration = 0
         playbackState = .stopped
         stopProgressTimer()
         updateNowPlayingInfo()

@@ -9,9 +9,10 @@ struct PracticeScreen: View {
     @EnvironmentObject var settingsManager: SettingsManager
     @EnvironmentObject var audioPlayer: AudioPlayer
     @State private var isLoaded = false
+    @State private var isPrepared = false
     @State private var downloader = MP3Downloader()
-    @State private var practiceIndex: Int = -1
-    @State private var moduleName: String = ""
+    @State private var practiceIndex: Int?
+    @State private var moduleName: String?
     
     let practice: Practice
     
@@ -43,9 +44,40 @@ struct PracticeScreen: View {
             
             Spacer()
             
-            progressBar
+            if isLoaded {
+                progressBar
+            } else {
+                ProgressView() {
+                    Text("Загрузка...")
+                }
+            }
             
-            controlButtons
+            if isLoaded {
+                controlButtons
+            }
+            VStack(spacing: 8) {
+                Button(action: {
+                    //TODO: залогировать время осознанности!
+                    dismiss()
+                }) {
+                    Text("Завершить")
+                        .padding(8)
+                        .frame(maxWidth: .infinity)
+                }
+                .buttonStyle(.glassProminent)
+                Button(action: {
+                    dismiss()
+                }) {
+                    Text("Отменить сессию")
+                        .padding(8)
+                        .frame(maxWidth: .infinity)
+                }
+                .buttonStyle(.plain)
+            }
+            .padding(.vertical)
+            .frame(width: 240)
+            .opacity(audioPlayer.isPlaying || audioPlayer.currentTime == 0 ? 0 : 1)
+            //TODO: надо второй критерий поменять. после полного воспроизведения плеер на начало сбрасывается!
         }
         //.ignoresSafeArea()
         .frame(maxWidth: .infinity)
@@ -54,11 +86,11 @@ struct PracticeScreen: View {
                 .aspectRatio(contentMode: .fill)
                 .blur(radius: 12)
                 .opacity(0.33)
+                //.ignoresSafeArea()
         )
         .id(practice.id)
-        //.ignoresSafeArea()
-        .navigationTitle(practiceIndex > 0 ? "Практика \(practiceIndex+1)" : "")
-        .navigationSubtitle(practiceIndex > 0 ? moduleName : "")
+        .navigationTitle(practiceIndex != nil ? "Практика \(practiceIndex!+1)" : "")
+        .navigationSubtitle(moduleName != nil ? moduleName! : "")
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItemGroup(placement: .topBarTrailing) {
@@ -71,12 +103,9 @@ struct PracticeScreen: View {
         }
         .task { @MainActor in
             guard !isLoaded else { return }
-//            guard let mp3Data = try? await currentAccount.fetchAudio(for: practice) else {
-//                //TODO: выдать сообщение об ошибке.
-//                return
-//            }
             guard let mp3Url = try? await currentAccount.fetchAudioUrl(for: practice) else {
                 //TODO: выдать сообщение об ошибке.
+                print("cant't get mp3Url")
                 return
             }
             
@@ -87,18 +116,19 @@ struct PracticeScreen: View {
                 //let mp3File = try await downloader.downloadMP3IfNeeded(from: mp3Url)
                 let mp3File = try await downloader.simpleDownloadMP3(from: mp3Url)
                 print("mp3File: \(mp3File.absoluteString)")
+                withAnimation {
+                    isLoaded = true
+                }
                 
                 try audioPlayer.setupWithMetadata(localFileURL: mp3File, title: practice.name, artist: "Путь великанов", album: practice.group, artwork: image)
+                
+                print("готов")
+                withAnimation {
+                    isPrepared = true
+                }
             } catch {
                 print(error)
             }
-            
-            
-            
-            //audioPlayer.setupWithMetadata(mp3Data: mp3Data, title: practice.name, artist: "Путь великанов", album: practice.group, artwork: image)
-            
-            
-            isLoaded = true
             
             currentAccount.currentPractice = practice
         }
@@ -177,7 +207,7 @@ struct PracticeScreen: View {
                 .disabled(audioPlayer.currentTime >= audioPlayer.duration)
             }
         }
-        .disabled(!isLoaded)
+        .disabled(!isPrepared)
     }
     
     private func formatTime(_ time: TimeInterval) -> String {
