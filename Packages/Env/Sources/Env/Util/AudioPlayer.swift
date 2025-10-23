@@ -486,3 +486,115 @@ extension AudioPlayer {
         }
     }
 }
+
+// MARK: - Local File Playback
+/// · setup(localFileURL:) - загрузка аудио из локального файла по URL
+/// · setup(filePath:) - загрузка по строковому пути
+/// · setupWithMetadata версии для локальных файлов
+/// · fileExists(at:) - проверка существования файла
+/// · getFileDuration(at:) - получение длительности без полной загрузки плеера
+extension AudioPlayer {
+    
+    /// Setup audio player with local file URL
+    /// - Parameter fileURL: Local file URL pointing to audio file
+    public func setup(localFileURL: URL) throws {
+        cleanupCurrentPlayback()
+        
+        guard FileManager.default.fileExists(atPath: localFileURL.path) else {
+            throw NSError(domain: "AudioPlayer", code: 404, userInfo: [NSLocalizedDescriptionKey: "File not found at path: \(localFileURL.path)"])
+        }
+        
+        do {
+            try AVAudioSession.sharedInstance().setActive(true)
+            
+            audioPlayer = try AVAudioPlayer(contentsOf: localFileURL)
+            audioPlayer?.delegate = self
+            audioPlayer?.prepareToPlay()
+            
+            duration = audioPlayer?.duration ?? 0
+            currentTime = 0
+            
+            updateNowPlayingInfo()
+            playbackState = .stopped
+            
+        } catch {
+            print("Error setting up audio player with local file: \(error.localizedDescription)")
+            throw error
+        }
+    }
+    
+    /// Setup audio player with local file URL and metadata
+    /// - Parameters:
+    ///   - fileURL: Local file URL pointing to audio file
+    ///   - title: Track title for NowPlaying info
+    ///   - artist: Artist name for NowPlaying info
+    ///   - album: Album name for NowPlaying info
+    ///   - artwork: Artwork image for NowPlaying info
+    public func setupWithMetadata(
+        localFileURL: URL,
+        title: String? = nil,
+        artist: String? = nil,
+        album: String? = nil,
+        artwork: UIImage? = nil
+    ) throws {
+        try setup(localFileURL: localFileURL)
+        updateNowPlayingInfoWithMetadata(
+            title: title,
+            artist: artist,
+            album: album,
+            artwork: artwork
+        )
+    }
+    
+    /// Setup audio player with file path string
+    /// - Parameter filePath: String path to local audio file
+    public func setup(filePath: String) throws {
+        let fileURL = URL(fileURLWithPath: filePath)
+        try setup(localFileURL: fileURL)
+    }
+    
+    /// Setup audio player with file path and metadata
+    /// - Parameters:
+    ///   - filePath: String path to local audio file
+    ///   - title: Track title for NowPlaying info
+    ///   - artist: Artist name for NowPlaying info
+    ///   - album: Album name for NowPlaying info
+    ///   - artwork: Artwork image for NowPlaying info
+    public func setupWithMetadata(
+        filePath: String,
+        title: String? = nil,
+        artist: String? = nil,
+        album: String? = nil,
+        artwork: UIImage? = nil
+    ) throws {
+        try setup(filePath: filePath)
+        updateNowPlayingInfoWithMetadata(
+            title: title,
+            artist: artist,
+            album: album,
+            artwork: artwork
+        )
+    }
+    
+    /// Check if file exists at given URL
+    /// - Parameter fileURL: URL to check
+    /// - Returns: Boolean indicating file existence
+    public func fileExists(at fileURL: URL) -> Bool {
+        return FileManager.default.fileExists(atPath: fileURL.path)
+    }
+    
+    /// Get file duration without loading full player
+    /// - Parameter fileURL: Local file URL
+    /// - Returns: Duration in seconds if available
+    public func getFileDuration(at fileURL: URL) -> TimeInterval? {
+        guard fileExists(at: fileURL) else { return nil }
+        
+        do {
+            let audioPlayer = try AVAudioPlayer(contentsOf: fileURL)
+            return audioPlayer.duration
+        } catch {
+            print("Error getting file duration: \(error.localizedDescription)")
+            return nil
+        }
+    }
+}
