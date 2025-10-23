@@ -1,6 +1,8 @@
 import SwiftUI
 import Env
 import ButtonKit
+import Get
+import Models
 
 struct LoginScreen: View {
     @EnvironmentObject var currentAccount: CurrentAccount
@@ -11,6 +13,7 @@ struct LoginScreen: View {
     @State var pass: String = ""
     
     @State var signup = false
+    @State var errorString = ""
     
     var body: some View {
         NavigationStack {
@@ -59,6 +62,11 @@ struct LoginScreen: View {
                         .frame(width: 100, height: 100)
                     Spacer()
                 }
+            } footer: {
+                if !errorString.isEmpty {
+                    Text(errorString)
+                        .foregroundStyle(.red)
+                }
             }
             
             loginButton
@@ -87,8 +95,24 @@ struct LoginScreen: View {
     var loginButton: some View {
         Section {
             AsyncButton(action: {
-                try await currentAccount.setAccount(user: user, pass: pass)
-                try await currentAccount.connect()
+                do {
+                    errorString = ""
+                    try await currentAccount.setAccount(user: user, pass: pass)
+                    try await currentAccount.connect()
+                } catch CustomError.unacceptableStatusCode(let code, let text, _) {
+                    print(text)
+                    if let errorResponse = try? JSONDecoder().decode(ErrorResponse.self, from: Data(text.utf8)) {
+                        print("Код ошибки: \(errorResponse.error.code)")
+                        print("Сообщение: \(errorResponse.error.message)")
+                        errorString = errorResponse.error.message
+                    } else {
+                        errorString = ErrorCode.unknown.localizedMessage //"Неизвестная ошибка\n\(text)"
+                    }
+                    throw URLError(.init(rawValue: code))
+                } catch {
+                    print(error)
+                    throw error
+                }
             }, label: {
                 HStack {
                     Spacer()

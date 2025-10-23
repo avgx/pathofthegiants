@@ -1,6 +1,8 @@
 import SwiftUI
 import Env
+import Models
 import ButtonKit
+import Get
 
 struct SignupScreen: View {
     @Environment(\.dismiss) private var dismiss
@@ -10,6 +12,7 @@ struct SignupScreen: View {
     @State var email: String = ""
     @State var pass: String = ""
     
+    @State var errorString = ""
     @State var emailError = ""
     @State var isPasswordVisible = false
     
@@ -102,7 +105,10 @@ struct SignupScreen: View {
                 }
             } footer: {
                 VStack(alignment: .leading, spacing: 4) {
-                    if !emailError.isEmpty {
+                    if !errorString.isEmpty {
+                        Text(errorString)
+                            .foregroundStyle(.red)
+                    } else if !emailError.isEmpty {
                         Text(emailError)
                             .foregroundStyle(.red)
                     } else {
@@ -142,7 +148,24 @@ struct SignupScreen: View {
     var signupButton: some View {
         Section {
             AsyncButton(action: {
-                try await currentAccount.signup(user: email, pass: pass)
+                
+                do {
+                    errorString = ""
+                    try await currentAccount.signup(user: email, pass: pass)
+                } catch CustomError.unacceptableStatusCode(let code, let text, _) {
+                    print(text)
+                    if let errorResponse = try? JSONDecoder().decode(ErrorResponse.self, from: Data(text.utf8)) {
+                        print("Код ошибки: \(errorResponse.error.code)")
+                        print("Сообщение: \(errorResponse.error.message)")
+                        errorString = errorResponse.error.message
+                    } else {
+                        errorString = ErrorCode.unknown.localizedMessage //"Неизвестная ошибка\n\(text)"
+                    }
+                    throw URLError(.init(rawValue: code))
+                } catch {
+                    print(error)
+                    throw error
+                }
                 
                 dismiss()
             }, label: {

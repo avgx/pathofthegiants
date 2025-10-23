@@ -1,5 +1,73 @@
 import Foundation
 
+// Локализация ошибок
+struct LocalizedError {
+    static let requireConfirmedEmail = "Подтвердите регистрацию в письме, которое мы отправили на ваш e-mail"
+    static let unauthorized = "Указанный e-mail не зарегистрирован"
+    static let invalidParams = "Неверный формат параметров"
+    static let invalidPassword = "Неверный e-mail или пароль"
+    static let duplicateEmail = "Такой e-mail уже есть в системе"
+    static let rateLimit = "Превышен лимит действий. Попробуйте позже"
+    static let socket = "Отсутствует подключение к интернету"
+    static let unknown = "Неизвестная ошибка. Обратитесь в техподдержку"
+}
+
+// Enum для кодов ошибок
+public enum ErrorCode: String, Codable {
+    case requireConfirmedEmail = "RequireConfirmedEmailClientException"
+    case unauthorized = "UnauthorizedClientException"
+    case invalidParams = "InvalidParamsClientException"
+    case invalidPassword = "InvalidPasswordClientException"
+    case duplicateEmail = "DuplicateEmail"
+    case rateLimit = "RateLimitClientException"
+    case socket = "SocketException"
+    case unknown = "UnknownError"
+    
+    // Метод для получения локализованного сообщения
+    public var localizedMessage: String {
+        switch self {
+        case .requireConfirmedEmail:
+            return LocalizedError.requireConfirmedEmail
+        case .unauthorized:
+            return LocalizedError.unauthorized
+        case .invalidParams:
+            return LocalizedError.invalidParams
+        case .invalidPassword:
+            return LocalizedError.invalidPassword
+        case .duplicateEmail:
+            return LocalizedError.duplicateEmail
+        case .rateLimit:
+            return LocalizedError.rateLimit
+        case .socket:
+            return LocalizedError.socket
+        case .unknown:
+            return LocalizedError.unknown
+        }
+    }
+}
+
+// Структура для ответа об ошибке
+public struct ErrorResponse: Codable {
+    public let error: ErrorDetails
+    
+    enum CodingKeys: String, CodingKey {
+        case error = "Error"
+    }
+    
+    public struct ErrorDetails: Codable {
+        public let code: ErrorCode
+        
+        enum CodingKeys: String, CodingKey {
+            case code = "Code"
+        }
+        
+        // Вычисляемое свойство для получения локализованного сообщения
+        public var message: String {
+            code.localizedMessage
+        }
+    }
+}
+
 public struct Auth: Codable, Sendable {
     public let data: AuthData
 
