@@ -10,6 +10,8 @@ struct PracticeScreen: View {
     @EnvironmentObject var audioPlayer: AudioPlayer
     @State private var isLoaded = false
     @State private var downloader = MP3Downloader()
+    @State private var practiceIndex: Int = -1
+    @State private var moduleName: String = ""
     
     let practice: Practice
     
@@ -27,7 +29,7 @@ struct PracticeScreen: View {
             Spacer()
             
             PracticeImage(practice: practice)
-                .frame(width: 160, height: 160)
+                .frame(width: 200, height: 200)
             
             Spacer()
             
@@ -38,6 +40,8 @@ struct PracticeScreen: View {
                 .fontWeight(.light)
                 .foregroundStyle(.secondary)
                 .frame(width: 200)
+            
+            Spacer()
             
             progressBar
             
@@ -53,6 +57,9 @@ struct PracticeScreen: View {
         )
         .id(practice.id)
         //.ignoresSafeArea()
+        .navigationTitle(practiceIndex > 0 ? "Практика \(practiceIndex+1)" : "")
+        .navigationSubtitle(practiceIndex > 0 ? moduleName : "")
+        .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItemGroup(placement: .topBarTrailing) {
                 Button(action: {
@@ -64,10 +71,10 @@ struct PracticeScreen: View {
         }
         .task { @MainActor in
             guard !isLoaded else { return }
-            guard let mp3Data = try? await currentAccount.fetchAudio(for: practice) else {
-                //TODO: выдать сообщение об ошибке.
-                return
-            }
+//            guard let mp3Data = try? await currentAccount.fetchAudio(for: practice) else {
+//                //TODO: выдать сообщение об ошибке.
+//                return
+//            }
             guard let mp3Url = try? await currentAccount.fetchAudioUrl(for: practice) else {
                 //TODO: выдать сообщение об ошибке.
                 return
@@ -105,6 +112,8 @@ struct PracticeScreen: View {
             guard let module = modules.first(where: { $0.practicesIDS.contains(practice.id) }) else { return }
             guard let index = module.practicesIDS.firstIndex(of: practice.id) else { return }
             print("\(module.name) \(index)")
+            self.practiceIndex = index
+            self.moduleName = module.name
         }
     }
     
