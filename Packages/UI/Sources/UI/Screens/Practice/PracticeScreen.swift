@@ -9,6 +9,7 @@ struct PracticeScreen: View {
     @EnvironmentObject var settingsManager: SettingsManager
     @EnvironmentObject var audioPlayer: AudioPlayer
     @State private var isLoaded = false
+    @State private var downloader = MP3Downloader()
     
     let practice: Practice
     
@@ -72,15 +73,20 @@ struct PracticeScreen: View {
                             Image(systemName: "gobackward.15")
                                 .font(.title2)
                         }
+                        .buttonStyle(.glass)
+                        .glassEffect(.clear, in: .circle)
                         .disabled(audioPlayer.currentTime <= 0)
                     }
                     
                     Button(action: {
                         audioPlayer.togglePlayPause()
                     }) {
-                        Image(systemName: audioPlayer.isPlaying ? "pause.circle.fill" : "play.circle.fill")
-                            .font(.system(size: 50))
+                        Image(systemName: audioPlayer.isPlaying ? "pause" : "play")
+                            .font(.title)
+                            .padding(8)
                     }
+                    .buttonStyle(.glass)
+                    .glassEffect(.clear, in: .circle)
                     
                     if settingsManager.playerSeekEnabled {
                         Button(action: {
@@ -89,6 +95,8 @@ struct PracticeScreen: View {
                             Image(systemName: "goforward.15")
                                 .font(.title2)
                         }
+                        .buttonStyle(.glass)
+                        .glassEffect(.clear, in: .circle)
                         .disabled(audioPlayer.currentTime >= audioPlayer.duration)
                     }
                 }
@@ -96,6 +104,7 @@ struct PracticeScreen: View {
             }
             .padding()
         }
+        .id(practice.id)
         //.ignoresSafeArea()
         .toolbar {
             ToolbarItemGroup(placement: .topBarTrailing) {
@@ -112,11 +121,29 @@ struct PracticeScreen: View {
                 //TODO: выдать сообщение об ошибке.
                 return
             }
+            guard let mp3Url = try? await currentAccount.fetchAudioUrl(for: practice) else {
+                //TODO: выдать сообщение об ошибке.
+                return
+            }
             
             let image = try? await currentAccount.fetchImage(for: practice.image)
             
-            audioPlayer.setupWithMetadata(mp3Data: mp3Data, title: practice.name, artist: "Путь великанов", album: practice.group, artwork: image)
-
+            print("mp3Url: \(mp3Url.absoluteString)")
+            do {
+                //let mp3File = try await downloader.downloadMP3IfNeeded(from: mp3Url)
+                let mp3File = try await downloader.simpleDownloadMP3(from: mp3Url)
+                print("mp3File: \(mp3File.absoluteString)")
+                
+                try audioPlayer.setupWithMetadata(localFileURL: mp3File, title: practice.name, artist: "Путь великанов", album: practice.group, artwork: image)
+            } catch {
+                print(error)
+            }
+            
+            
+            
+            //audioPlayer.setupWithMetadata(mp3Data: mp3Data, title: practice.name, artist: "Путь великанов", album: practice.group, artwork: image)
+            
+            
             isLoaded = true
             
             currentAccount.currentPractice = practice
