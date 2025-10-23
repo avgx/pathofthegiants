@@ -14,96 +14,43 @@ struct PracticeScreen: View {
     let practice: Practice
     
     var body: some View {
-        ZStack(alignment: .center) {
-            PracticeImage(practice: practice)
-                .aspectRatio(contentMode: .fill)
-                .blur(radius: 12)
-                .opacity(0.33)
+        VStack(alignment: .center) {
+            Text(practice.name)
+                .font(.title)
+            VStack(alignment: .leading) {
+                Label(practice.group, systemImage: "ellipsis.bubble")
+                Label("Сложность \(practice.complication)/5", systemImage: "brain.head.profile")
+                Label(practice.pose, systemImage: "figure.mind.and.body")
+            }
+            .font(.footnote)
+            
+            Spacer()
             
             PracticeImage(practice: practice)
                 .frame(width: 160, height: 160)
             
-            VStack {
-                Text(practice.name)
-                    .font(.title)
-                VStack {
-                    Label(practice.group, systemImage: "ellipsis.bubble")
-                    Label("Сложность \(practice.complication)/5", systemImage: "brain.head.profile")
-                    Label(practice.pose, systemImage: "figure.mind.and.body")
-                }
+            Spacer()
+            
+            Text(practice.description)
+                .lineLimit(4)
+                .minimumScaleFactor(0.3)
                 .font(.footnote)
-                
-                Spacer()
-                
-                Text(practice.description)
-                    .lineLimit(4)
-                    .minimumScaleFactor(0.3)
-                    .font(.footnote)
-                    .fontWeight(.light)
-                    .foregroundStyle(.secondary)
-                    .frame(width: 200)
-
-                // Progress bar
-                VStack {
-                    Slider(
-                        value: Binding(
-                            get: { audioPlayer.currentTime },
-                            set: { audioPlayer.seek(to: $0) }
-                        ),
-                        in: 0...audioPlayer.duration
-                    )
-                    .disabled(audioPlayer.duration == 0 || !settingsManager.playerSeekEnabled)
-                    
-                    HStack {
-                        Text(formatTime(audioPlayer.currentTime))
-                            .font(.caption)
-                        Spacer()
-                        Text(formatTime(audioPlayer.currentTime - audioPlayer.duration))
-                            .font(.caption)
-                    }
-                }
-                .frame(width: 240)
-                
-                // Control buttons
-                HStack(spacing: 40) {
-                    if settingsManager.playerSeekEnabled {
-                        Button(action: {
-                            audioPlayer.seek(to: audioPlayer.currentTime - 15)
-                        }) {
-                            Image(systemName: "gobackward.15")
-                                .font(.title2)
-                        }
-                        .buttonStyle(.glass)
-                        .glassEffect(.clear, in: .circle)
-                        .disabled(audioPlayer.currentTime <= 0)
-                    }
-                    
-                    Button(action: {
-                        audioPlayer.togglePlayPause()
-                    }) {
-                        Image(systemName: audioPlayer.isPlaying ? "pause" : "play")
-                            .font(.title)
-                            .padding(8)
-                    }
-                    .buttonStyle(.glass)
-                    .glassEffect(.clear, in: .circle)
-                    
-                    if settingsManager.playerSeekEnabled {
-                        Button(action: {
-                            audioPlayer.seek(to: audioPlayer.currentTime + 15)
-                        }) {
-                            Image(systemName: "goforward.15")
-                                .font(.title2)
-                        }
-                        .buttonStyle(.glass)
-                        .glassEffect(.clear, in: .circle)
-                        .disabled(audioPlayer.currentTime >= audioPlayer.duration)
-                    }
-                }
-                .disabled(!isLoaded)
-            }
-            .padding()
+                .fontWeight(.light)
+                .foregroundStyle(.secondary)
+                .frame(width: 200)
+            
+            progressBar
+            
+            controlButtons
         }
+        //.ignoresSafeArea()
+        .frame(maxWidth: .infinity)
+        .background(
+            PracticeImage(practice: practice)
+                .aspectRatio(contentMode: .fill)
+                .blur(radius: 12)
+                .opacity(0.33)
+        )
         .id(practice.id)
         //.ignoresSafeArea()
         .toolbar {
@@ -153,6 +100,75 @@ struct PracticeScreen: View {
             audioPlayer.cleanupCurrentPlayback()
             currentAccount.currentPractice = nil
         }
+        .onAppear {
+            guard let modules = currentAccount.regular?.data else { return }
+            guard let module = modules.first(where: { $0.practicesIDS.contains(practice.id) }) else { return }
+            guard let index = module.practicesIDS.firstIndex(of: practice.id) else { return }
+            print("\(module.name) \(index)")
+        }
+    }
+    
+    @ViewBuilder
+    var progressBar: some View {
+        VStack {
+            Slider(
+                value: Binding(
+                    get: { audioPlayer.currentTime },
+                    set: { audioPlayer.seek(to: $0) }
+                ),
+                in: 0...audioPlayer.duration
+            )
+            .disabled(audioPlayer.duration == 0 || !settingsManager.playerSeekEnabled)
+            
+            HStack {
+                Text(formatTime(audioPlayer.currentTime))
+                    .font(.caption)
+                Spacer()
+                Text(formatTime(audioPlayer.currentTime - audioPlayer.duration))
+                    .font(.caption)
+            }
+        }
+        .frame(width: 240)
+    }
+    
+    @ViewBuilder
+    var controlButtons: some View {
+        HStack(spacing: 40) {
+            if settingsManager.playerSeekEnabled {
+                Button(action: {
+                    audioPlayer.seek(to: audioPlayer.currentTime - 15)
+                }) {
+                    Image(systemName: "gobackward.15")
+                        .font(.title2)
+                }
+                .buttonStyle(.glass)
+                .glassEffect(.clear, in: .circle)
+                .disabled(audioPlayer.currentTime <= 0)
+            }
+            
+            Button(action: {
+                audioPlayer.togglePlayPause()
+            }) {
+                Image(systemName: audioPlayer.isPlaying ? "pause" : "play")
+                    .font(.title)
+                    .padding(8)
+            }
+            .buttonStyle(.glass)
+            .glassEffect(.clear, in: .circle)
+            
+            if settingsManager.playerSeekEnabled {
+                Button(action: {
+                    audioPlayer.seek(to: audioPlayer.currentTime + 15)
+                }) {
+                    Image(systemName: "goforward.15")
+                        .font(.title2)
+                }
+                .buttonStyle(.glass)
+                .glassEffect(.clear, in: .circle)
+                .disabled(audioPlayer.currentTime >= audioPlayer.duration)
+            }
+        }
+        .disabled(!isLoaded)
     }
     
     private func formatTime(_ time: TimeInterval) -> String {
