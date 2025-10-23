@@ -65,7 +65,7 @@ import Models
     let stats = try await http2.send(Api.stats())
     print(stats.value)
     
-    _ = try await http2.send(Api.postProgress(practiceId: stats.value.data.favoritePractice.practiceID, seconds: 3.14))
+    _ = try await http2.send(Api.postProgress(practiceId: stats.value.data.favoritePractice?.practiceID ?? 0, seconds: 3.14))
     
     let p = practices.value.data.first!
     _ = try await http2.send(Api.postCompleted(practiceId: p.id, seconds: Double(p.audioDuration)))
