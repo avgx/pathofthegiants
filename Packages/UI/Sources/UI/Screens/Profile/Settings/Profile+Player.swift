@@ -15,7 +15,7 @@ extension Profile {
             List {
                 Section {
                     Toggle("Перемотка", isOn: $settingsManager.playerSeekEnabled)
-//                    Toggle("Сохранять прогресс", isOn: $trackProgress)
+                    Toggle("Сохранять прогресс", isOn: $settingsManager.playerContinueProgress)
                 }
                 
                 Section {

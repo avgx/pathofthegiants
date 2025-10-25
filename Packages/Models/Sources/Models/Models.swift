@@ -176,8 +176,10 @@ public struct Trial: Codable, Sendable {
     }
 }
 
+public typealias ModuleID = Int
+
 public struct ModuleData: Codable, Identifiable, Sendable {
-    public let id: Int
+    public let id: ModuleID
     public let name, description, image: String
     public let opened, trial: Bool
     public let orderNumber: Int
@@ -207,8 +209,13 @@ extension ModuleData: Hashable {
     }
 }
 
+public typealias PracticeID = Int
+extension PracticeID {
+    public static let invalid = -1
+}
+
 public struct Practice: Codable, Identifiable, Sendable {
-    public let id: Int
+    public let id: PracticeID
     public let name, briefDescription, description, image: String
     public let audio: String
     public let audioDuration: Int

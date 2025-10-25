@@ -6,7 +6,7 @@ import SwiftUI
 
 @MainActor 
 public protocol AudioPlayerDelegate: AnyObject {
-    func audioPlayerListenedTime(duration: TimeInterval)
+    func audioPlayerListenedTime(duration: TimeInterval, currentTime: TimeInterval)
     func audioPlayerDidFinishPlaying(duration: TimeInterval)
 }
                                         
@@ -324,7 +324,10 @@ public class AudioPlayer: NSObject, ObservableObject {
         
         if playbackSessionTime > 0.5 {
             // Отправляем время воспроизведения
-            delegate?.audioPlayerListenedTime(duration: playbackSessionTime)
+            delegate?.audioPlayerListenedTime(
+                duration: playbackSessionTime,
+                currentTime: (player.currentTime != 0 ? player.currentTime : player.duration)
+            )
         }
     }
     

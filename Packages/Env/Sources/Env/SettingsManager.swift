@@ -14,6 +14,11 @@ public class SettingsManager: ObservableObject {
             AudioPlayer.shared.setSeekEnabled(playerSeekEnabled)
         }
     }
+    @Published public var playerContinueProgress = true {
+        didSet {
+            storage.playerContinueProgress = playerContinueProgress
+        }
+    }
     
     @Published public var appleHealthEnabled = true {
         didSet {
@@ -52,6 +57,7 @@ public class SettingsManager: ObservableObject {
     private init() {
         statisticsUpdate = storage.statisticsUpdate
         playerSeekEnabled = storage.playerSeekEnabled
+        playerContinueProgress = storage.playerContinueProgress
         appleHealthEnabled = storage.appleHealthEnabled
         notificationTimeEnabled = storage.notificationTimeEnabled
         notificationTime = storage.notificationTime
@@ -64,6 +70,7 @@ extension SettingsManager {
     struct Storage {
         @AppStorage("settings.statisticsUpdate")        var statisticsUpdate: StatisticsUpdate = .seconds
         @AppStorage("settings.playerSeekEnabled")       var playerSeekEnabled: Bool = true
+        @AppStorage("settings.playerContinueProgress")  var playerContinueProgress: Bool = true
         @AppStorage("settings.appleHealthEnabled")      var appleHealthEnabled: Bool = false
         @AppStorage("settings.notificationTimeEnabled") var notificationTimeEnabled: Bool = false
         @AppStorage("settings.notificationTime")        var notificationTime: Date = defaultTime
