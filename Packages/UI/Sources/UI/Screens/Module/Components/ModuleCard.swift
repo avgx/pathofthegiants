@@ -34,6 +34,25 @@ struct ModuleCard: View {
             .padding(.leading, 16)
             .frame(maxWidth: .infinity, alignment: .leading)
             .background(.regularMaterial)
+            .overlay(alignment: .trailing, content: {
+                if module.practices.count > 0 {
+                    ZStack(alignment: .center) {
+                        Circle()
+                            .stroke(Color.secondary, lineWidth: 1)
+                            .frame(width: 40, height: 40)
+                        Text("\(module.practices.count)")
+                            .font(.footnote)
+                    }
+                    //.padding(.horizontal)
+                    .frame(width: 40, height: 40) // Размер круга
+                    .padding(.horizontal)
+                }
+                
+//                if module.practices.count > 0 {
+//                    Text("\(module.practices.count)")
+//                        .padding(.horizontal)
+//                }
+            })
         }
         .frame(maxWidth: .infinity)
         .background(ModuleImage(moduleImage: module.image))

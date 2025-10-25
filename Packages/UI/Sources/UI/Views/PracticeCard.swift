@@ -3,6 +3,8 @@ import Env
 import Models
 
 struct PracticeCard: View {
+    @EnvironmentObject var currentAccount: CurrentAccount
+    
     let practice: Practice
     @State var fullscreen = false
     
@@ -26,6 +28,11 @@ struct PracticeCard: View {
                 Text(practice.briefDescription)
                     .font(.footnote)
                     .foregroundStyle(.secondary)
+            }
+            
+            if let p = currentAccount.tracker.progress[practice.id] {
+                Spacer()
+                ProgressBadge(progress: .constant(p / Double(practice.audioDuration)))
             }
         }
         

@@ -7,7 +7,7 @@ import Models
 @MainActor
 public class SessionTracker: ObservableObject {
     /// Кэш програсса
-    private var progress: [PracticeID : TimeInterval] = [:]
+    @Published public private(set) var progress: [PracticeID : TimeInterval] = [:]
     /// Текущая сессия
     @Published public private(set) var current: Practice?
     /// Общее время текущей сессии
