@@ -154,7 +154,7 @@ public class CurrentAccount: ObservableObject {
     
     public func update(avatar: UIImage) async throws {
         guard let http else { return }
-        guard let jpeg = avatar.jpegData(compressionQuality: 0.9) else { return }
+        guard let jpeg = avatar.resize240().jpegData(compressionQuality: 0.9) else { return }
         
         let r = Api.profileAvatar()
         var request = try await http.makeURLRequest(for: r)
@@ -173,6 +173,18 @@ public class CurrentAccount: ObservableObject {
             self.avatarImage = try? await fetchAvatar(for: image)
         }
         self.accountInfo = try await http.send(Api.accountInfo()).value
+    }
+}
+
+extension UIImage {
+    public func resize240() -> UIImage {
+        let w = 240.0
+        let original = self.size
+        let targetSize = CGSize(width: w, height: w * original.height/original.width)
+        let renderer = UIGraphicsImageRenderer(size: targetSize)
+        return renderer.image { (context) in
+            self.draw(in: CGRect(origin: .zero, size: targetSize))
+        }
     }
 }
 
