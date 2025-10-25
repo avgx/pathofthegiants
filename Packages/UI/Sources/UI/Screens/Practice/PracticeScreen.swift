@@ -14,6 +14,10 @@ struct PracticeScreen: View {
     @State private var practiceIndex: Int?
     @State private var moduleName: String?
     
+    @State var gobackwardAnimating = false
+    @State var goforwardAnimating = false
+    
+    
     let practice: Practice
     
     var body: some View {
@@ -31,21 +35,23 @@ struct PracticeScreen: View {
             
             PracticeImage(practice: practice)
                 .frame(width: 200, height: 200)
+                .clipShape(Circle())
             
             Spacer()
             
             Text(practice.description)
                 .lineLimit(4)
-                .minimumScaleFactor(0.3)
+                //.minimumScaleFactor(0.3)
                 .font(.footnote)
                 .fontWeight(.light)
                 .foregroundStyle(.secondary)
-                .frame(width: 200)
+                .frame(width: 240)
             
             Spacer()
             
             if isLoaded {
                 progressBar
+                    .padding(.horizontal)
             } else {
                 ProgressView() {
                     Text("Загрузка...")
@@ -72,21 +78,29 @@ struct PracticeScreen: View {
                         .padding(8)
                         .frame(maxWidth: .infinity)
                 }
+                .controlSize(.small)
                 .buttonStyle(.plain)
             }
-            .padding(.vertical)
             .frame(width: 240)
+            .padding(.top)
             .opacity(audioPlayer.isPlaying || audioPlayer.currentTime == 0 ? 0 : 1)
             //TODO: надо второй критерий поменять. после полного воспроизведения плеер на начало сбрасывается!
         }
         //.ignoresSafeArea()
-        .frame(maxWidth: .infinity)
+        //.frame(maxWidth: .infinity)
         .background(
-            PracticeImage(practice: practice)
-                .aspectRatio(contentMode: .fill)
-                .blur(radius: 12)
-                .opacity(0.33)
-                //.ignoresSafeArea()
+            ZStack {
+                Color.black
+                    .opacity(0.24)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    .ignoresSafeArea()
+                
+                PracticeImage(practice: practice)
+                    .aspectRatio(contentMode: .fill)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    .clipped()
+                    .blur(radius: 54)
+            }
         )
         .id(practice.id)
         .navigationTitle(practiceIndex != nil ? "Практика \(practiceIndex!+1)" : "")
@@ -167,7 +181,7 @@ struct PracticeScreen: View {
                     .font(.caption)
             }
         }
-        .frame(width: 240)
+        //.frame(width: 240)
     }
     
     @ViewBuilder
@@ -176,9 +190,11 @@ struct PracticeScreen: View {
             if settingsManager.playerSeekEnabled {
                 Button(action: {
                     audioPlayer.seek(to: audioPlayer.currentTime - 15)
+                    gobackwardAnimating.toggle()
                 }) {
                     Image(systemName: "gobackward.15")
                         .font(.title2)
+                        .symbolEffect(.rotate, value: gobackwardAnimating)
                 }
                 .buttonStyle(.glass)
                 .glassEffect(.clear, in: .circle)
@@ -198,9 +214,11 @@ struct PracticeScreen: View {
             if settingsManager.playerSeekEnabled {
                 Button(action: {
                     audioPlayer.seek(to: audioPlayer.currentTime + 15)
+                    goforwardAnimating.toggle()
                 }) {
                     Image(systemName: "goforward.15")
                         .font(.title2)
+                        .symbolEffect(.rotate, value: goforwardAnimating)
                 }
                 .buttonStyle(.glass)
                 .glassEffect(.clear, in: .circle)

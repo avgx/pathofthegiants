@@ -18,7 +18,6 @@ struct PracticeImage: View {
                 ProgressView()
             }
         }
-        .clipShape(Circle())
         .task {
             let image = try? await currentAccount.fetchImage(for: practice.image)
             self.image = image ?? UIImage()

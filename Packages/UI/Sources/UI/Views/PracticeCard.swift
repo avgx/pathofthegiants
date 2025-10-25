@@ -10,6 +10,7 @@ struct PracticeCard: View {
         HStack(spacing: 16) {
             PracticeImage(practice: practice)
                 .frame(width: 44, height: 44)
+                .clipShape(Circle())
                 .overlay {
                     if practice.subscriptionLevel > 0 {
                         Image(systemName: "crown.fill")
