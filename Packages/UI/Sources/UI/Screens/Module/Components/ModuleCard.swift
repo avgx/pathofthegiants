@@ -4,6 +4,8 @@ import Models
 
 @MainActor
 struct ModuleCard: View {
+    @EnvironmentObject var currentAccount: CurrentAccount
+    
     let module: ModuleData
     
     var body: some View {
@@ -36,26 +38,31 @@ struct ModuleCard: View {
             .background(.regularMaterial)
             .overlay(alignment: .trailing, content: {
                 if module.practices.count > 0 {
+                    let progress = moduleProgress()
                     ZStack(alignment: .center) {
-                        Circle()
-                            .stroke(Color.secondary, lineWidth: 1)
-                            .frame(width: 40, height: 40)
+                        ProgressCircleBadge(progress: .constant(progress))
+                            .font(.largeTitle)
+                            .fontWeight(.ultraLight)
+                            .foregroundStyle(Color.accentColor)
                         Text("\(module.practices.count)")
                             .font(.footnote)
                     }
-                    //.padding(.horizontal)
-                    .frame(width: 40, height: 40) // Размер круга
                     .padding(.horizontal)
                 }
-                
-//                if module.practices.count > 0 {
-//                    Text("\(module.practices.count)")
-//                        .padding(.horizontal)
-//                }
             })
         }
         .frame(maxWidth: .infinity)
         .background(ModuleImage(moduleImage: module.image))
+    }
+    
+    /// Учитываем только полностью завершенные практики
+    private func moduleProgress() -> Double {
+        guard module.practices.count > 0 else { return 0.0 }
+        let progress = currentAccount.tracker.progress
+        let complete: Int = module.practices.reduce(into: 0) { res, practice in
+            res += Int(progress[practice.id] ?? 0) == practice.audioDuration ? 1 : 0
+        }
+        return Double(complete) / Double(module.practices.count)
     }
     
     @ViewBuilder

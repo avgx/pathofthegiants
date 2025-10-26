@@ -24,6 +24,31 @@ struct ProgressBadge: View {
     }
 }
 
+///TODO: это копипаста с `ProgressBadge` надо поправить по-нормальному
+struct ProgressCircleBadge: View {
+    /// Процент прогресса от 0 до 1
+    @Binding var progress: CGFloat
+    
+    var body: some View {
+        ZStack {
+            /// Базовая иконка (серая)
+            Image(systemName: "circle")
+                .foregroundStyle(.gray)
+                .opacity(progress < 1 ? 1.0 : 0.0)
+            /// Частично заполненная окантовка с круговым прогрессом
+            Image(systemName: "circle")
+                .mask(
+                    ProgressMask(progress: progress)
+                )
+                .opacity(progress < 1 ? 1.0 : 0.0)
+            /// Для 100% и checkmark раскрашиваем
+            Image(systemName: "circle")
+                .opacity(progress < 1 ? 0.0 : 1.0)
+                .symbolEffect(.bounce, value: progress >= 1)
+        }
+    }
+}
+
 struct ProgressMask: Shape {
     var progress: CGFloat
     
