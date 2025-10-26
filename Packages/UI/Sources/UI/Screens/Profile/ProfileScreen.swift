@@ -63,6 +63,7 @@ struct ProfileScreen: View {
             
             Section {
                 Profile.displaySettings.navigationLink
+                Profile.haptic.navigationLink
             }
             
             Section {

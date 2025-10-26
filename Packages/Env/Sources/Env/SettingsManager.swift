@@ -56,6 +56,27 @@ public class SettingsManager: ObservableObject {
         }
     }
     
+    @Published public var hapticButtonPressEnabled = true {
+        didSet {
+            storage.hapticButtonPressEnabled = hapticButtonPressEnabled
+        }
+    }
+    @Published public var hapticDataRefreshEnabled = true {
+        didSet {
+            storage.hapticDataRefreshEnabled = hapticDataRefreshEnabled
+        }
+    }
+    @Published public var hapticNotificationEnabled = true {
+        didSet {
+            storage.hapticNotificationEnabled = hapticNotificationEnabled
+        }
+    }
+    @Published public var hapticTabSelectionEnabled = true {
+        didSet {
+            storage.hapticTabSelectionEnabled = hapticTabSelectionEnabled
+        }
+    }
+    
     private var storage = Storage()
     
     public static let shared = SettingsManager()
@@ -70,6 +91,10 @@ public class SettingsManager: ObservableObject {
         moduleBackground = storage.moduleBackground
         moduleBackgroundBlur = storage.moduleBackgroundBlur
         moduleImage = storage.moduleImage
+        hapticButtonPressEnabled = storage.hapticButtonPressEnabled
+        hapticDataRefreshEnabled = storage.hapticDataRefreshEnabled
+        hapticNotificationEnabled = storage.hapticNotificationEnabled
+        hapticTabSelectionEnabled = storage.hapticTabSelectionEnabled
     }
 }
 
@@ -84,6 +109,10 @@ extension SettingsManager {
         @AppStorage("settings.moduleBackground")        var moduleBackground: Bool = true
         @AppStorage("settings.moduleBackgroundBlur")    var moduleBackgroundBlur: Double = 12
         @AppStorage("settings.moduleImage")             var moduleImage: Bool = true
+        @AppStorage("settings.hapticButtonPressEnabled")  var hapticButtonPressEnabled = true
+        @AppStorage("settings.hapticDataRefreshEnabled")  var hapticDataRefreshEnabled = true
+        @AppStorage("settings.hapticNotificationEnabled") var hapticNotificationEnabled = true
+        @AppStorage("settings.hapticTabSelectionEnabled") var hapticTabSelectionEnabled = true
         
         static let defaultTime: Date = {
             let calendar = Calendar.current

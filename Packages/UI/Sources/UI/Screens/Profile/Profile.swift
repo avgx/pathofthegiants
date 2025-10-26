@@ -8,6 +8,7 @@ enum Profile: String, Codable, Identifiable, Sendable {
     case appleHealth
 //    case gameCenter
     case displaySettings
+    case haptic
     case help
     case info
     
@@ -39,6 +40,8 @@ extension Profile {
 //            "laurel.leading.laurel.trailing"
         case .displaySettings:
             "wand.and.sparkles"
+        case .haptic:
+            "waveform.path"
         case .help:
             "questionmark.circle"
         case .info:
@@ -62,6 +65,8 @@ extension Profile {
 //            "Game Center"
         case .displaySettings:
             "Оформление"
+        case .haptic:
+            "Виброотклик"
         case .help:
             "Помощь"
         case .info:
@@ -96,6 +101,8 @@ extension Profile {
 //                GameCenterView()
             case .displaySettings:
                 DisplaySettingsView()
+            case .haptic:
+                HapticSettingsView()
             case .help:
                 HelpView()
             case .info:

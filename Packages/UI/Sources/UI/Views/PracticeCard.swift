@@ -44,6 +44,7 @@ struct PracticeCard: View {
         }
         .onTapGesture {
             fullscreen.toggle()
+            HapticManager.shared.fireHaptic(.buttonPress)
         }
         .fullScreenCover(isPresented: $fullscreen) {
             NavigationStack {

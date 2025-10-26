@@ -58,6 +58,7 @@ struct PracticeScreen: View {
             ToolbarItemGroup(placement: .topBarTrailing) {
                 Button(action: {
                     dismiss()
+                    HapticManager.shared.fireHaptic(.buttonPress)
                 }) {
                     Image(systemName: "xmark")
                 }
@@ -82,6 +83,9 @@ struct PracticeScreen: View {
             audioPlayer.cleanupCurrentPlayback()
             currentAccount.cancelPractice()
         }
+//        .onChange(of: isPrepared) {
+//            HapticManager.shared.fireHaptic(.notification(.success))
+//        }
     }
     
     @ViewBuilder
@@ -144,6 +148,7 @@ struct PracticeScreen: View {
             Button(action: {
                 currentAccount.closePractice()
                 dismiss()
+                HapticManager.shared.fireHaptic(.buttonPress)
             }) {
                 Text("Завершить")
                     .padding(8)
@@ -155,6 +160,7 @@ struct PracticeScreen: View {
             Button(action: {
                 currentAccount.cancelPractice()
                 dismiss()
+                HapticManager.shared.fireHaptic(.buttonPress)
             }) {
                 Text("Отменить сессию")
                     .padding(8)
@@ -199,6 +205,7 @@ struct PracticeScreen: View {
                 Button(action: {
                     audioPlayer.seek(to: audioPlayer.currentTime - 15)
                     gobackwardAnimating.toggle()
+                    HapticManager.shared.fireHaptic(.buttonPress)
                 }) {
                     Image(systemName: "gobackward.15")
                         .font(.title2)
@@ -209,6 +216,7 @@ struct PracticeScreen: View {
             
             Button(action: {
                 audioPlayer.togglePlayPause()
+                HapticManager.shared.fireHaptic(.buttonPress)
             }) {
                 Image(systemName: audioPlayer.isPlaying ? "pause.fill" : "play.fill")
                     .font(.title)
@@ -221,6 +229,7 @@ struct PracticeScreen: View {
                 Button(action: {
                     audioPlayer.seek(to: audioPlayer.currentTime + 15)
                     goforwardAnimating.toggle()
+                    HapticManager.shared.fireHaptic(.buttonPress)
                 }) {
                     Image(systemName: "goforward.15")
                         .font(.title2)
