@@ -30,8 +30,27 @@ extension Profile {
                 }
                 
                 Section {
-                    Toggle("Фон", isOn: $settingsManager.moduleBackground)
                     Toggle("Изображение перед списком практик", isOn: $settingsManager.moduleImage)
+                    Toggle("Фон", isOn: $settingsManager.moduleBackground)
+                       
+                    if settingsManager.moduleBackground {
+                        HStack {
+                            Text("Размытие фона")
+                            Slider(
+                                value: Binding(
+                                    get: { settingsManager.moduleBackgroundBlur },
+                                    set: { newValue in
+                                        // Обновляем асинхронно
+                                        DispatchQueue.main.async {
+                                            settingsManager.moduleBackgroundBlur = newValue
+                                        }
+                                    }
+                                ),
+                                in: 0...100)
+                            Text("\(Int(settingsManager.moduleBackgroundBlur))")
+                        }
+                    }
+                    
                 } header: {
                     Text("Модуль")
                 }

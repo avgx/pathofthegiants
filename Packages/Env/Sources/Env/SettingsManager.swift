@@ -44,6 +44,12 @@ public class SettingsManager: ObservableObject {
         }
     }
     
+    @Published public var moduleBackgroundBlur: Double = 12 {
+        didSet {
+            storage.moduleBackgroundBlur = moduleBackgroundBlur
+        }
+    }
+    
     @Published public var moduleImage = true {
         didSet {
             storage.moduleImage = moduleImage
@@ -62,6 +68,7 @@ public class SettingsManager: ObservableObject {
         notificationTimeEnabled = storage.notificationTimeEnabled
         notificationTime = storage.notificationTime
         moduleBackground = storage.moduleBackground
+        moduleBackgroundBlur = storage.moduleBackgroundBlur
         moduleImage = storage.moduleImage
     }
 }
@@ -75,6 +82,7 @@ extension SettingsManager {
         @AppStorage("settings.notificationTimeEnabled") var notificationTimeEnabled: Bool = false
         @AppStorage("settings.notificationTime")        var notificationTime: Date = defaultTime
         @AppStorage("settings.moduleBackground")        var moduleBackground: Bool = true
+        @AppStorage("settings.moduleBackgroundBlur")    var moduleBackgroundBlur: Double = 12
         @AppStorage("settings.moduleImage")             var moduleImage: Bool = true
         
         static let defaultTime: Date = {

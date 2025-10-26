@@ -23,6 +23,7 @@ struct ModuleScreen: View {
         if settingsManager.moduleBackground {
             ModuleImage(moduleImage: module.image)
                 .aspectRatio(contentMode: .fill)
+                .blur(radius: CGFloat(settingsManager.moduleBackgroundBlur))
                 .ignoresSafeArea()
         } else {
             // Обязательно нужен else
