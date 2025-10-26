@@ -28,14 +28,12 @@ extension Profile {
                     }
                     .pickerStyle(.menu)
                 }
-                
                 Section {
-                    Toggle("Изображение перед списком практик", isOn: $settingsManager.moduleImage)
                     Toggle("Фон", isOn: $settingsManager.moduleBackground)
                        
                     if settingsManager.moduleBackground {
                         HStack {
-                            Text("Размытие фона")
+                            Text("Размытие")
                             Slider(
                                 value: Binding(
                                     get: { settingsManager.moduleBackgroundBlur },
@@ -50,7 +48,14 @@ extension Profile {
                             Text("\(Int(settingsManager.moduleBackgroundBlur))")
                         }
                     }
-                    
+                } header: {
+                    Text("Фон")
+                } footer: {
+                    Text("При отображении модуля или сундука используется фоновое изображение")
+                }
+                
+                Section {
+                    Toggle("Изображение перед списком практик", isOn: $settingsManager.moduleImage)
                 } header: {
                     Text("Модуль")
                 }

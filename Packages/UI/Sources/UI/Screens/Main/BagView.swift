@@ -3,6 +3,7 @@ import Env
 import Models
 
 struct BagView: View {
+    @EnvironmentObject var settingsManager: SettingsManager
     @EnvironmentObject var currentAccount: CurrentAccount
     
     let subtitle = "В сундуке хранятся все доступные практики"
@@ -16,10 +17,26 @@ struct BagView: View {
                     ContentUnavailableView("Практики недоступны", systemImage: "exclamationmark.triangle")
                 }
             }
-            //TODO: нужен для фон? как в модулях
+            .scrollContentBackground(.hidden) // This hides the default form background
+            .background(backgroundView)
             .navigationTitle("Сундук")
             .toolbarTitleDisplayMode(.inlineLarge)
         }
         .navigationViewStyle(.stack)
+    }
+    
+    @ViewBuilder
+    private var backgroundView: some View {
+        if settingsManager.moduleBackground {
+            MainBackground()
+                .aspectRatio(contentMode: .fill)
+                .blur(radius: CGFloat(settingsManager.moduleBackgroundBlur))
+                .ignoresSafeArea()
+        } else {
+            // Обязательно нужен else
+            // Лучшие варианты для дефолтного фона:
+            Color(.systemGroupedBackground) // 👈 Самый точный аналог дефолтного
+                .ignoresSafeArea()
+        }
     }
 }
