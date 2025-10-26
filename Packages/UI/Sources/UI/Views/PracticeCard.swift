@@ -30,12 +30,18 @@ struct PracticeCard: View {
                     .foregroundStyle(.secondary)
             }
             
+            Spacer()
+        }
+        .overlay(alignment: .topTrailing) {
             if let p = currentAccount.tracker.progress[practice.id] {
-                Spacer()
-                ProgressBadge(progress: .constant(p / Double(practice.audioDuration)))
+                HStack {
+                    Spacer()
+                    ProgressBadge(progress: .constant(p / Double(practice.audioDuration)))
+                        .foregroundStyle(Color.accentColor)
+                        .font(.body)
+                }
             }
         }
-        
         .onTapGesture {
             fullscreen.toggle()
         }
