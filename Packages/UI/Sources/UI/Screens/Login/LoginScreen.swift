@@ -73,15 +73,22 @@ struct LoginScreen: View {
             
             
             Section {
+                Button(action: { signup.toggle() }) {
+                    HStack {
+                        Spacer()
+                        Text("Зарегистрироваться")
+                            .minimumScaleFactor(0.7)
+                        Spacer()
+                    }
+                    .compositingGroup()
+                    .padding(8)
+                }
+                .buttonStyle(.glass)
+            } header: {
                 HStack {
                     Spacer()
                     Text("Нет аккаунта?")
                         .font(.footnote)
-                    
-                    Button(action: { signup.toggle() }) {
-                        Text("Зарегистрироваться")
-                            .minimumScaleFactor(0.7)
-                    }
                     Spacer()
                 }
             }
@@ -125,7 +132,7 @@ struct LoginScreen: View {
             .throwableButtonStyle(.shake)
             .allowsHitTestingWhenLoading(false)
             .asyncButtonStyle(.overlay)
-            .buttonStyle(.borderedProminent)
+            .buttonStyle(.glassProminent)
         }
         .listRowBackground(Color.clear)
         .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
