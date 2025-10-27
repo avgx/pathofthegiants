@@ -218,8 +218,6 @@ extension CurrentAccount: AudioPlayerDelegate {
         switch SettingsManager.shared.statisticsUpdate {
         case .seconds:
             progress = Int(duration)
-        case .minutes:
-            progress = Int(duration / 60) * 60
         case .complete:
             if abs(currentPractice.audioDuration - Int(duration)) < 1 {
                 progress = Int(duration)

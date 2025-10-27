@@ -127,7 +127,6 @@ extension SettingsManager {
 extension SettingsManager {
     public enum StatisticsUpdate: String, Codable, CaseIterable, Identifiable, Sendable, CustomStringConvertible {
         case seconds
-        case minutes
         case complete
         
         public var id: String {
@@ -138,8 +137,6 @@ extension SettingsManager {
             switch self {
             case .seconds:
                 "каждую секунду"
-            case .minutes:
-                "каждую минуту"
             case .complete:
                 "только проведенную от начала и до конца"
             }
