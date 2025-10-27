@@ -28,10 +28,18 @@ struct BagView: View {
     @ViewBuilder
     private var backgroundView: some View {
         if settingsManager.moduleBackground {
-            MainBackground()
-                .aspectRatio(contentMode: .fill)
-                .blur(radius: CGFloat(settingsManager.moduleBackgroundBlur))
-                .ignoresSafeArea()
+            ZStack {
+                Color(.systemGroupedBackground)
+                    .opacity(0.24)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    .ignoresSafeArea()
+                
+                MainBackground()
+                    .aspectRatio(contentMode: .fill)
+                    .opacity(0.7)
+                    .blur(radius: CGFloat(settingsManager.moduleBackgroundBlur))
+                    .ignoresSafeArea()
+            }
         } else {
             // Обязательно нужен else
             // Лучшие варианты для дефолтного фона:
