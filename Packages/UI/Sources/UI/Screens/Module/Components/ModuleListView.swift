@@ -24,7 +24,7 @@ struct ModuleListView: View {
                     ZStack {
                         NavigationLink(value: module) {
                             EmptyView()
-                        }.opacity(0.0)
+                        }.onTapHaptic(.buttonPress).opacity(0.0)
                         ModuleCard(module: module)
                     }
                     .aspectRatio(16.0/9.0, contentMode: .fill)

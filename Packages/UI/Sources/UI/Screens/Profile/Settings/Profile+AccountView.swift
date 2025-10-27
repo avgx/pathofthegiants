@@ -47,6 +47,9 @@ extension Profile {
                     Task {
                         if let newImage = UIImage(named: newString) {
                             try? await currentAccount.update(avatar: newImage)
+                            await MainActor.run {
+                                HapticManager.shared.fireHaptic(.buttonPress)
+                            }
                         }
                     }
                 }
@@ -56,6 +59,9 @@ extension Profile {
                         
                         Task {
                             try? await currentAccount.update(avatar: newImage)
+                            await MainActor.run {
+                                HapticManager.shared.fireHaptic(.buttonPress)
+                            }
                         }
                     }
                 }
@@ -95,6 +101,9 @@ extension Profile {
                         .onSubmit {
                             Task {
                                 try? await currentAccount.update(nickname: nickname)
+                                await MainActor.run {
+                                    HapticManager.shared.fireHaptic(.buttonPress)
+                                }
                             }
                         }
                 } header: {
@@ -151,6 +160,7 @@ extension Profile {
             Section {
                 Button(action: {
                     currentAccount.disconnect()
+                    HapticManager.shared.fireHaptic(.buttonPress)
                 }, label: {
                     HStack {
                         Spacer()
