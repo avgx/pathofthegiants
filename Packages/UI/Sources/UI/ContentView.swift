@@ -16,6 +16,7 @@ public struct ContentView: View {
         Group {
             if !initialLoadComplete {
                 SplashScreen(complete: $initialLoadComplete)
+                    .setupAppGlobalNavigationBar("Alegreya")
             } else if currentAccount.isTrial {
                 TrialScreen()
             } else if currentAccount.token != nil {

@@ -30,6 +30,9 @@ let package = Package(
             name: "UI",
             dependencies: [
                 "Models", "Env", "Api", "ButtonKit"
+            ],
+            resources: [
+                .process("Fonts")
             ]
         ),
     ]
