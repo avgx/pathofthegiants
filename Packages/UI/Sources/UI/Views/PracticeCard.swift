@@ -18,7 +18,7 @@ struct PracticeCard: View {
                         Image(systemName: "crown.fill")
                             .resizable()
                             .scaledToFit()
-                            .foregroundStyle(Color.accentColor)
+                            .foregroundStyle(Color.purple)
                             .frame(width: 16, height: 16)
                             .offset(x: 22 - 8/2, y: -22 + 8/2)
                     }
