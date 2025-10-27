@@ -20,20 +20,38 @@ struct PracticeScreen: View {
     
     let practice: Practice
     
+    //TODO: move to settings
+    let glassEffectOnCard = false
+    let mergePlayerControlsWithFinishButtons = true
+    let practiceCancelButtonEnabled = false
+    
     var body: some View {
         VStack(alignment: .center, spacing: 4) {
-            card
-                .glassEffect(.clear, in: .rect(cornerRadius: 16))
-                .padding(.horizontal)
-            
+            if glassEffectOnCard {
+                card
+                    .glassEffect(.clear, in: .rect(cornerRadius: 16))
+                    .padding(.horizontal)
+            }
+            else {
+                card
+                    .padding(.horizontal)
+            }
             Spacer()
             
-            playerControls
-                .padding()
-                .glassEffect(.clear, in: .rect(cornerRadius: 16))
+            if mergePlayerControlsWithFinishButtons {
+                VStack {
+                    playerControls
+                    finishButtons
+                }
                 .padding(.horizontal)
-            
-            finishButtons
+            } else {
+                playerControls
+                    .padding()
+                    .glassEffect(.clear, in: .rect(cornerRadius: 16))
+                    .padding(.horizontal)
+                
+                finishButtons
+            }
         }
         .frame(maxWidth: .infinity)
         .background(
@@ -93,6 +111,8 @@ struct PracticeScreen: View {
         VStack(alignment: .center) {
             Text(practice.name)
                 .font(.title)
+                .lineLimit(1)
+                .minimumScaleFactor(0.8)
             VStack(alignment: .leading) {
                 Label(practice.group, systemImage: "ellipsis.bubble")
                 Label("Сложность \(practice.complication)/5", systemImage: "brain.head.profile")
@@ -103,7 +123,7 @@ struct PracticeScreen: View {
             Spacer()
             
             PracticeImage(practice: practice)
-                .frame(width: 160, height: 160)
+                .frame(width: 240, height: 240)
                 .clipShape(Circle())
             
             Spacer()
@@ -157,18 +177,20 @@ struct PracticeScreen: View {
             .buttonStyle(.glassProminent)
             .opacity(audioPlayer.isPlaying || (currentAccount.tracker.currentTotal == 0) ? 0 : 1)
             
-            Button(action: {
-                currentAccount.cancelPractice()
-                dismiss()
-                HapticManager.shared.fireHaptic(.buttonPress)
-            }) {
-                Text("Отменить сессию")
-                    .padding(8)
-                    .frame(maxWidth: .infinity)
+            if practiceCancelButtonEnabled {
+                Button(action: {
+                    currentAccount.cancelPractice()
+                    dismiss()
+                    HapticManager.shared.fireHaptic(.buttonPress)
+                }) {
+                    Text("Отменить сессию")
+                        .padding(8)
+                        .frame(maxWidth: .infinity)
+                }
+                .controlSize(.small)
+                .buttonStyle(.plain)
+                .opacity(audioPlayer.isPlaying || (currentAccount.tracker.currentTotal == 0) ? 0 : 1)
             }
-            .controlSize(.small)
-            .buttonStyle(.plain)
-            .opacity(audioPlayer.isPlaying || (currentAccount.tracker.currentTotal == 0) ? 0 : 1)
         }
         .frame(width: 240)
         .padding(.top)
@@ -184,7 +206,12 @@ struct PracticeScreen: View {
             Slider(
                 value: Binding(
                     get: { audioPlayer.currentTime },
-                    set: { audioPlayer.seek(to: $0) }
+                    set: { newValue in
+                        // Обновляем асинхронно
+                        DispatchQueue.main.async {
+                            audioPlayer.seek(to: newValue)
+                        }
+                    }
                 ),
                 in: 0...audioPlayer.duration
             )
