@@ -77,6 +77,12 @@ public class SettingsManager: ObservableObject {
         }
     }
     
+    @Published public var uiStyle: Style = .classic {
+        didSet {
+            storage.uiStyle = uiStyle
+        }
+    }
+    
     private var storage = Storage()
     
     public static let shared = SettingsManager()
@@ -95,6 +101,7 @@ public class SettingsManager: ObservableObject {
         hapticDataRefreshEnabled = storage.hapticDataRefreshEnabled
         hapticNotificationEnabled = storage.hapticNotificationEnabled
         hapticTabSelectionEnabled = storage.hapticTabSelectionEnabled
+        uiStyle = storage.uiStyle
     }
 }
 
@@ -113,6 +120,8 @@ extension SettingsManager {
         @AppStorage("settings.hapticDataRefreshEnabled")  var hapticDataRefreshEnabled = true
         @AppStorage("settings.hapticNotificationEnabled") var hapticNotificationEnabled = true
         @AppStorage("settings.hapticTabSelectionEnabled") var hapticTabSelectionEnabled = true
+        
+        @AppStorage("settings.uiStyle") var uiStyle: Style = .classic
         
         static let defaultTime: Date = {
             let calendar = Calendar.current
@@ -139,6 +148,32 @@ extension SettingsManager {
                 "каждую секунду"
             case .complete:
                 "только проведенную от начала и до конца"
+            }
+        }
+    }
+}
+
+extension SettingsManager {
+    public enum Style: String, Codable, CaseIterable, Identifiable, Sendable, CustomStringConvertible {
+        case classic
+        case brutalNordic
+        case zoomer
+        case custom
+        
+        public var id: String {
+            rawValue
+        }
+        
+        public var description: String {
+            switch self {
+            case .classic:
+                "Классический"
+            case .brutalNordic:
+                "Суровый"
+            case .zoomer:
+                "Зумерский"
+            case .custom:
+                "Настраиваемый"
             }
         }
     }

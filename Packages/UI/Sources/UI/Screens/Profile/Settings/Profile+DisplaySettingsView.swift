@@ -27,7 +27,20 @@ extension Profile {
                         }
                     }
                     .pickerStyle(.menu)
+                    
+                    Picker("Стиль", selection: $settingsManager.uiStyle) {
+                        ForEach(SettingsManager.Style.allCases, id: \.self) { style in
+                            HStack {
+                                Text(style.description)
+                            }
+                            .tag(style)
+                        }
+                    }
+                    .pickerStyle(.menu)
+                } footer: {
+                    Text("TODO: переключение настроек интерфейса в зависимости от стиля будет потом")
                 }
+                
                 Section {
                     Toggle("Фон", isOn: $settingsManager.moduleBackground)
                        
@@ -53,12 +66,16 @@ extension Profile {
                 } footer: {
                     Text("При отображении модуля или сундука используется фоновое изображение")
                 }
+                .opacity(settingsManager.uiStyle == .custom ? 1.0 : 0.5)
+                .disabled(settingsManager.uiStyle != .custom)
                 
                 Section {
                     Toggle("Изображение перед списком практик", isOn: $settingsManager.moduleImage)
                 } header: {
                     Text("Модуль")
                 }
+                .opacity(settingsManager.uiStyle == .custom ? 1.0 : 0.5)
+                .disabled(settingsManager.uiStyle != .custom)
             }
         }
     }
