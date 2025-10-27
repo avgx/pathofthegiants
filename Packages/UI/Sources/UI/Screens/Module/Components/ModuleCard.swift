@@ -37,7 +37,7 @@ struct ModuleCard: View {
             .frame(maxWidth: .infinity, alignment: .leading)
             .background(.regularMaterial)
             .overlay(alignment: .trailing, content: {
-                if module.practices.count > 0 {
+                if moduleProgressEnabled && module.practices.count > 0 {
                     let progress = moduleProgress()
                     ZStack(alignment: .center) {
                         ProgressCircleBadge(progress: .constant(progress))
@@ -54,7 +54,7 @@ struct ModuleCard: View {
         .frame(maxWidth: .infinity)
         .background(ModuleImage(moduleImage: module.image))
     }
-    
+    let moduleProgressEnabled = false
     /// Учитываем только полностью завершенные практики
     private func moduleProgress() -> Double {
         guard module.practices.count > 0 else { return 0.0 }
