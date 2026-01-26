@@ -209,6 +209,21 @@ extension ModuleData: Hashable {
     }
 }
 
+extension ModuleData: Comparable {
+    ///AI generated
+    ///    Если у lhs поле opened == true, а у rhs — false, то `lhs < rhs` вернёт true (значит, lhs будет раньше в отсортированном массиве).
+    /// Если оба opened равны (оба true или оба false), то сравнение идёт по orderNumber: меньший номер идёт первым.
+    public static func < (lhs: ModuleData, rhs: ModuleData) -> Bool {
+        // Сначала сравниваем по `opened`
+        if lhs.opened != rhs.opened {
+            return lhs.opened // true < false
+        }
+        
+        // Если `opened` одинаковы, сравниваем по `orderNumber`
+        return lhs.orderNumber < rhs.orderNumber
+    }
+}
+
 public typealias PracticeID = Int
 extension PracticeID {
     public static let invalid = -1

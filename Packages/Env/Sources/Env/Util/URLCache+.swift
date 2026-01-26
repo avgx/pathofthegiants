@@ -1,7 +1,7 @@
 import Foundation
 
 extension URLCache {
-    static let imageCache: URLCache = CustomURLCache(memoryCapacity: 10*1024*1024, diskCapacity: 50*1024*1024, diskPath: nil)
+    public static let imageCache: URLCache = CustomURLCache(memoryCapacity: 10*1024*1024, diskCapacity: 50*1024*1024, diskPath: nil)
 }
 
 class CustomURLCache: URLCache {

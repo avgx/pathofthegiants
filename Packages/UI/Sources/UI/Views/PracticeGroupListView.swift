@@ -3,6 +3,8 @@ import Env
 import Models
 
 struct PracticeGroupListView: View {
+    @EnvironmentObject var currentAccount: CurrentAccount
+    
     let practices: [Practice]
     let subtitle: String?
     
@@ -48,6 +50,16 @@ struct PracticeGroupListView: View {
         .onAppear {
             self.groups = Array(Set(practices.map { $0.group }))
                 .sorted(using: KeyPathComparator(\.groupOrder, order: .forward))
+        }
+        .refreshable(action: {
+            refresh()
+        })
+    }
+    
+    func refresh() {
+        Task {
+            URLCache.imageCache.removeAllCachedResponses()
+            try? await currentAccount.connect()
         }
     }
 }

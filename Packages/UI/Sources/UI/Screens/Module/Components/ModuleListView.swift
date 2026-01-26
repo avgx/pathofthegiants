@@ -3,6 +3,8 @@ import Env
 import Models
 
 struct ModuleListView: View {
+    @EnvironmentObject var currentAccount: CurrentAccount
+    
     let modules: [ModuleData]
     
     @Namespace private var namespace
@@ -19,7 +21,8 @@ struct ModuleListView: View {
             .listRowInsets(EdgeInsets(top: 0, leading: 16, bottom: 0, trailing: 16))
             .listRowBackground(Color.clear)
             
-            ForEach(modules.sorted(using: KeyPathComparator(\.id, order: .forward))) { module in
+            //.sorted(using: KeyPathComparator(\.id, order: .forward))
+            ForEach(modules.sorted()) { module in
                 Section {
                     ZStack {
                         NavigationLink(value: module) {
@@ -44,6 +47,16 @@ struct ModuleListView: View {
                 //иногда Transition сбоит. нужно исследовать
                 //.navigationTransition(.zoom(sourceID: module.id, in: namespace))
         })
+        .refreshable(action: {
+            refresh()
+        })
+    }
+    
+    func refresh() {
+        Task {
+            URLCache.imageCache.removeAllCachedResponses()
+            try? await currentAccount.connect()
+        }
     }
 }
 
