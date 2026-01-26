@@ -273,7 +273,10 @@ extension MP3Downloader {
             return cached
         }
         
-        let (data, _) = try await URLSession.shared.data(from: url)
+        let (data, response) = try await URLSession.shared.data(from: url)
+        guard (response as? HTTPURLResponse)?.statusCode == 200 else {
+            throw URLError(.badServerResponse)
+        }
         let fileName = url.lastPathComponent
         let destinationURL = cacheDirectory.appendingPathComponent(fileName)
         try data.write(to: destinationURL)
