@@ -41,6 +41,8 @@ struct ProfileHeaderView: View {
             HStack {
                 nick
                 Spacer()
+                subscription
+                    .padding()
             }
             .padding(.horizontal)
         }
@@ -62,5 +64,24 @@ struct ProfileHeaderView: View {
             .fontWeight(.bold)
     }
     
-    
+    @ViewBuilder
+    var subscription: some View {
+        if info.data.subscriptionLevel == 1 {
+            VStack {
+                Text("Подписка")
+                    .fontWeight(.bold)
+                if let date = info.data.endDate {
+                    Text("до \(info.data.formattedEndDate)")
+                        .font(.caption2)
+                }
+            }
+        } else {
+            Button(action:{}) {
+                Text("Подписка")
+            }
+            .buttonStyle(.borderedProminent)
+            .tint(.purple)
+        }
+        
+    }
 }

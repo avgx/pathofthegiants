@@ -103,6 +103,8 @@ public struct AccountInfo: Codable, Sendable {
 public struct AccountInfoData: Codable, Sendable {
     public let userID, email, nickname: String
     public let subscriptionLevel: Int
+    /// 2026-02-25T17:40:40.136208
+    public let subscriptionEndDate: String?
     public let avatar: String?
     
     enum CodingKeys: String, CodingKey {
@@ -111,14 +113,43 @@ public struct AccountInfoData: Codable, Sendable {
         case nickname = "Nickname"
         case avatar = "Avatar"
         case subscriptionLevel = "SubscriptionLevel"
+        case subscriptionEndDate = "SubscriptionEndDate"
     }
     
-    public init(userID: String, email: String, nickname: String, subscriptionLevel: Int, avatar: String? = nil) {
+    public init(userID: String, email: String, nickname: String, subscriptionLevel: Int, subscriptionEndDate: String?, avatar: String? = nil) {
         self.userID = userID
         self.email = email
         self.nickname = nickname
         self.avatar = avatar
         self.subscriptionLevel = subscriptionLevel
+        self.subscriptionEndDate = subscriptionEndDate
+    }
+    
+    public var endDate: Date? {
+        guard let subscriptionEndDate else { return nil }
+        let formatter = DateFormatter()
+        formatter.locale = Locale(identifier: "en_US_POSIX") // Critical for consistent parsing
+        formatter.timeZone = TimeZone(secondsFromGMT: 0) // UTC
+        formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSSSS"
+        
+        return formatter.date(from: subscriptionEndDate)
+    }
+    
+    public var formattedEndDate: String {
+        guard let endDate else { return subscriptionEndDate ?? "" }
+        let formatter = DateFormatter()
+        
+        if Calendar.current.isDateInToday(endDate) {
+            // Сегодня: показываем время
+            formatter.dateStyle = .none
+            formatter.timeStyle = .short
+        } else {
+            // Не сегодня: только дата
+            formatter.dateStyle = .medium
+            formatter.timeStyle = .none
+        }
+        
+        return formatter.string(from: endDate)
     }
 }
 

@@ -267,13 +267,18 @@ extension MP3Downloader {
 
 // Альтернативная упрощенная версия без прогресса
 extension MP3Downloader {
-    public func simpleDownloadMP3(from url: URL) async throws -> URL {
+    public func simpleDownloadMP3(from url: URL, token: String?) async throws -> URL {
         if let cached = fileExistsInCache(for: url) {
             print("Найден в кэше")
             return cached
         }
         
-        let (data, response) = try await URLSession.shared.data(from: url)
+        var request = URLRequest(url: url)
+        if let token {
+            request.addValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+        }
+        
+        let (data, response) = try await URLSession.shared.data(for: request)
         guard (response as? HTTPURLResponse)?.statusCode == 200 else {
             throw URLError(.badServerResponse)
         }

@@ -100,7 +100,8 @@ extension Profile {
                             guard let mp3Url = try? await currentAccount.fetchAudioUrl(for: practice) else {
                                 return
                             }
-                            _ = try await downloader.simpleDownloadMP3(from: mp3Url)
+                            //TODO: конечно токен надо брать "не так". переделать
+                            _ = try await downloader.simpleDownloadMP3(from: mp3Url, token: AuthToken.load())
                             let fileInCache = await downloader.fileExistsInCache(fileName: practice.audio)
                             await MainActor.run {
                                 self.fileExistsInCache = fileInCache != nil

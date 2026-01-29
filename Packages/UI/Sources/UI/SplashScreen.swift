@@ -20,7 +20,11 @@ struct SplashScreen: View {
             Task {
                 bgMain = try? await currentAccount.fetchBgMain()
                 
-                try? await currentAccount.connect()
+                do {
+                    try await currentAccount.connect()
+                } catch {
+                    print(error.localizedDescription)
+                }
                 
                 withAnimation {
                     complete = true

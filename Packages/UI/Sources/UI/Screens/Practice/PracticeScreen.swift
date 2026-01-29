@@ -289,7 +289,8 @@ struct PracticeScreen: View {
         print("mp3Url: \(mp3Url.absoluteString)")
         do {
             //let mp3File = try await downloader.downloadMP3IfNeeded(from: mp3Url)
-            let mp3File = try await downloader.simpleDownloadMP3(from: mp3Url)
+            //TODO: конечно токен надо брать "не так". переделать
+            let mp3File = try await downloader.simpleDownloadMP3(from: mp3Url, token: AuthToken.load())
             print("mp3File: \(mp3File.absoluteString)")
             withAnimation {
                 isLoaded = true
