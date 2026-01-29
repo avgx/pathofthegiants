@@ -3,6 +3,7 @@ import Env
 import Models
 
 struct ModuleListView: View {
+    @EnvironmentObject var settingsManager: SettingsManager
     @EnvironmentObject var currentAccount: CurrentAccount
     
     let modules: [ModuleData]
@@ -32,8 +33,11 @@ struct ModuleListView: View {
                     }
                     .aspectRatio(16.0/9.0, contentMode: .fill)
                     .listRowInsets(.init(top: 0, leading: 0, bottom: 0, trailing: 0))
-                    //иногда Transition сбоит. нужно исследовать
-                    //.matchedTransitionSource(id: module.id, in: namespace)
+                    .if(settingsManager.zoomNavigationTransition) { view in
+                        //иногда Transition сбоит. нужно исследовать
+                        view.matchedTransitionSource(id: module.id, in: namespace)
+                    }
+                    
                 }
                 .listSectionSpacing(.compact)
             }
@@ -44,8 +48,10 @@ struct ModuleListView: View {
         .padding(.top, -32) // Отрицательный паддинг чтобы придвинуть к навигации
         .navigationDestination(for: ModuleData.self, destination: { module in
             ModuleScreen(module: module)
-                //иногда Transition сбоит. нужно исследовать
-                //.navigationTransition(.zoom(sourceID: module.id, in: namespace))
+                .if(settingsManager.zoomNavigationTransition) { view in
+                    //иногда Transition сбоит. нужно исследовать
+                    view.navigationTransition(.zoom(sourceID: module.id, in: namespace))
+                }
         })
         .refreshable(action: {
             refresh()

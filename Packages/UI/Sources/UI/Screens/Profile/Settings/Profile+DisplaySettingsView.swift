@@ -38,7 +38,7 @@ extension Profile {
                     }
                     .pickerStyle(.menu)
                 } footer: {
-                    Text("TODO: переключение настроек интерфейса в зависимости от стиля будет потом")
+                    Text("настройки интерфейса переключатся в зависимости от выбранного стиля")
                 }
                 
                 Section {
@@ -71,6 +71,7 @@ extension Profile {
                 
                 Section {
                     Toggle("Изображение перед списком практик", isOn: $settingsManager.moduleImage)
+                    Toggle("Навигация через зум", isOn: $settingsManager.zoomNavigationTransition)
                 } header: {
                     Text("Модуль")
                 }

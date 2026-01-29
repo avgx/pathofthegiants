@@ -56,6 +56,12 @@ public class SettingsManager: ObservableObject {
         }
     }
     
+    @Published public var zoomNavigationTransition = false {
+        didSet {
+            storage.zoomNavigationTransition = zoomNavigationTransition
+        }
+    }
+    
     @Published public var hapticButtonPressEnabled = true {
         didSet {
             storage.hapticButtonPressEnabled = hapticButtonPressEnabled
@@ -80,6 +86,7 @@ public class SettingsManager: ObservableObject {
     @Published public var uiStyle: Style = .classic {
         didSet {
             storage.uiStyle = uiStyle
+            applyUiStyle()
         }
     }
     
@@ -97,11 +104,33 @@ public class SettingsManager: ObservableObject {
         moduleBackground = storage.moduleBackground
         moduleBackgroundBlur = storage.moduleBackgroundBlur
         moduleImage = storage.moduleImage
+        zoomNavigationTransition = storage.zoomNavigationTransition
         hapticButtonPressEnabled = storage.hapticButtonPressEnabled
         hapticDataRefreshEnabled = storage.hapticDataRefreshEnabled
         hapticNotificationEnabled = storage.hapticNotificationEnabled
         hapticTabSelectionEnabled = storage.hapticTabSelectionEnabled
         uiStyle = storage.uiStyle
+    }
+    
+    private func applyUiStyle() {
+        switch uiStyle {
+        case .classic:
+            moduleBackground = true
+            moduleBackgroundBlur = 12
+            moduleImage = false
+            zoomNavigationTransition = false
+        case .brutalNordic:
+            moduleBackground = false
+            moduleImage = false
+            zoomNavigationTransition = false
+        case .zoomer:
+            moduleBackground = true
+            moduleBackgroundBlur = 12
+            moduleImage = true
+            zoomNavigationTransition = true
+        case .custom:
+            break
+        }
     }
 }
 
@@ -116,6 +145,7 @@ extension SettingsManager {
         @AppStorage("settings.moduleBackground")        var moduleBackground: Bool = true
         @AppStorage("settings.moduleBackgroundBlur")    var moduleBackgroundBlur: Double = 12
         @AppStorage("settings.moduleImage")             var moduleImage: Bool = true
+        @AppStorage("settings.zoomNavigationTransition")  var zoomNavigationTransition: Bool = false
         @AppStorage("settings.hapticButtonPressEnabled")  var hapticButtonPressEnabled = true
         @AppStorage("settings.hapticDataRefreshEnabled")  var hapticDataRefreshEnabled = true
         @AppStorage("settings.hapticNotificationEnabled") var hapticNotificationEnabled = true

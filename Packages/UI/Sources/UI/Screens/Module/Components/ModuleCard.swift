@@ -74,7 +74,8 @@ struct ModuleCard: View {
                 .padding(.horizontal, 8)
                 .background(.orange)
         case (true, true):
-            Text("За монеты")
+            /// За монеты
+            Text("Подписка")
                 .padding(.vertical, 4)
                 .padding(.horizontal, 8)
                 .background(.purple)
