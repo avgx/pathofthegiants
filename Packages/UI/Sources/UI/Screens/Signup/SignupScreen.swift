@@ -3,6 +3,7 @@ import Env
 import Models
 import ButtonKit
 import Get
+import LivsyToast
 
 struct SignupScreen: View {
     @Environment(\.dismiss) private var dismiss
@@ -15,6 +16,7 @@ struct SignupScreen: View {
     @State var errorString = ""
     @State var emailError = ""
     @State var isPasswordVisible = false
+    @State var toastCheckEmail = false
     
     var isEmailValid: Bool {
         emailError.isEmpty && !email.isEmpty
@@ -42,6 +44,25 @@ struct SignupScreen: View {
                         }
                     }
                 }
+            }
+            .toast(
+                isPresented: $toastCheckEmail,
+                duration: 2,
+                edge: .bottom
+            ) {
+                HStack(spacing: 12) {
+                    Image(systemName: "mail")
+                    
+                    Text("Письмо с подтверждением регистрации отправлено")
+                        .font(.callout)
+                        .fontWeight(.semibold)
+                }
+                .padding(.horizontal, 16)
+                .padding(.vertical, 12)
+                .background(
+                    RoundedRectangle(cornerRadius: 20, style: .continuous)
+                        .fill(.ultraThinMaterial)
+                )
             }
         }
         .navigationViewStyle(.stack)
@@ -152,6 +173,7 @@ struct SignupScreen: View {
                 do {
                     errorString = ""
                     try await currentAccount.signup(user: email, pass: pass)
+                    toastCheckEmail.toggle()
                 } catch CustomError.unacceptableStatusCode(let code, let text, _) {
                     print(text)
                     if let errorResponse = try? JSONDecoder().decode(ErrorResponse.self, from: Data(text.utf8)) {
