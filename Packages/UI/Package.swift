@@ -23,7 +23,7 @@ let package = Package(
         .package(name: "Api", path: "../Api"),
         .package(url: "https://github.com/avgx/ButtonKit", branch: "main"),
         .package(url: "https://github.com/avgx/LivsyToast", branch: "main"),
-        .package(url: "https://github.com/Livsy90/Stretchable", branch: "main"),
+        .package(url: "https://github.com/avgx/Stretchable", branch: "main"),
     ],
     targets: [
         // Targets are the basic building blocks of a package, defining a module or a test suite.
