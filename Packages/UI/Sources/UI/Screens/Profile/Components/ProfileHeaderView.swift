@@ -1,6 +1,7 @@
 import SwiftUI
 import Env
 import Models
+import Stretchable
 
 @MainActor
 struct ProfileHeaderView: View {
@@ -18,6 +19,7 @@ struct ProfileHeaderView: View {
         VStack(alignment: .leading) {
             headerImage
                 .ignoresSafeArea()
+                .stretchable()
                 .overlay {
                     VStack(alignment: .leading) {
                         Spacer()
