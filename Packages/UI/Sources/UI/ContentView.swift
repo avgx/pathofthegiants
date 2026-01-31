@@ -38,6 +38,9 @@ public struct ContentView: View {
         .onDisappear {
             audioPlayer.delegate = nil
         }
+        .environment(\.defaultMinListHeaderHeight, 0) // Убираем отступы заголовков секций
+        .environment(\.defaultMinListRowHeight, 0) // Убираем минимальную высоту рядов
+        .listSectionSpacing(.compact)
     }
 }
 

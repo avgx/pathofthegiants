@@ -43,9 +43,6 @@ struct PracticeGroupListView: View {
                 )
             }
         }
-        .listSectionSpacing(.compact)
-        .environment(\.defaultMinListHeaderHeight, 0) // Убираем отступы заголовков секций
-        .environment(\.defaultMinListRowHeight, 0) // Убираем минимальную высоту рядов
         .padding(.top, -32) // Отрицательный паддинг чтобы придвинуть к навигации
         .onAppear {
             self.groups = Array(Set(practices.map { $0.group }))

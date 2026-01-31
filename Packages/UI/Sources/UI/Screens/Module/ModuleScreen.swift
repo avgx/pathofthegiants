@@ -3,6 +3,8 @@ import Env
 import Models
 
 struct ModuleScreen: View {
+    @Environment(\.dismiss) private var dismiss
+    @Environment(\.isPresented) private var isPresented
     @EnvironmentObject var settingsManager: SettingsManager
     @EnvironmentObject var currentAccount: CurrentAccount
     
@@ -15,7 +17,21 @@ struct ModuleScreen: View {
             .toolbarTitleDisplayMode(.inline)
             .toolbar(.hidden, for: .tabBar)
             .scrollContentBackground(.hidden) // This hides the default form background
+            .scrollBounceBehavior(.basedOnSize)
             .background(backgroundView)
+            .if(settingsManager.zoomNavigationTransition) { view in
+                view
+                    .navigationBarBackButtonHidden()
+                    .toolbar {
+                        ToolbarItem(placement: .confirmationAction) {
+                            Button(action:{ dismiss() }){
+                                Image(systemName: "xmark")
+                            }
+                            .buttonBorderShape(.circle)
+                            .opacity(0.2)
+                        }
+                    }
+            }
     }
     
     @ViewBuilder

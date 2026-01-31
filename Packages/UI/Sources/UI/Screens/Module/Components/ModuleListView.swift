@@ -42,9 +42,6 @@ struct ModuleListView: View {
                 .listSectionSpacing(.compact)
             }
         }
-        .listSectionSpacing(.compact)
-        .environment(\.defaultMinListHeaderHeight, 0) // Убираем отступы заголовков секций
-        .environment(\.defaultMinListRowHeight, 0) // Убираем минимальную высоту рядов
         .padding(.top, -32) // Отрицательный паддинг чтобы придвинуть к навигации
         .navigationDestination(for: ModuleData.self, destination: { module in
             ModuleScreen(module: module)

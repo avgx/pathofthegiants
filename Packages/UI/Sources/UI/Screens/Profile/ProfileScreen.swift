@@ -6,6 +6,7 @@ import Models
 
 struct ProfileScreen: View {
     @EnvironmentObject var currentAccount: CurrentAccount
+    @EnvironmentObject var settingsManager: SettingsManager
     @State var showTitle = false
     @State var stat: UserStatsData? = nil
     @State var refresh = UUID()
@@ -16,6 +17,8 @@ struct ProfileScreen: View {
                 .task(id: refresh) {
                     stat = try? await currentAccount.fetchStats()
                 }
+                .scrollContentBackground(.hidden) // This hides the default form background
+                .background(backgroundView)
         }
         .navigationViewStyle(.stack)
     }
@@ -102,6 +105,29 @@ struct ProfileScreen: View {
             ProfileHeaderView(info: info, stat: stat)
         } else {
             ContentUnavailableView("Нет данных", systemImage: "exclamationmark.triangle").padding()
+        }
+    }
+    
+    @ViewBuilder
+    private var backgroundView: some View {
+        if settingsManager.moduleBackground {
+            ZStack {
+                Color(.systemGroupedBackground)
+                    .opacity(0.24)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    .ignoresSafeArea()
+                
+                MainBackground()
+                    .aspectRatio(contentMode: .fill)
+                    .opacity(0.7)
+                    .blur(radius: CGFloat(settingsManager.moduleBackgroundBlur))
+                    .ignoresSafeArea()
+            }
+        } else {
+            // Обязательно нужен else
+            // Лучшие варианты для дефолтного фона:
+            Color(.systemGroupedBackground) // 👈 Самый точный аналог дефолтного
+                .ignoresSafeArea()
         }
     }
 }

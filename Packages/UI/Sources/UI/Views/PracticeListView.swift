@@ -11,17 +11,30 @@ struct PracticeListView: View {
     
     var body: some View {
         List {
-            if let image, settingsManager.moduleImage {
+            if let image, settingsManager.moduleImage || settingsManager.zoomNavigationTransition {
                 Section {
-                    ZStack {
-                        Color.clear
-                            .frame(maxWidth: .infinity)
-                            .background(ModuleImage(moduleImage: image))
-                    }
-                    .aspectRatio(16.0/9.0, contentMode: .fill)
-                    .listRowInsets(.init(top: 0, leading: 0, bottom: 0, trailing: 0))
+                    Color.clear
+                        .background {
+                            ModuleImage(moduleImage: image)
+                        }
+                        .if(settingsManager.zoomNavigationTransition) { view in
+                            view.edgesIgnoringSafeArea(.top)
+                        }
                 }
                 .listSectionSpacing(.compact)
+                .listSectionSeparator(.hidden)
+                .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
+                .listRowBackground(Color.clear)
+                .if(settingsManager.zoomNavigationTransition) { view in
+                    view
+                        .listSectionMargins(.horizontal, 0)
+                        .listSectionMargins(.top, 0)
+                        .aspectRatio(4.0/3.0, contentMode: .fit)
+                }
+                .if(!settingsManager.zoomNavigationTransition) { view in
+                    view
+                        .aspectRatio(16.0/9.0, contentMode: .fill)
+                }
             }
             
             if let subtitle {
@@ -44,11 +57,20 @@ struct PracticeListView: View {
             .listRowBackground(
                 Rectangle().fill(.ultraThinMaterial)
             )
+            //.listSectionMargins(.top, -40)
+            //.zIndex(1)
         }
-        .listSectionSpacing(.compact)
-        .environment(\.defaultMinListHeaderHeight, 0) // Убираем отступы заголовков секций
-        .environment(\.defaultMinListRowHeight, 0) // Убираем минимальную высоту рядов
-        .padding(.top, -32) // Отрицательный паддинг чтобы придвинуть к навигации
+        .if(settingsManager.zoomNavigationTransition) { view in
+            view
+                .listStyle(.plain)  // Ключевой модификатор: убирает встроенные отступы List
+                .edgesIgnoringSafeArea(.top)
+        }
+        .if(!settingsManager.zoomNavigationTransition) { view in
+            view
+                .listSectionSpacing(.compact)
+                .padding(.top, -32) // Отрицательный паддинг чтобы придвинуть к навигации
+            //.padding(.top, -(UIApplication.shared.windows.first?.windowScene?.statusBarManager?.statusBarFrame.height ?? 0))
+        }
     }
 }
 
