@@ -2,22 +2,24 @@ import SwiftUI
 import Env
 import Models
 
-struct DouView: View {
+struct BagScreen: View {
     @EnvironmentObject var settingsManager: SettingsManager
     @EnvironmentObject var currentAccount: CurrentAccount
+    
+    let subtitle = "В сундуке хранятся все доступные практики"
     
     var body: some View {
         NavigationStack {
             Group {
-                if let modules = currentAccount.regular {
-                    ModuleListView(modules: modules.data)
+                if let practices = currentAccount.practices {
+                    PracticeGroupListView(practices: practices.data, subtitle: subtitle)
                 } else {
-                    ContentUnavailableView("Путь скрыт", systemImage: "exclamationmark.triangle")
+                    ContentUnavailableView("Практики недоступны", systemImage: "exclamationmark.triangle")
                 }
             }
-            .navigationTitle("Путь великанов")
             .scrollContentBackground(.hidden) // This hides the default form background
             .background(backgroundView)
+            .navigationTitle("Сундук")
             .toolbarTitleDisplayMode(.inlineLarge)
         }
         .navigationViewStyle(.stack)
@@ -38,7 +40,6 @@ struct DouView: View {
                     .blur(radius: CGFloat(settingsManager.moduleBackgroundBlur))
                     .ignoresSafeArea()
             }
-            
         } else {
             // Обязательно нужен else
             // Лучшие варианты для дефолтного фона:

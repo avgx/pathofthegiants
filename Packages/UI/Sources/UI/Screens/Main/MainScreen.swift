@@ -26,11 +26,11 @@ struct MainScreen: View {
     var body: some View {
         TabView(selection: $selectedTab) {
             Tab("Путь", systemImage: "road.lanes", value: .dou) {
-                DouView()
+                DouScreen()
             }
             
             Tab("Сундук", systemImage: "bag", value: .bag) {
-                BagView()
+                BagScreen()
             }
             
             Tab("Профиль", systemImage: "person", value: .profile) {
