@@ -101,6 +101,8 @@ struct PracticeScreen: View {
             audioPlayer.cleanupCurrentPlayback()
             currentAccount.cancelPractice()
         }
+        .lifecycleLog(String(reflecting: Self.self))
+        .lifecycleLog(name: practice.name)
 //        .onChange(of: isPrepared) {
 //            HapticManager.shared.fireHaptic(.notification(.success))
 //        }

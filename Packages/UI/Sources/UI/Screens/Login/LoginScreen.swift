@@ -36,12 +36,7 @@ struct LoginScreen: View, Loggable {
             })
         }
         .navigationViewStyle(.stack)
-        .onAppear {
-            logger.info("LoginScreen")
-        }
-        .onDisappear {
-            logger.info("~LoginScreen")
-        }
+        .lifecycleLog(String(reflecting: Self.self))
     }
     
     @ViewBuilder

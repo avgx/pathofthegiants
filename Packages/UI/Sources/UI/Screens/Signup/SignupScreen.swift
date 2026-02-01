@@ -66,6 +66,7 @@ struct SignupScreen: View {
             }
         }
         .navigationViewStyle(.stack)
+        .lifecycleLog(String(reflecting: Self.self))
     }
     
     @ViewBuilder

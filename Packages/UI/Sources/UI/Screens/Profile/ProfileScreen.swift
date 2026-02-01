@@ -21,12 +21,7 @@ struct ProfileScreen: View, Loggable {
                 .background(backgroundView)
         }
         .navigationViewStyle(.stack)
-        .onAppear {
-            logger.info("ProfileScreen")
-        }
-        .onDisappear {
-            logger.info("~ProfileScreen")
-        }
+        .lifecycleLog(String(reflecting: Self.self))
     }
     var list: some View {
         List {

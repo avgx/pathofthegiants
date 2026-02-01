@@ -21,12 +21,7 @@ struct DouScreen: View, Loggable {
             .toolbarTitleDisplayMode(.inlineLarge)
         }
         .navigationViewStyle(.stack)
-        .onAppear {
-            logger.info("DouScreen")
-        }
-        .onDisappear {
-            logger.info("~DouScreen")
-        }
+        .lifecycleLog(String(reflecting: Self.self))
     }
     
     @ViewBuilder

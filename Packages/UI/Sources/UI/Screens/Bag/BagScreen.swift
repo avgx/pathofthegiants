@@ -23,12 +23,7 @@ struct BagScreen: View, Loggable {
             .toolbarTitleDisplayMode(.inlineLarge)
         }
         .navigationViewStyle(.stack)
-        .onAppear {
-            logger.info("BagScreen")
-        }
-        .onDisappear {
-            logger.info("~BagScreen")
-        }
+        .lifecycleLog(String(reflecting: Self.self))
     }
     
     @ViewBuilder

@@ -26,6 +26,7 @@ struct TrialScreen: View {
             }
         }
         .navigationViewStyle(.stack)
+        .lifecycleLog(String(reflecting: Self.self))
     }
 }
 
