@@ -2,7 +2,7 @@ import SwiftUI
 import Env
 import Models
 
-struct DouScreen: View {
+struct DouScreen: View, Loggable {
     @EnvironmentObject var settingsManager: SettingsManager
     @EnvironmentObject var currentAccount: CurrentAccount
     
@@ -21,6 +21,12 @@ struct DouScreen: View {
             .toolbarTitleDisplayMode(.inlineLarge)
         }
         .navigationViewStyle(.stack)
+        .onAppear {
+            logger.info("DouScreen")
+        }
+        .onDisappear {
+            logger.info("~DouScreen")
+        }
     }
     
     @ViewBuilder

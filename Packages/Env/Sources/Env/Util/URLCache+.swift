@@ -1,10 +1,10 @@
 import Foundation
 
 extension URLCache {
-    public static let imageCache: URLCache = CustomURLCache(memoryCapacity: 10*1024*1024, diskCapacity: 50*1024*1024, diskPath: nil)
+    public static let imageCache: URLCache = CustomURLCache(memoryCapacity: 100*1024*1024, diskCapacity: 100*1024*1024, diskPath: nil)
 }
 
-class CustomURLCache: URLCache {
+class CustomURLCache: URLCache, Loggable, @unchecked Sendable {
     
     // Преобразование запроса
     private func normalizeRequest(_ request: URLRequest) -> URLRequest {
@@ -28,9 +28,9 @@ class CustomURLCache: URLCache {
         
         // Пример логирования
         if let response = cachedResponse {
-            print("Получен закэшированный ответ для \(request.url?.absoluteString ?? "")")
+            logger.info("Получен закэшированный ответ для \(request.url?.absoluteString ?? "")")
         } else {
-            print("Кэшированный ответ не найден для \(request.url?.absoluteString ?? "")")
+            logger.info("Кэшированный ответ не найден для \(request.url?.absoluteString ?? "")")
         }
         
         return cachedResponse
@@ -44,10 +44,12 @@ class CustomURLCache: URLCache {
             return
         }
         
-        print("Сохраняем ответ для \(normalizedRequest.url?.absoluteString ?? "")")
+        logger.info("Сохраняем ответ для \(normalizedRequest.url?.absoluteString ?? "") currentMemoryUsage:\(super.currentMemoryUsage)")
         
         // Сохраняем ответ
         super.storeCachedResponse(cachedResponse, for: normalizedRequest)
+        
+        logger.info("Сохранен ответ для \(normalizedRequest.url?.absoluteString ?? "") currentMemoryUsage:\(super.currentMemoryUsage)")
     }
     
     // Метод для удаления закэшированного ответа
@@ -55,17 +57,19 @@ class CustomURLCache: URLCache {
         let normalizedRequest = normalizeRequest(request)
         // Добавляем дополнительную логику при удалении
         // К сожалению оно работает как-то странно и не удаляет 
-        print("Удаление кэша для \(normalizedRequest.url?.absoluteString ?? "")")
+        logger.info("Удаление кэша для \(normalizedRequest.url?.absoluteString ?? "")")
         super.removeCachedResponse(for: normalizedRequest)
     }
     
     // Пример метода для проверки условий хранения
     private func shouldStore(_ cachedResponse: CachedURLResponse, for request: URLRequest) -> Bool {
-        print("А нужно ли сохранить ответ на: \(request.httpMethod ?? "") \(request)")
+        
         // Здесь можно добавить логику фильтрации
         // Например, проверять размер ответа или другие параметры
         //return true
-        return request.httpMethod == "GET" && request.url?.absoluteString.contains("?_=") == false
+        let res = request.httpMethod == "GET" && request.url?.absoluteString.contains("?_=") == false
+        logger.info("А нужно ли сохранить ответ на: \(request.httpMethod ?? "") \(request) |\(res)")
+        return res
     }
     
     // Функция для очистки кэша
@@ -74,5 +78,6 @@ class CustomURLCache: URLCache {
         // Устанавливаем политику, игнорирующую кэш
         request.cachePolicy = .reloadIgnoringLocalAndRemoteCacheData
         self.removeCachedResponse(for: request)
+        logger.info("Удаление кэша для: \(request.httpMethod ?? "") \(request)")
     }
 }

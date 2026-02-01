@@ -3,8 +3,9 @@ import Env
 import ButtonKit
 import Get
 import Models
+import Env
 
-struct LoginScreen: View {
+struct LoginScreen: View, Loggable {
     @EnvironmentObject var currentAccount: CurrentAccount
     
     @AppStorage("user") var savedUser = ""
@@ -35,6 +36,12 @@ struct LoginScreen: View {
             })
         }
         .navigationViewStyle(.stack)
+        .onAppear {
+            logger.info("LoginScreen")
+        }
+        .onDisappear {
+            logger.info("~LoginScreen")
+        }
     }
     
     @ViewBuilder

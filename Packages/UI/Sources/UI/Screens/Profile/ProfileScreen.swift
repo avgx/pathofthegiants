@@ -4,7 +4,7 @@ import Models
 
 
 
-struct ProfileScreen: View {
+struct ProfileScreen: View, Loggable {
     @EnvironmentObject var currentAccount: CurrentAccount
     @EnvironmentObject var settingsManager: SettingsManager
     @State var showTitle = false
@@ -21,6 +21,12 @@ struct ProfileScreen: View {
                 .background(backgroundView)
         }
         .navigationViewStyle(.stack)
+        .onAppear {
+            logger.info("ProfileScreen")
+        }
+        .onDisappear {
+            logger.info("~ProfileScreen")
+        }
     }
     var list: some View {
         List {

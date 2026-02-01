@@ -2,7 +2,7 @@ import SwiftUI
 import Env
 import Models
 
-struct BagScreen: View {
+struct BagScreen: View, Loggable {
     @EnvironmentObject var settingsManager: SettingsManager
     @EnvironmentObject var currentAccount: CurrentAccount
     
@@ -23,6 +23,12 @@ struct BagScreen: View {
             .toolbarTitleDisplayMode(.inlineLarge)
         }
         .navigationViewStyle(.stack)
+        .onAppear {
+            logger.info("BagScreen")
+        }
+        .onDisappear {
+            logger.info("~BagScreen")
+        }
     }
     
     @ViewBuilder
