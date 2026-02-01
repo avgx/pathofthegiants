@@ -33,6 +33,7 @@ struct ModuleScreen: View {
                     }
             }
             .lifecycleLog(String(reflecting: Self.self))
+            .lifecycleLog(name: module.name)
     }
     
     @ViewBuilder
