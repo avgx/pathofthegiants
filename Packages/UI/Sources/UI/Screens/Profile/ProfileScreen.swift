@@ -142,7 +142,7 @@ struct ProfileScreen: View, Loggable {
 //                }
 //                .buttonStyle(.plain)
                 Button(action: { showLogs.toggle() }) {
-                    Label("Отладка", systemImage: "doc")
+                    Label("Отладка", systemImage: "list.bullet.clipboard")
                 }
                 .buttonStyle(.plain)
                 .sheet(isPresented: $showLogs) {
@@ -166,6 +166,17 @@ struct ProfileScreen: View, Loggable {
             
             Section {
                 Profile.help.navigationLink
+                
+                Link(destination: URL(string: "https://путьвеликанов.рф/politika_konfidentsialnosti")!, label: {
+                    Label("Политика конфиденциальности", systemImage: "text.document")
+                })
+                .buttonStyle(.plain)
+                
+                Link(destination: URL(string: "https://путьвеликанов.рф/polzovatelskoe_soglashenie")!, label: {
+                    Label("Пользовательское соглашение", systemImage: "text.document")
+                })
+                .buttonStyle(.plain)
+                
                 LabeledContent(content: {
                     Text(Bundle.main.versionBuild)
                 }, label: {
