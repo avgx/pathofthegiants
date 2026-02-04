@@ -22,12 +22,12 @@ struct LifecycleLogViewModifier: ViewModifier {
         content
             .onAppear {
                 startTime = Date()
-                lifecycle.log(level: level, "[\(viewName)]")
+                lifecycle.log(level: level, "[\(viewName, privacy: .public)]")
             }
             .onDisappear {
                 guard let start = startTime else { return }
                 let duration = Date().timeIntervalSince(start)
-                lifecycle.info("[~\(viewName)]: \(String(format: "%.2f", duration))")
+                lifecycle.info("[~\(viewName, privacy: .public)]: \(String(format: "%.2f", duration), privacy: .public)")
                 startTime = nil
             }
     }

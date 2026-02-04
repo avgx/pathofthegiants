@@ -28,9 +28,9 @@ class CustomURLCache: URLCache, Loggable, @unchecked Sendable {
         
         // Пример логирования
         if let response = cachedResponse {
-            logger.info("Получен закэшированный ответ для \(request.url?.absoluteString ?? "")")
+            logger.info("Found cache for \(request.url?.absoluteString ?? "", privacy: .public)")
         } else {
-            logger.info("Кэшированный ответ не найден для \(request.url?.absoluteString ?? "")")
+            logger.info("Cache missed for \(request.url?.absoluteString ?? "", privacy: .public)")
         }
         
         return cachedResponse
@@ -44,12 +44,12 @@ class CustomURLCache: URLCache, Loggable, @unchecked Sendable {
             return
         }
         
-        logger.info("Сохраняем ответ для \(normalizedRequest.url?.absoluteString ?? "") currentMemoryUsage:\(super.currentMemoryUsage)")
+        logger.info("Save response for \(normalizedRequest.url?.absoluteString ?? "", privacy: .public) currentMemoryUsage:\(super.currentMemoryUsage, privacy: .public)")
         
         // Сохраняем ответ
         super.storeCachedResponse(cachedResponse, for: normalizedRequest)
         
-        logger.info("Сохранен ответ для \(normalizedRequest.url?.absoluteString ?? "") currentMemoryUsage:\(super.currentMemoryUsage)")
+        logger.info("Saved response for \(normalizedRequest.url?.absoluteString ?? "", privacy: .public) currentMemoryUsage:\(super.currentMemoryUsage, privacy: .public)")
     }
     
     // Метод для удаления закэшированного ответа
@@ -57,7 +57,7 @@ class CustomURLCache: URLCache, Loggable, @unchecked Sendable {
         let normalizedRequest = normalizeRequest(request)
         // Добавляем дополнительную логику при удалении
         // К сожалению оно работает как-то странно и не удаляет 
-        logger.info("Удаление кэша для \(normalizedRequest.url?.absoluteString ?? "")")
+        logger.info("Delete cache for \(normalizedRequest.url?.absoluteString ?? "", privacy: .public)")
         super.removeCachedResponse(for: normalizedRequest)
     }
     
@@ -68,7 +68,7 @@ class CustomURLCache: URLCache, Loggable, @unchecked Sendable {
         // Например, проверять размер ответа или другие параметры
         //return true
         let res = request.httpMethod == "GET" && request.url?.absoluteString.contains("?_=") == false
-        logger.info("А нужно ли сохранить ответ на: \(request.httpMethod ?? "") \(request) |\(res)")
+        logger.info("Should store response to: \(request.httpMethod ?? "", privacy: .public) \(request, privacy: .public) | answer: \(res, privacy: .public)")
         return res
     }
     
@@ -78,6 +78,6 @@ class CustomURLCache: URLCache, Loggable, @unchecked Sendable {
         // Устанавливаем политику, игнорирующую кэш
         request.cachePolicy = .reloadIgnoringLocalAndRemoteCacheData
         self.removeCachedResponse(for: request)
-        logger.info("Удаление кэша для: \(request.httpMethod ?? "") \(request)")
+        logger.info("Delete cache for: \(request.httpMethod ?? "", privacy: .public) \(request, privacy: .public)")
     }
 }

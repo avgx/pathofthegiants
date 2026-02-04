@@ -10,7 +10,7 @@ public protocol Loggable {
 public extension Loggable {
     /// Статический логгер для типа
     static var logger: Logger {
-        Logger(subsystem: Bundle.main.bundleIdentifier ?? "unknown", category: String(describing: self).lowercased())
+        Logger(subsystem: Bundle.main.bundleIdentifier ?? "unknown", category: String(describing: self))
         ///Было Logger(label: String(describing: self).lowercased())
     }
     

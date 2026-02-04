@@ -6,11 +6,9 @@ enum Profile: String, Codable, Identifiable, Sendable {
     case statistics
     case notifications
     case appleHealth
-//    case gameCenter
     case displaySettings
     case haptic
     case help
-    case info
     
     var id: String {
         rawValue
@@ -44,8 +42,6 @@ extension Profile {
             "waveform.path"
         case .help:
             "questionmark.circle"
-        case .info:
-            "info.circle"
         }
     }
     
@@ -61,16 +57,12 @@ extension Profile {
             "Уведомления"
         case .appleHealth:
             "Apple Health"
-//        case .gameCenter:
-//            "Game Center"
         case .displaySettings:
             "Оформление"
         case .haptic:
             "Виброотклик"
         case .help:
-            "Помощь"
-        case .info:
-            "О приложении"
+            "Путь великанов"
         }
     }
     
@@ -97,16 +89,12 @@ extension Profile {
                 NotificationsView()
             case .appleHealth:
                 AppleHealthView()
-//            case .gameCenter:
-//                GameCenterView()
             case .displaySettings:
                 DisplaySettingsView()
             case .haptic:
                 HapticSettingsView()
             case .help:
-                HelpView()
-            case .info:
-                InfoView()
+                AboutView()
             }
         }
         .navigationTitle(self.navigationTitle)

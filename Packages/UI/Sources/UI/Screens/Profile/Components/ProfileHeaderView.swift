@@ -2,6 +2,7 @@ import SwiftUI
 import Env
 import Models
 import Stretchable
+import LivsyToast
 
 @MainActor
 struct ProfileHeaderView: View {
@@ -14,6 +15,9 @@ struct ProfileHeaderView: View {
     
     let info: AccountInfo
     let stat: UserStatsData?
+    @Binding var showTitle: Bool
+    
+    @State var notImpl = false
     
     var body: some View {
         VStack(alignment: .leading) {
@@ -31,6 +35,7 @@ struct ProfileHeaderView: View {
                     }
                     .padding(.leading, 16)
                 }
+                
             HStack {
                 Spacer()
                 if let stat {
@@ -40,6 +45,21 @@ struct ProfileHeaderView: View {
                 }
             }
             .padding(.horizontal)
+            .overlay(alignment: .top) {
+                GeometryReader { proxy in
+                    Color.clear
+                        .frame(height: 1)
+                        .onChange(of: proxy.frame(in: .global).minY) { _, newY in
+                            // Если элемент ушёл за верхнюю границу экрана
+                            if newY < 0 {
+                                showTitle = true
+                            } else {
+                                showTitle = false
+                            }
+                        }
+                }
+            }
+            
             HStack {
                 nick
                 Spacer()
@@ -78,11 +98,12 @@ struct ProfileHeaderView: View {
                 }
             }
         } else {
-            Button(action:{}) {
+            Button(action:{ notImpl.toggle() }) {
                 Text("Подписка")
             }
             .buttonStyle(.borderedProminent)
             .tint(.purple)
+            .toast(isPresented: $notImpl, message: "пока не реализовано")
         }
         
     }
