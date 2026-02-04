@@ -88,13 +88,14 @@ extension Profile {
         
         let practice: Practice
         @State var fileExistsInCache: Bool?
+        @State var fileSize: Int64?
         
         var body: some View {
             LabeledContent(content: {
                 if let fileExistsInCache {
                     if fileExistsInCache {
                         Image(systemName: "checkmark.circle")
-                            .foregroundStyle(.green)
+                                .foregroundStyle(.green)                        
                     } else {
                         AsyncButton(action: {
                             guard let mp3Url = try? await currentAccount.fetchAudioUrl(for: practice) else {
@@ -103,8 +104,10 @@ extension Profile {
                             //TODO: конечно токен надо брать "не так". переделать
                             _ = try await downloader.simpleDownloadMP3(from: mp3Url, token: AuthToken.load())
                             let fileInCache = await downloader.fileExistsInCache(fileName: practice.audio)
+                            let fileSize = await downloader.fileSize(fileName: practice.audio)
                             await MainActor.run {
                                 self.fileExistsInCache = fileInCache != nil
+                                self.fileSize = fileSize
                             }
                         }) {
                             Image(systemName: "arrow.down.to.line")
@@ -115,11 +118,21 @@ extension Profile {
                 }
             }, label: {
                 Text(practice.name)
+                HStack(spacing: 8) {
+                    Text(TimeInterval(practice.audioDuration).formatTime())
+                    if let fileSize, fileSize > 0 {
+                        Text("\(MemorySizeFormatter.format(fileSize))")
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                    }
+                }
             })
             .task {
                 let fileInCache = await downloader.fileExistsInCache(fileName: practice.audio)
+                let fileSize = await downloader.fileSize(fileName: practice.audio)
                 await MainActor.run {
                     self.fileExistsInCache = fileInCache != nil
+                    self.fileSize = fileSize
                 }
             }
             .id(practice.id)

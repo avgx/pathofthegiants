@@ -31,6 +31,7 @@ struct ModuleListView: View {
                         }.onTapHaptic(.buttonPress).opacity(0.0)
                         ModuleCard(module: module)
                     }
+                    //TODO: вместо ZStack надо .navigationLinkIndicatorVisibility(.hidden) но ещё отработать Haptic
                     .aspectRatio(16.0/9.0, contentMode: .fill)
                     .listRowInsets(.init(top: 0, leading: 0, bottom: 0, trailing: 0))
                     .if(settingsManager.zoomNavigationTransition) { view in

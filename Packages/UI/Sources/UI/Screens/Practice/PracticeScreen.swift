@@ -203,7 +203,7 @@ struct PracticeScreen: View {
     @ViewBuilder
     var progressBar: some View {
         HStack {
-            Text(formatTime(audioPlayer.currentTime))
+            Text((audioPlayer.currentTime).formatTime())
                 .font(.caption)
             Slider(
                 value: Binding(
@@ -222,7 +222,7 @@ struct PracticeScreen: View {
             .tint(.white)
             .disabled(audioPlayer.duration == 0 || !settingsManager.playerSeekEnabled)
             
-            Text(formatTime(audioPlayer.currentTime - audioPlayer.duration))
+            Text((audioPlayer.currentTime - audioPlayer.duration).formatTime())
                 .font(.caption)
         }
     }
@@ -270,12 +270,12 @@ struct PracticeScreen: View {
         .disabled(!isPrepared)
     }
     
-    private func formatTime(_ time: TimeInterval) -> String {
-        let sign = time < 0 ? "-" : ""
-        let minutes = Int(abs(time)) / 60
-        let seconds = Int(abs(time)) % 60
-        return String(format: "\(sign)%d:%02d", minutes, seconds)
-    }
+//    private func formatTime(_ time: TimeInterval) -> String {
+//        let sign = time < 0 ? "-" : ""
+//        let minutes = Int(abs(time)) / 60
+//        let seconds = Int(abs(time)) % 60
+//        return String(format: "\(sign)%d:%02d", minutes, seconds)
+//    }
     
     @MainActor
     func load() async {

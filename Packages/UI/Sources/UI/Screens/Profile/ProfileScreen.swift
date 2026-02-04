@@ -124,18 +124,23 @@ struct ProfileScreen: View, Loggable {
 //                    Label("Задать вопрос", systemImage: "mail")
 //                }
                 
-                Button(action: {
-                    notImpl.toggle()
-//                    let s1 = LoggerExport.export()
-//                    print(s1)
-//                    
-//                    let s = LoggerExport.exportEntries()
-//                    print(s)
-                }) {
-                    ///Report a Bug
+                Link(destination: URL(string: "https://github.com/avgx/pathofthegiants/issues")!, label: {
                     Label("Сообщить об ошибке", systemImage: "ladybug")
-                }
+                })
                 .buttonStyle(.plain)
+                
+//                Button(action: {
+//                    notImpl.toggle()
+////                    let s1 = LoggerExport.export()
+////                    print(s1)
+////                    
+////                    let s = LoggerExport.exportEntries()
+////                    print(s)
+//                }) {
+//                    ///Report a Bug
+//                    Label("Сообщить об ошибке", systemImage: "ladybug")
+//                }
+//                .buttonStyle(.plain)
                 Button(action: { showLogs.toggle() }) {
                     Label("Отладка", systemImage: "doc")
                 }

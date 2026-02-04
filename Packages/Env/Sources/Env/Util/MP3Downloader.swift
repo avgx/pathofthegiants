@@ -175,6 +175,16 @@ public actor MP3Downloader: NSObject, URLSessionDownloadDelegate {
         return FileManager.default.fileExists(atPath: fileURL.path) ? fileURL : nil
     }
     
+    public func fileSize(fileName: String) -> Int64? {
+        let fileURL = cacheDirectory.appendingPathComponent(fileName)
+        guard FileManager.default.fileExists(atPath: fileURL.path) else {
+            return nil
+        }
+        
+        let resources = try? fileURL.resourceValues(forKeys: [.fileSizeKey])
+        return Int64(resources?.fileSize ?? 0)
+    }
+    
     /// Получает локальный URL для файла (не проверяет существование)
     public func localURL(for url: URL) -> URL {
         let fileName = url.lastPathComponent
