@@ -54,9 +54,11 @@ struct PracticeListView: View {
                     PracticeCard(practice: practice)
                 }
             }
-            .listRowBackground(
-                Rectangle().fill(.ultraThinMaterial)
-            )
+            .if(settingsManager.listRowMaterialBackground) { view in
+                view.listRowBackground(
+                    Rectangle().fill(.ultraThinMaterial)
+                )
+            }
             //.listSectionMargins(.top, -40)
             //.zIndex(1)
         }

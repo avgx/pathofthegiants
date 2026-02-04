@@ -38,6 +38,12 @@ public class SettingsManager: ObservableObject {
         }
     }
     
+    @Published public var listRowMaterialBackground = true {
+        didSet {
+            storage.listRowMaterialBackground = listRowMaterialBackground
+        }
+    }
+    
     @Published public var moduleBackground = true {
         didSet {
             storage.moduleBackground = moduleBackground
@@ -101,6 +107,7 @@ public class SettingsManager: ObservableObject {
         appleHealthEnabled = storage.appleHealthEnabled
         notificationTimeEnabled = storage.notificationTimeEnabled
         notificationTime = storage.notificationTime
+        listRowMaterialBackground = storage.listRowMaterialBackground
         moduleBackground = storage.moduleBackground
         moduleBackgroundBlur = storage.moduleBackgroundBlur
         moduleImage = storage.moduleImage
@@ -115,15 +122,18 @@ public class SettingsManager: ObservableObject {
     private func applyUiStyle() {
         switch uiStyle {
         case .classic:
+            listRowMaterialBackground = true
             moduleBackground = true
             moduleBackgroundBlur = 12
             moduleImage = false
             zoomNavigationTransition = false
         case .brutalNordic:
+            listRowMaterialBackground = false
             moduleBackground = false
             moduleImage = false
             zoomNavigationTransition = false
         case .zoomer:
+            listRowMaterialBackground = true
             moduleBackground = true
             moduleBackgroundBlur = 12
             moduleImage = true
@@ -142,6 +152,7 @@ extension SettingsManager {
         @AppStorage("settings.appleHealthEnabled")      var appleHealthEnabled: Bool = false
         @AppStorage("settings.notificationTimeEnabled") var notificationTimeEnabled: Bool = false
         @AppStorage("settings.notificationTime")        var notificationTime: Date = defaultTime
+        @AppStorage("settings.listRowMaterialBackground") var listRowMaterialBackground: Bool = true
         @AppStorage("settings.moduleBackground")        var moduleBackground: Bool = true
         @AppStorage("settings.moduleBackgroundBlur")    var moduleBackgroundBlur: Double = 12
         @AppStorage("settings.moduleImage")             var moduleImage: Bool = true

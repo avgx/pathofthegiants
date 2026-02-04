@@ -3,6 +3,7 @@ import Env
 import Models
 
 struct PracticeGroupListView: View {
+    @EnvironmentObject var settingsManager: SettingsManager
     @EnvironmentObject var currentAccount: CurrentAccount
     
     let practices: [Practice]
@@ -38,9 +39,11 @@ struct PracticeGroupListView: View {
                 } header: {
                     Text(group)
                 }
-                .listRowBackground(
-                    Rectangle().fill(.ultraThinMaterial)
-                )
+                .if(settingsManager.listRowMaterialBackground) { view in
+                    view.listRowBackground(
+                        Rectangle().fill(.ultraThinMaterial)
+                    )
+                }
             }
         }
         .padding(.top, -32) // Отрицательный паддинг чтобы придвинуть к навигации

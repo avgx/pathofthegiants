@@ -62,9 +62,19 @@ extension Profile {
                         }
                     }
                 } header: {
-                    Text("Фон")
+                    Text("Экран")
                 } footer: {
                     Text("При отображении модуля или сундука используется фоновое изображение")
+                }
+                .opacity(settingsManager.uiStyle == .custom ? 1.0 : 0.5)
+                .disabled(settingsManager.uiStyle != .custom)
+                
+                Section {
+                    Toggle("Фон", isOn: $settingsManager.listRowMaterialBackground)
+                } header: {
+                    Text("Строки в списках")
+                } footer: {
+                    Text("Стиль отображения строк практики, сундука или настроек")
                 }
                 .opacity(settingsManager.uiStyle == .custom ? 1.0 : 0.5)
                 .disabled(settingsManager.uiStyle != .custom)

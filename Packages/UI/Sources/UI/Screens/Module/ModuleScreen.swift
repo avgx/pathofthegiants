@@ -46,8 +46,10 @@ struct ModuleScreen: View {
         } else {
             // Обязательно нужен else
             //Color.clear
-            Rectangle().fill(.ultraThinMaterial)
+            Color(UIColor.systemBackground)
                 .ignoresSafeArea()
+//            Rectangle().fill(.ultraThinMaterial)
+//                .ignoresSafeArea()
         }
     }
 }
