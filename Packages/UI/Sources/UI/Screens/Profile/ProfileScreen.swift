@@ -2,7 +2,7 @@ import SwiftUI
 import Env
 import Models
 import LivsyToast
-
+import DeviceKit
 
 struct ProfileScreen: View, Loggable {
     @EnvironmentObject var currentAccount: CurrentAccount
@@ -115,14 +115,37 @@ struct ProfileScreen: View, Loggable {
             }
             
             Section {
-                Link(destination: URL(string: "mailto:pathofthegiants@gmail.com")!, label: {
+                /// Ask a Question
+                Link(
+                    destination: URL.mailto(
+                        "pathofthegiants@gmail.com",
+                        subject: "Путь великанов",
+                        body: """
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            ID: \(currentAccount.accountInfo?.data.userID ?? "-")
+                            Подписка до: \(currentAccount.accountInfo?.data.subscriptionEndDate ?? "-")
+                            TZ: \(TimeZone.current)
+                            Версия: \(Bundle.main.versionBuild)
+                            Устройство: \(Device.current)
+                            Диагональ: \(Device.current.diagonal)
+                            Яркость: \(Device.current.screenBrightness)
+                            Экран: \(Int(UIScreen.main.bounds.width))x\(Int(UIScreen.main.bounds.height))
+                            iOS: \(UIDevice.current.systemVersion)
+                            """
+                    )!,
+                    label: {
                     Label("Задать вопрос", systemImage: "mail")
                 })
                 .buttonStyle(.plain)
-//                Button(action: { notImpl.toggle() }) {
-//                    /// Ask a Question
-//                    Label("Задать вопрос", systemImage: "mail")
-//                }
                 
                 Link(destination: URL(string: "https://github.com/avgx/pathofthegiants/issues")!, label: {
                     Label("Сообщить об ошибке", systemImage: "ladybug")
@@ -214,6 +237,7 @@ struct ProfileScreen: View, Loggable {
     
     @ViewBuilder
     var info: some View {
+        //TODO: #53 переделать
         if let info = currentAccount.accountInfo {
             ProfileHeaderView(info: info, stat: stat, showTitle: $showTitle)
         } else {

@@ -84,7 +84,7 @@ extension Profile {
             case .player:
                 PlayerView()
             case .statistics:
-                StatisticsView()
+                StatisticsUpdateView()
             case .notifications:
                 NotificationsView()
             case .appleHealth:

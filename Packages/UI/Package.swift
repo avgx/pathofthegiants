@@ -24,6 +24,7 @@ let package = Package(
         .package(url: "https://github.com/avgx/ButtonKit", branch: "main"),
         .package(url: "https://github.com/avgx/LivsyToast", branch: "main"),
         .package(url: "https://github.com/avgx/Stretchable", branch: "main"),
+        .package(url: "https://github.com/avgx/DeviceKit", branch: "master"),
     ],
     targets: [
         // Targets are the basic building blocks of a package, defining a module or a test suite.
@@ -36,7 +37,8 @@ let package = Package(
                 "Api",
                 "ButtonKit",
                 "LivsyToast",
-                "Stretchable"
+                "Stretchable",
+                "DeviceKit"
             ],
             resources: [
                 .process("Fonts")

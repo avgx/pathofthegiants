@@ -13,7 +13,7 @@ extension URL {
     ///   - body: Текст письма (переносы строк автоматически кодируются как %0D%0A).
     /// - Returns: Готовый URL для mailto‑ссылки или `nil`, если сборка не удалась.
     public static func mailto(
-        to: String,
+        _ to: String,
         cc: String? = nil,
         bcc: String? = nil,
         subject: String? = nil,
@@ -38,9 +38,7 @@ extension URL {
         }
         
         if let body = body {
-            // Заменяем \n на %0D%0A (CRLF в URL‑кодировке)
-            let encodedBody = body.replacingOccurrences(of: "\n", with: "%0D%0A")
-            queryItems.append(URLQueryItem(name: "body", value: encodedBody))
+            queryItems.append(URLQueryItem(name: "body", value: body))
         }
         
         components.queryItems = queryItems
