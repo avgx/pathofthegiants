@@ -11,7 +11,7 @@ struct ProfileScreen: View, Loggable {
     @State var stat: UserStatsData? = nil
     @State var refresh = UUID()
     @State var notImpl = false
-    @State var showLogs = false
+//    @State var showLogs = false
     
     var body: some View {
         NavigationStack {
@@ -57,7 +57,6 @@ struct ProfileScreen: View, Loggable {
                 Profile.player.navigationLink
                 Profile.statistics.navigationLink
                 Profile.appleHealth.navigationLink
-//                Profile.gameCenter.navigationLink
                 Profile.notifications.navigationLink
             } header: {
                 Text("Настройки")
@@ -70,145 +69,9 @@ struct ProfileScreen: View, Loggable {
                 Text("Интерфейс")
             }
             
-            Section {
-                Link(destination: URL(string: "https://vk.com/pathofthegiants")!, label: {
-                    Label {
-                        Text("ВКонтакте")
-                        Text("@pathofthegiants")
-                    } icon: {
-                        Image("vk-symbol")
-                    }
-                })
-                .buttonStyle(.plain)
-                Link(destination: URL(string: "https://t.me/pathofthegiants")!, label: {
-                    Label {
-                        Text("Telegram")
-                        Text("t.me/pathofthegiants")
-                            .font(.caption2)
-                    } icon: {
-                        Image(systemName: "paperplane")
-                    }
-                })
-                .buttonStyle(.plain)
-                Link(destination: URL(string: "https://www.youtube.com/@pathofthegiants")!, label: {
-                    Label {
-                        Text("Youtube")
-                        Text("@pathofthegiants")
-                            .font(.caption2)
-                    } icon: {
-                        Image(systemName: "play.rectangle.fill")
-                    }
-                })
-                .buttonStyle(.plain)
-                Link(destination: URL(string: "https://rutube.ru/channel/57855700")!, label: {
-                    Label {
-                        Text("Rutube")
-                        Text("channel/57855700")
-                            .font(.caption2)
-                    } icon: {
-                        Image("rutube-symbol")
-                    }
-                })
-                .buttonStyle(.plain)
-            } header: {
-                Text("Социальные сети")
-            }
-            
-            Section {
-                /// Ask a Question
-                Link(
-                    destination: URL.mailto(
-                        "pathofthegiants@gmail.com",
-                        subject: "Путь великанов",
-                        body: """
-                            
-                            
-                            
-                            
-                            
-                            
-                            
-                            
-                            
-                            
-                            ID: \(currentAccount.accountInfo?.data.userID ?? "-")
-                            Подписка до: \(currentAccount.accountInfo?.data.subscriptionEndDate ?? "-")
-                            TZ: \(TimeZone.current)
-                            Версия: \(Bundle.main.versionBuild)
-                            Устройство: \(Device.current)
-                            Диагональ: \(Device.current.diagonal)
-                            Яркость: \(Device.current.screenBrightness)
-                            Экран: \(Int(UIScreen.main.bounds.width))x\(Int(UIScreen.main.bounds.height))
-                            iOS: \(UIDevice.current.systemVersion)
-                            """
-                    )!,
-                    label: {
-                    Label("Задать вопрос", systemImage: "mail")
-                })
-                .buttonStyle(.plain)
-                
-                Link(destination: URL(string: "https://github.com/avgx/pathofthegiants/issues")!, label: {
-                    Label("Сообщить об ошибке", systemImage: "ladybug")
-                })
-                .buttonStyle(.plain)
-                
-//                Button(action: {
-//                    notImpl.toggle()
-////                    let s1 = LoggerExport.export()
-////                    print(s1)
-////                    
-////                    let s = LoggerExport.exportEntries()
-////                    print(s)
-//                }) {
-//                    ///Report a Bug
-//                    Label("Сообщить об ошибке", systemImage: "ladybug")
-//                }
-//                .buttonStyle(.plain)
-                Button(action: { showLogs.toggle() }) {
-                    Label("Отладка", systemImage: "list.bullet.clipboard")
-                }
-                .buttonStyle(.plain)
-                .sheet(isPresented: $showLogs) {
-                    LogsSheetView()
-                }
-                Button(action: { notImpl.toggle() }) {
-                    /// Rate app
-                    Label("Оценить приложение", systemImage: "star")
-                }
-                .buttonStyle(.plain)
-                Button(action: { notImpl.toggle() }) {
-                    /// Share the app
-                    Label("Поделиться", systemImage: "square.and.arrow.up")
-                }
-                .buttonStyle(.plain)
-            } header: {
-                ///Support
-                Text("Поддержка")
-            }
-            .toast(isPresented: $notImpl, message: "пока не реализовано")
-            
-            Section {
-                Profile.help.navigationLink
-                
-                Link(destination: URL(string: "https://путьвеликанов.рф/politika_konfidentsialnosti")!, label: {
-                    Label("Политика конфиденциальности", systemImage: "text.document")
-                })
-                .buttonStyle(.plain)
-                
-                Link(destination: URL(string: "https://путьвеликанов.рф/polzovatelskoe_soglashenie")!, label: {
-                    Label("Пользовательское соглашение", systemImage: "text.document")
-                })
-                .buttonStyle(.plain)
-                
-                LabeledContent(content: {
-                    Text(Bundle.main.versionBuild)
-                }, label: {
-                    Label("Версия", systemImage: "info.circle")
-                })
-            } header: {
-                ///About
-                Text("О приложении")
-            }
+            SocialSection()
+            SupportSection()
+            AboutSection()
         }
         .refreshable {
             refresh = UUID()
