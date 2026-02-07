@@ -14,6 +14,7 @@ struct LoginScreen: View, Loggable {
     @State var pass: String = ""
     
     @State var signup = false
+    @State var restore = false
     @State var errorString = ""
     
     var body: some View {
@@ -33,6 +34,9 @@ struct LoginScreen: View, Loggable {
             .toolbarTitleDisplayMode(.inlineLarge)
             .sheet(isPresented: $signup, content: {
                 SignupScreen()
+            })
+            .sheet(isPresented: $restore, content: {
+                RestoreScreen(email: $user, pass: $pass)
             })
         }
         .navigationViewStyle(.stack)
@@ -135,6 +139,19 @@ struct LoginScreen: View, Loggable {
             .allowsHitTestingWhenLoading(false)
             .asyncButtonStyle(.overlay)
             .buttonStyle(.glassProminent)
+        } footer: {
+            Button(action: { restore.toggle() }) {
+                HStack {
+                    Spacer()
+                    Text("Забыли пароль?")
+                    Spacer()
+                }
+                .compositingGroup()
+                .padding(8)
+            }
+            .buttonStyle(.plain)
+            .foregroundStyle(Color.accentColor)
+            .padding(.bottom, 8)
         }
         .listRowBackground(Color.clear)
         .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))

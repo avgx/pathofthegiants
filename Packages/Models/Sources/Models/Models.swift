@@ -6,6 +6,7 @@ struct LocalizedError {
     static let unauthorized = "Указанный e-mail не зарегистрирован"
     static let invalidParams = "Неверный формат параметров"
     static let invalidPassword = "Неверный e-mail или пароль"
+    static let notFound = "Указанный e-mail не зарегистрирован"
     static let duplicateEmail = "Такой e-mail уже есть в системе"
     static let rateLimit = "Превышен лимит действий. Попробуйте позже"
     static let socket = "Отсутствует подключение к интернету"
@@ -18,6 +19,7 @@ public enum ErrorCode: String, Codable {
     case unauthorized = "UnauthorizedClientException"
     case invalidParams = "InvalidParamsClientException"
     case invalidPassword = "InvalidPasswordClientException"
+    case notFound = "NotFoundClientException"
     case duplicateEmail = "DuplicateEmail"
     case rateLimit = "RateLimitClientException"
     case socket = "SocketException"
@@ -34,6 +36,8 @@ public enum ErrorCode: String, Codable {
             return LocalizedError.invalidParams
         case .invalidPassword:
             return LocalizedError.invalidPassword
+        case .notFound:
+            return LocalizedError.notFound
         case .duplicateEmail:
             return LocalizedError.duplicateEmail
         case .rateLimit:
