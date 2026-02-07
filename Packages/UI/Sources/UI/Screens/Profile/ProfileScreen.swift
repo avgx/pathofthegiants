@@ -27,7 +27,7 @@ struct ProfileScreen: View, Loggable {
     var list: some View {
         List {
             Section {
-                info
+                ProfileHeaderView(info: currentAccount.accountInfo, stat: stat, showTitle: $showTitle)
                     .edgesIgnoringSafeArea(.top)
             }
             .listSectionMargins(.horizontal, 0)
@@ -82,17 +82,7 @@ struct ProfileScreen: View, Loggable {
             feature.destination
         })
     }
-    
-    @ViewBuilder
-    var info: some View {
-        //TODO: #53 переделать
-        if let info = currentAccount.accountInfo {
-            ProfileHeaderView(info: info, stat: stat, showTitle: $showTitle)
-        } else {
-            ContentUnavailableView("Нет данных", systemImage: "exclamationmark.triangle").padding()
-        }
-    }
-    
+
     @ViewBuilder
     private var backgroundView: some View {
         if settingsManager.moduleBackground {

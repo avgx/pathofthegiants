@@ -13,7 +13,7 @@ struct ProfileHeaderView: View {
         static let avatarHeight: CGFloat = 80
     }
     
-    let info: AccountInfo
+    let info: AccountInfo?
     let stat: UserStatsData?
     @Binding var showTitle: Bool
     
@@ -81,18 +81,18 @@ struct ProfileHeaderView: View {
     
     @ViewBuilder
     var nick: some View {
-        Text("@\(info.data.nickname)")
+        Text("@\(info?.data.nickname ?? "??????")")
             .font(.title2)
             .fontWeight(.bold)
     }
     
     @ViewBuilder
     var subscription: some View {
-        if info.data.subscriptionLevel == 1 {
+        if let info, info.data.subscriptionLevel == 1 {
             VStack {
                 Text("Подписка")
                     .fontWeight(.bold)
-                if let date = info.data.endDate {
+                if info.data.endDate != nil {
                     Text("до \(info.data.formattedEndDate)")
                         .font(.caption2)
                 }
@@ -105,6 +105,5 @@ struct ProfileHeaderView: View {
             .tint(.purple)
             .toast(isPresented: $notImpl, message: "пока не реализовано")
         }
-        
     }
 }
