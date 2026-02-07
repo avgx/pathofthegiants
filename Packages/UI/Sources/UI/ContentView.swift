@@ -2,6 +2,8 @@ import SwiftUI
 import Env
 
 public struct ContentView: View {
+    @Environment(\.colorScheme) var colorScheme
+    
     @StateObject private var themeManager = ThemeManager.shared
     @StateObject private var settingsManager = SettingsManager.shared
     @StateObject private var currentAccount = CurrentAccount.shared
@@ -32,6 +34,8 @@ public struct ContentView: View {
         .environmentObject(healthKitManager)
         .environmentObject(notificationManager)
         .preferredColorScheme(themeManager.selectedTheme)
+        //.tint перекрашивает и кнопки в тулбаре
+        .accentColor(currentAccentColor)
         .onAppear {
             audioPlayer.delegate = currentAccount
         }
@@ -41,6 +45,17 @@ public struct ContentView: View {
         .environment(\.defaultMinListHeaderHeight, 0) // Убираем отступы заголовков секций
         .environment(\.defaultMinListRowHeight, 0) // Убираем минимальную высоту рядов
         .listSectionSpacing(.compact)
+    }
+    
+    private var currentAccentColor: Color {
+        guard settingsManager.customAccentColor else {
+            return .accentColor
+        }
+        
+        let theme = themeManager.selectedTheme ?? colorScheme
+        return theme == .light
+            ? settingsManager.accentLight
+            : settingsManager.accentDark
     }
 }
 

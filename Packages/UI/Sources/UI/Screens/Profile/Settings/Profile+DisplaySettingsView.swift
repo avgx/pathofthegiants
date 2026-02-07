@@ -42,6 +42,16 @@ extension Profile {
                 }
                 
                 Section {
+                    Toggle("Настраиваемый", isOn: $settingsManager.customAccentColor)
+                    ColorPicker("В светлой теме", selection: $settingsManager.accentLight, supportsOpacity: false)
+                    ColorPicker("В темной теме", selection: $settingsManager.accentDark, supportsOpacity: false)
+                } header: {
+                    Text("Цвет акцента")
+                }
+                .opacity(settingsManager.uiStyle == .custom ? 1.0 : 0.5)
+                .disabled(settingsManager.uiStyle != .custom)
+                
+                Section {
                     Toggle("Фон", isOn: $settingsManager.moduleBackground)
                        
                     if settingsManager.moduleBackground {
@@ -84,6 +94,84 @@ extension Profile {
                     Toggle("Навигация через зум", isOn: $settingsManager.zoomNavigationTransition)
                 } header: {
                     Text("Модуль")
+                }
+                .opacity(settingsManager.uiStyle == .custom ? 1.0 : 0.5)
+                .disabled(settingsManager.uiStyle != .custom)
+                
+                Section {
+                    HStack {
+                        Text("Прозрачность темной подложки")
+                        Slider(
+                            value: Binding(
+                                get: { settingsManager.practiceBackgroundBlackOpacity * 100 },
+                                set: { newValue in
+                                    // Обновляем асинхронно
+                                    DispatchQueue.main.async {
+                                        settingsManager.practiceBackgroundBlackOpacity = Double(newValue) / 100.0
+                                    }
+                                }
+                            ),
+                            in: 0...100)
+                        Text("\(Int(settingsManager.practiceBackgroundBlackOpacity * 100))")
+                    }
+                    HStack {
+                        Text("Прозрачность светлой подложки")
+                        Slider(
+                            value: Binding(
+                                get: { settingsManager.practiceBackgroundWhiteOpacity * 100 },
+                                set: { newValue in
+                                    // Обновляем асинхронно
+                                    DispatchQueue.main.async {
+                                        settingsManager.practiceBackgroundWhiteOpacity = Double(newValue) / 100.0
+                                    }
+                                }
+                            ),
+                            in: 0...100)
+                        Text("\(Int(settingsManager.practiceBackgroundWhiteOpacity * 100))")
+                    }
+                    HStack {
+                        Text("Размытие")
+                        Slider(
+                            value: Binding(
+                                get: { settingsManager.practiceBackgroundBlur },
+                                set: { newValue in
+                                    // Обновляем асинхронно
+                                    DispatchQueue.main.async {
+                                        settingsManager.practiceBackgroundBlur = newValue
+                                    }
+                                }
+                            ),
+                            in: 0...100)
+                        Text("\(Int(settingsManager.practiceBackgroundBlur))")
+                    }
+                    HStack {
+                        Text("Прозрачность")
+                        Slider(
+                            value: Binding(
+                                get: { settingsManager.practiceBackgroundImageOpacity * 100 },
+                                set: { newValue in
+                                    // Обновляем асинхронно
+                                    DispatchQueue.main.async {
+                                        settingsManager.practiceBackgroundImageOpacity = Double(newValue) / 100.0
+                                    }
+                                }
+                            ),
+                            in: 0...100)
+                        Text("\(Int(settingsManager.practiceBackgroundImageOpacity * 100))")
+                    }
+                } header: {
+                    Text("Фон практики")
+                } footer: {
+                    Text("Диапазон прозрачности от 0 (совсем прозрачный) до 100 (совсем непрозрачный).")
+                }
+                .opacity(settingsManager.uiStyle == .custom ? 1.0 : 0.5)
+                .disabled(settingsManager.uiStyle != .custom)
+                
+                Section {
+                    Toggle("Эффект стекла на карточке", isOn: $settingsManager.practiceGlassEffectOnCard)
+                    Toggle("Эффект стекла на управлении", isOn: $settingsManager.practiceGlassEffectOnControls)
+                } header: {
+                    Text("Плеер")
                 }
                 .opacity(settingsManager.uiStyle == .custom ? 1.0 : 0.5)
                 .disabled(settingsManager.uiStyle != .custom)

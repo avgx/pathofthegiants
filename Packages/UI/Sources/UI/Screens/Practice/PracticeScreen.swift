@@ -20,44 +20,40 @@ struct PracticeScreen: View {
     
     let practice: Practice
     
-    //TODO: move to settings
-    let glassEffectOnCard = false
-    let mergePlayerControlsWithFinishButtons = true
+    //TODO: Нужно подумать о механике явной отмены сессии. нужно ли это? или и так понятно.
     let practiceCancelButtonEnabled = false
     
     var body: some View {
         VStack(alignment: .center, spacing: 4) {
-            if glassEffectOnCard {
-                card
-                    .glassEffect(.clear, in: .rect(cornerRadius: 16))
-                    .padding(.horizontal)
-            }
-            else {
-                card
-                    .padding(.horizontal)
-            }
-            Spacer()
-            
-            if mergePlayerControlsWithFinishButtons {
-                VStack {
-                    playerControls
-                    finishButtons
+            card
+                .if(settingsManager.practiceGlassEffectOnCard) { view in
+                    view.glassEffect(.clear, in: .rect(cornerRadius: 16))
                 }
                 .padding(.horizontal)
-            } else {
+            Spacer()
+            
+            VStack(spacing: 4) {
                 playerControls
-                    .padding()
-                    .glassEffect(.clear, in: .rect(cornerRadius: 16))
-                    .padding(.horizontal)
-                
+                    .if(settingsManager.practiceGlassEffectOnControls) { view in
+                        view
+                            .padding()
+                            .glassEffect(.clear, in: .rect(cornerRadius: 16))
+                    }
+                    
                 finishButtons
             }
+            .padding(.horizontal)
         }
         .frame(maxWidth: .infinity)
         .background(
             ZStack {
                 Color.black
-                    .opacity(0.24)
+                    .opacity(settingsManager.practiceBackgroundBlackOpacity)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    .ignoresSafeArea()
+                
+                Color.white
+                    .opacity(settingsManager.practiceBackgroundWhiteOpacity)
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
                     .ignoresSafeArea()
                 
@@ -65,7 +61,8 @@ struct PracticeScreen: View {
                     .aspectRatio(contentMode: .fill)
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
                     .clipped()
-                    .blur(radius: 54)
+                    .blur(radius: settingsManager.practiceBackgroundBlur)
+                    .opacity(settingsManager.practiceBackgroundImageOpacity)
             }
         )
         .id(practice.id)
@@ -121,18 +118,19 @@ struct PracticeScreen: View {
                 Label(practice.pose, systemImage: "figure.mind.and.body")
             }
             .font(.footnote)
+            .minimumScaleFactor(0.8)
             
             Spacer()
             
             PracticeImage(practice: practice)
-                .frame(width: 240, height: 240)
+                .frame(width: 220, height: 220)
                 .clipShape(Circle())
             
             Spacer()
             
             Text(practice.description)
                 .lineLimit(4)
-                //.minimumScaleFactor(0.3)
+                .minimumScaleFactor(0.8)
                 .font(.footnote)
                 .fontWeight(.light)
                 .foregroundStyle(.secondary)
@@ -148,7 +146,7 @@ struct PracticeScreen: View {
         VStack(alignment: .center, spacing: 4) {
             if isLoaded {
                 progressBar
-                    .foregroundStyle(.white)
+                    .foregroundStyle(Color(UIColor.label)) //.white
             } else {
                 ProgressView() {
                     Text("Загрузка...")
@@ -158,7 +156,7 @@ struct PracticeScreen: View {
             
             if isLoaded {
                 controlButtons
-                    .foregroundStyle(.white)
+                    .foregroundStyle(Color(UIColor.label)) //.white
             }
         }
         .frame(maxWidth: .infinity)
@@ -219,7 +217,7 @@ struct PracticeScreen: View {
             )
             .sliderThumbVisibility(.hidden)
             .controlSize(.small)
-            .tint(.white)
+            .tint(Color(UIColor.label)) //.white
             .disabled(audioPlayer.duration == 0 || !settingsManager.playerSeekEnabled)
             
             Text((audioPlayer.currentTime - audioPlayer.duration).formatTime())
@@ -270,13 +268,6 @@ struct PracticeScreen: View {
         .disabled(!isPrepared)
     }
     
-//    private func formatTime(_ time: TimeInterval) -> String {
-//        let sign = time < 0 ? "-" : ""
-//        let minutes = Int(abs(time)) / 60
-//        let seconds = Int(abs(time)) % 60
-//        return String(format: "\(sign)%d:%02d", minutes, seconds)
-//    }
-    
     @MainActor
     func load() async {
         guard !isLoaded else { return }
@@ -309,7 +300,6 @@ struct PracticeScreen: View {
             print(error)
         }
         
-        //currentAccount.currentPractice = practice
         currentAccount.startPractice(practice)
         
         if settingsManager.playerContinueProgress {
