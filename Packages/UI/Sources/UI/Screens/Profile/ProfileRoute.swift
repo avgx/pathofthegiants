@@ -1,6 +1,6 @@
 import SwiftUI
 
-enum Profile: String, Codable, Identifiable, Sendable {
+enum ProfileRoute: String, Codable, Identifiable, Sendable {
     case account
     case player
     case statistics
@@ -15,7 +15,7 @@ enum Profile: String, Codable, Identifiable, Sendable {
     }
 }
 
-extension Profile {
+extension ProfileRoute {
     @MainActor
     @ViewBuilder
     var navigationLabel: some View {

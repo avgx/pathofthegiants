@@ -4,7 +4,7 @@ struct AboutSection: View {
     
     var body: some View {
         Section {
-            Profile.help.navigationLink
+            ProfileRoute.help.navigationLink
             
             Link(destination: URL(string: "https://путьвеликанов.рф/politika_konfidentsialnosti")!, label: {
                 Label("Политика конфиденциальности", systemImage: "text.document")

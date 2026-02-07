@@ -11,7 +11,6 @@ struct ProfileScreen: View, Loggable {
     @State var stat: UserStatsData? = nil
     @State var refresh = UUID()
     @State var notImpl = false
-//    @State var showLogs = false
     
     var body: some View {
         NavigationStack {
@@ -37,34 +36,20 @@ struct ProfileScreen: View, Loggable {
             .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
             .listRowBackground(Color.clear)
             
-            Section {
-                if let favoritePractice = stat?.favoritePractice {
-                    if let p = currentAccount.practices?.data.first(where: { $0.id == favoritePractice.practiceID }) {
-                        PracticeCard(practice: p)
-                            .id(p.id)
-                    } else {
-                        Text("Пока отсутствует")
-                    }
-                } else {
-                    Text("Пока отсутствует")
-                }
-            } header: {
-                Text("Любимая практика")
-            }
-            
+            FavoritePracticeSection(stat: stat)
             
             Section {
-                Profile.player.navigationLink
-                Profile.statistics.navigationLink
-                Profile.appleHealth.navigationLink
-                Profile.notifications.navigationLink
+                ProfileRoute.player.navigationLink
+                ProfileRoute.statistics.navigationLink
+                ProfileRoute.appleHealth.navigationLink
+                ProfileRoute.notifications.navigationLink
             } header: {
                 Text("Настройки")
             }
             
             Section {
-                Profile.displaySettings.navigationLink
-                Profile.haptic.navigationLink
+                ProfileRoute.displaySettings.navigationLink
+                ProfileRoute.haptic.navigationLink
             } header: {
                 Text("Интерфейс")
             }
@@ -90,10 +75,10 @@ struct ProfileScreen: View, Loggable {
                 })
             }
             ToolbarItemGroup(placement: .topBarTrailing) {
-                Profile.account.navigationLink
+                ProfileRoute.account.navigationLink
             }
         }
-        .navigationDestination(for: Profile.self, destination: { feature in
+        .navigationDestination(for: ProfileRoute.self, destination: { feature in
             feature.destination
         })
     }
