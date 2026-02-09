@@ -19,15 +19,14 @@ struct LoginScreen: View, Loggable {
     
     var body: some View {
         NavigationStack {
-            VStack {
-                form
-                    .onAppear {
-                        user = savedUser
-                    }
-                    .onDisappear {
-                        savedUser = user
-                    }
-            }
+            form
+                .onAppear {
+                    user = savedUser
+                }
+                .onDisappear {
+                    savedUser = user
+                }
+            .scrollBounceBehavior(.basedOnSize)
             .scrollContentBackground(.hidden) // This hides the default form background
             .background(MainBackground())
             .navigationTitle("Путь великанов")

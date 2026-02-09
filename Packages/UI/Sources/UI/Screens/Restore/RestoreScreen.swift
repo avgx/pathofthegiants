@@ -28,9 +28,8 @@ struct RestoreScreen: View, Loggable {
     
     var body: some View {
         NavigationStack {
-            VStack {
-                form
-            }
+            form
+            .scrollBounceBehavior(.basedOnSize)
             .navigationTitle("Смена пароля")
             .toolbarTitleDisplayMode(.inline)
             .toolbar {

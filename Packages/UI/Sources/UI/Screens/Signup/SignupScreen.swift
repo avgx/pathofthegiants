@@ -27,9 +27,8 @@ struct SignupScreen: View, Loggable {
     
     var body: some View {
         NavigationStack {
-            VStack {
-                form
-            }
+            form
+            .scrollBounceBehavior(.basedOnSize)
             //.scrollContentBackground(.hidden) // This hides the default form background
             //.background(MainBackground())
             .navigationTitle("Регистрация")
