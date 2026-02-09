@@ -6,7 +6,7 @@ import Get
 import LivsyToast
 
 //TODO: это почти полный копипаст SignupScreen. временно.
-struct RestoreScreen: View {
+struct RestoreScreen: View, Loggable {
     @Environment(\.dismiss) private var dismiss
     @Environment(\.isPresented) var isPresented
     @EnvironmentObject var currentAccount: CurrentAccount
@@ -43,6 +43,28 @@ struct RestoreScreen: View {
                         }
                     }
                 }
+                ToolbarItemGroup(placement: .confirmationAction) {
+                    sendActionButton
+                }
+            }
+            .toast(
+                isPresented: $toastCheckEmail,
+                duration: 2,
+                edge: .bottom
+            ) {
+                HStack(spacing: 12) {
+                    Image(systemName: "mail")
+                    
+                    Text("Письмо со ссылкой на подтверждение смены пароля отправлено")
+                        .font(.callout)
+                        .fontWeight(.semibold)
+                }
+                .padding(.horizontal, 16)
+                .padding(.vertical, 12)
+                .background(
+                    RoundedRectangle(cornerRadius: 20, style: .continuous)
+                        .fill(.ultraThinMaterial)
+                )
             }
         }
         .navigationViewStyle(.stack)
@@ -128,22 +150,22 @@ struct RestoreScreen: View {
                 .font(.caption)
             }
             
-            sendActionButton
+            //sendActionButton
         }
     }
     
     @ViewBuilder
     var sendActionButton: some View {
-        Section {
+//        Section {
             AsyncButton(action: {
                 
                 do {
                     errorString = ""
                     try await currentAccount.restore(user: email, pass: pass)
-                    print("email sent")
-                    //toastCheckEmail.toggle()
+                    toastCheckEmail.toggle()
+                    dismiss()
                 } catch CustomError.unacceptableStatusCode(let code, let text, _) {
-                    print(text)
+                    logger.error("\(code, privacy: .public) \(text, privacy: .public)")
                     if let errorResponse = try? JSONDecoder().decode(ErrorResponse.self, from: Data(text.utf8)) {
                         print("Код ошибки: \(errorResponse.error.code)")
                         print("Сообщение: \(errorResponse.error.message)")
@@ -159,23 +181,24 @@ struct RestoreScreen: View {
                 
                 //dismiss()
             }, label: {
-                HStack {
-                    Spacer()
-                    Text("Сменить пароль")
-                    Spacer()
-                }
-                .compositingGroup()
-                .padding(8)
+//                HStack {
+//                    Spacer()
+//                    Text("Сменить пароль")
+//                    Spacer()
+//                }
+//                .compositingGroup()
+//                .padding(8)
+                Image(systemName: "checkmark")
             })
             .throwableButtonStyle(.shake)
             .allowsHitTestingWhenLoading(false)
             .asyncButtonStyle(.overlay)
             .buttonStyle(.borderedProminent)
             .disabled(!isEmailValid || !isPasswordValid)
-        }
-        .listRowBackground(Color.clear)
-        .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
-        .listRowSeparator(.hidden)
+//        }
+//        .listRowBackground(Color.clear)
+//        .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
+//        .listRowSeparator(.hidden)
     }
     
     func validateEmail() {

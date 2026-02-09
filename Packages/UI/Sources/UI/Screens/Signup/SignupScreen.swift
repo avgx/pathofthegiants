@@ -5,7 +5,7 @@ import ButtonKit
 import Get
 import LivsyToast
 
-struct SignupScreen: View {
+struct SignupScreen: View, Loggable {
     @Environment(\.dismiss) private var dismiss
     @Environment(\.isPresented) var isPresented
     @EnvironmentObject var currentAccount: CurrentAccount
@@ -43,6 +43,9 @@ struct SignupScreen: View {
                             Image(systemName: "xmark")
                         }
                     }
+                }
+                ToolbarItemGroup(placement: .confirmationAction) {
+                    signupButton
                 }
             }
             .toast(
@@ -160,7 +163,7 @@ struct SignupScreen: View {
                 .font(.caption)
             }
             
-            signupButton
+//            signupButton
             
 //            trialButton
         }
@@ -168,15 +171,16 @@ struct SignupScreen: View {
     
     @ViewBuilder
     var signupButton: some View {
-        Section {
+//        Section {
             AsyncButton(action: {
                 
                 do {
                     errorString = ""
                     try await currentAccount.signup(user: email, pass: pass)
                     toastCheckEmail.toggle()
+                    dismiss()
                 } catch CustomError.unacceptableStatusCode(let code, let text, _) {
-                    print(text)
+                    logger.error("\(code, privacy: .public) \(text, privacy: .public)")
                     if let errorResponse = try? JSONDecoder().decode(ErrorResponse.self, from: Data(text.utf8)) {
                         print("Код ошибки: \(errorResponse.error.code)")
                         print("Сообщение: \(errorResponse.error.message)")
@@ -190,25 +194,26 @@ struct SignupScreen: View {
                     throw error
                 }
                 
-                dismiss()
+                
             }, label: {
-                HStack {
-                    Spacer()
-                    Text("Зарегистрироваться")
-                    Spacer()
-                }
-                .compositingGroup()
-                .padding(8)
+//                HStack {
+//                    Spacer()
+//                    Text("Зарегистрироваться")
+//                    Spacer()
+//                }
+//                .compositingGroup()
+//                .padding(8)
+                Image(systemName: "checkmark")
             })
             .throwableButtonStyle(.shake)
             .allowsHitTestingWhenLoading(false)
             .asyncButtonStyle(.overlay)
             .buttonStyle(.borderedProminent)
             .disabled(!isEmailValid || !isPasswordValid)
-        }
-        .listRowBackground(Color.clear)
-        .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
-        .listRowSeparator(.hidden)
+//        }
+//        .listRowBackground(Color.clear)
+//        .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
+//        .listRowSeparator(.hidden)
     }
     
     
