@@ -162,7 +162,7 @@ struct SignupScreen: View {
             
             signupButton
             
-            trialButton
+//            trialButton
         }
     }
     
@@ -211,46 +211,7 @@ struct SignupScreen: View {
         .listRowSeparator(.hidden)
     }
     
-    @ViewBuilder
-    var trialButton: some View {
-        Section {
-            AsyncButton(action: {
-                try await currentAccount.setTrial()
-            }, label: {
-                HStack {
-                    Spacer()
-                    Text("Практики вне Пути")
-                    Spacer()
-                }
-                .compositingGroup()
-                .padding(8)
-            })
-            .throwableButtonStyle(.shake)
-            .allowsHitTestingWhenLoading(false)
-            .asyncButtonStyle(.overlay)
-            .buttonStyle(.borderedProminent)
-        } header: {
-            HStack(spacing: 16) {
-                Spacer()
-                Text("или посмотреть")
-                Spacer()
-            }
-            .compositingGroup()
-            .padding(.bottom, 16)
-        } footer: {
-            HStack(spacing: 16) {
-                Spacer()
-                Text("Эти практики доступны без регистрации.")
-                    .foregroundStyle(.secondary)
-                    .lineLimit(1)
-                    .minimumScaleFactor(0.5)
-                Spacer()
-            }
-        }
-        .listRowBackground(Color.clear)
-        .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
-        .listRowSeparator(.hidden)
-    }
+    
     
     func validateEmail() {
         let emailMaxLength = 32
