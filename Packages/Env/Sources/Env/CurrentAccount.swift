@@ -94,6 +94,12 @@ public class CurrentAccount: ObservableObject {
         _ = try await http.send(Api.accountSignup(user: user, password: pass))
     }
     
+    public func restore(user: String, pass: String) async throws {
+        let http = HttpClient5(baseURL: Api.baseURL, sessionConfiguration: .withCache)
+
+        _ = try await http.send(Api.accountRestore(user: user, password: pass))
+    }
+    
     public func fetchBgMain() async throws -> UIImage {
         let http = HttpClient5(baseURL: Api.baseURL, sessionConfiguration: .withCache)
         

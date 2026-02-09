@@ -139,7 +139,8 @@ struct RestoreScreen: View {
                 
                 do {
                     errorString = ""
-                    //try await currentAccount.signup(user: email, pass: pass)
+                    try await currentAccount.restore(user: email, pass: pass)
+                    print("email sent")
                     //toastCheckEmail.toggle()
                 } catch CustomError.unacceptableStatusCode(let code, let text, _) {
                     print(text)

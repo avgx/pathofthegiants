@@ -13,7 +13,7 @@ public enum Api {
     /// 400
     /// {"Error":{"Code":"InvalidPasswordClientException"}}
     public static func accountLogin(user: String, password: String) -> Request<Auth> {
-        return Request(path: "/Account/Login/", method: .post, query: [
+        return Request(path: "/Account/Login", method: .post, query: [
             ("login", user),
             ("password", password)
         ])
@@ -24,9 +24,16 @@ public enum Api {
     /// {"Error":{"Code":"InvalidParamsClientException","Data":{"Field":["password"]}}}
     /// {"Error":{"Code":"DuplicateEmail","Data":{"Description":"Email 'aaa@gmail.com' is already taken."}}}
     public static func accountSignup(user: String, password: String) -> Request<String> {
-        return Request(path: "/Account/Signup/", method: .post, query: [
+        return Request(path: "/Account/Signup", method: .post, query: [
             ("login", user),
             ("password", password)
+        ])
+    }
+    
+    public static func accountRestore(user: String, password: String) -> Request<String> {
+        return Request(path: "/Account/ResetPasswordViaEmail", method: .post, query: [
+            ("login", user),
+            ("newPassword", password)
         ])
     }
     
