@@ -38,11 +38,7 @@ struct ProfileHeaderView: View {
                 
             HStack {
                 Spacer()
-                if let stat {
-                    StatsView(stat: stat)
-                } else {
-                    ProgressView()
-                }
+                StatsView(stat: stat)
             }
             .padding(.horizontal)
             .overlay(alignment: .top) {

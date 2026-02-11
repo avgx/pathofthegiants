@@ -24,6 +24,9 @@ struct PracticeScreen: View {
     let practiceCancelButtonEnabled = false
     
     var body: some View {
+#if DEBUG
+        let _ = Self._printChanges() // Place it here
+#endif
         VStack(alignment: .center, spacing: 4) {
             card
                 .if(settingsManager.practiceGlassEffectOnCard) { view in

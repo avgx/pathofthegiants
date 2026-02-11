@@ -13,9 +13,14 @@ struct ProfileScreen: View, Loggable {
     @State var notImpl = false
     
     var body: some View {
+#if DEBUG
+        let _ = Self._printChanges() // Place it here
+#endif
         NavigationStack {
             list
                 .task(id: refresh) {
+                    stat = nil
+                    try? await Task.sleep(for: .seconds(1))
                     stat = try? await currentAccount.fetchStats()
                 }
                 .scrollContentBackground(.hidden) // This hides the default form background
