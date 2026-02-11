@@ -112,7 +112,9 @@ struct LogsSheetView: View {
     private func loadLogs() async {
         do {
             let logStore = try OSLogStore(scope: .currentProcessIdentifier)
-            let position = logStore.position(timeIntervalSinceLatestBoot: 0)
+            //let position = logStore.position(timeIntervalSinceLatestBoot: 0)
+            let oneDayAgo = Calendar.current.date(byAdding: .day, value: -1, to: Date())!
+            let position = logStore.position(date: oneDayAgo)
             
             let predicate = NSPredicate(
                 format: "subsystem == %@",
