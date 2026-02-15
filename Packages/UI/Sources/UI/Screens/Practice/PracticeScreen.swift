@@ -157,11 +157,6 @@ struct PracticeScreen: View, Loggable {
                     .foregroundStyle(Color(UIColor.label)) //.white
             } else {
                 if isError {
-//                    ContentUnavailableView {
-//                        Label("Практика недоступна", systemImage: "exclamationmark.triangle")
-//                    } description: {
-//                        Text("Ошибка загрузки.")
-//                    }
                     Label("Практика недоступна", systemImage: "exclamationmark.triangle")
                 } else {
                     ProgressView() {
@@ -172,7 +167,8 @@ struct PracticeScreen: View, Loggable {
             }
             
             if isLoaded {
-                controlButtons
+                AudioPlayerControlButtons()
+                    .disabled(!isPrepared)
                     .foregroundStyle(Color(UIColor.label)) //.white
             }
         }
@@ -242,48 +238,7 @@ struct PracticeScreen: View, Loggable {
         }
     }
     
-    @ViewBuilder
-    var controlButtons: some View {
-        HStack(spacing: 40) {
-            if settingsManager.playerSeekEnabled {
-                Button(action: {
-                    audioPlayer.seek(to: audioPlayer.currentTime - 15)
-                    gobackwardAnimating.toggle()
-                    HapticManager.shared.fireHaptic(.buttonPress)
-                }) {
-                    Image(systemName: "gobackward.15")
-                        .font(.title2)
-                        .symbolEffect(.rotate, options: .speed(8), value: gobackwardAnimating)
-                }
-                .disabled(audioPlayer.currentTime <= 0)
-            }
-            
-            Button(action: {
-                audioPlayer.togglePlayPause()
-                HapticManager.shared.fireHaptic(.buttonPress)
-            }) {
-                Image(systemName: audioPlayer.isPlaying ? "pause.fill" : "play.fill")
-                    .font(.title)
-                    .fontWeight(.bold)
-                    .contentTransition(.symbolEffect(.replace))
-            }
-            .frame(width: 40)
-            
-            if settingsManager.playerSeekEnabled {
-                Button(action: {
-                    audioPlayer.seek(to: audioPlayer.currentTime + 15)
-                    goforwardAnimating.toggle()
-                    HapticManager.shared.fireHaptic(.buttonPress)
-                }) {
-                    Image(systemName: "goforward.15")
-                        .font(.title2)
-                        .symbolEffect(.rotate, options: .speed(8), value: goforwardAnimating)
-                }
-                .disabled(audioPlayer.currentTime >= audioPlayer.duration)
-            }
-        }
-        .disabled(!isPrepared)
-    }
+    
     
     @MainActor
     func load() async {
