@@ -99,6 +99,7 @@ struct ProfileHeaderView: View {
             }
             .buttonStyle(.borderedProminent)
             .tint(.purple)
+            .disabled(true)
             .toast(isPresented: $notImpl, message: "пока не реализовано")
         }
     }

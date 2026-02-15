@@ -77,6 +77,7 @@ struct PracticeScreen: View, Loggable {
         .toolbar {
             ToolbarItemGroup(placement: .topBarTrailing) {
                 Button(action: {
+                    audioPlayer.pause()
                     currentAccount.closePractice()
                     HapticManager.shared.fireHaptic(.buttonPress)
                     
@@ -106,9 +107,10 @@ struct PracticeScreen: View, Loggable {
         }
         .lifecycleLog(String(reflecting: Self.self))
         .lifecycleLog(name: practice.name)
-        .onChange(of: isPrepared) {
-            HapticManager.shared.fireHaptic(.notification(.success))
-        }
+        //TODO: это даёт лишний отклик. слишком быстро происходит. нужно ли оставить?
+//        .onChange(of: isPrepared) {
+//            HapticManager.shared.fireHaptic(.notification(.success))
+//        }
     }
     
     @ViewBuilder
