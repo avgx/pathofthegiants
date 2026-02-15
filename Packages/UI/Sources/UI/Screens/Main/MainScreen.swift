@@ -11,6 +11,7 @@ enum Feature: String, Identifiable, Hashable, CaseIterable, Codable, Sendable {
 
 struct MainScreen: View {
     @EnvironmentObject var currentAccount: CurrentAccount
+    @EnvironmentObject var tracker: SessionTracker
     @State var selectedTab: Feature = .dou
     
 //    private var selectedTabBinding: Binding<Feature> {
@@ -39,6 +40,12 @@ struct MainScreen: View {
         }
         .onChange(of: selectedTab) {
             HapticManager.shared.fireHaptic(.tabSelection)
+        }
+        .fullScreenCover(item: tracker.currentPracticeBinding) { practice in
+            NavigationStack {
+                PracticeScreen(practice: practice)
+            }
+            .navigationViewStyle(.stack)
         }
     }
 }

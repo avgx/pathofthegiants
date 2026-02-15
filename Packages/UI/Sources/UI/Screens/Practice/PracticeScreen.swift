@@ -3,12 +3,14 @@ import AVFoundation
 import Env
 import Models
 
-struct PracticeScreen: View {
+struct PracticeScreen: View, Loggable {
     @Environment(\.dismiss) private var dismiss
     @EnvironmentObject var currentAccount: CurrentAccount
     @EnvironmentObject var settingsManager: SettingsManager
     @EnvironmentObject var audioPlayer: AudioPlayer
+    @EnvironmentObject var tracker: SessionTracker
     @State private var isLoaded = false
+    @State private var isError = false
     @State private var isPrepared = false
     @State private var downloader = MP3Downloader()
     @State private var practiceIndex: Int?
@@ -75,8 +77,10 @@ struct PracticeScreen: View {
         .toolbar {
             ToolbarItemGroup(placement: .topBarTrailing) {
                 Button(action: {
-                    dismiss()
+                    currentAccount.closePractice()
                     HapticManager.shared.fireHaptic(.buttonPress)
+                    
+                    dismiss()
                 }) {
                     Image(systemName: "xmark")
                 }
@@ -99,13 +103,12 @@ struct PracticeScreen: View {
         .onDisappear {
             audioPlayer.stop()
             audioPlayer.cleanupCurrentPlayback()
-            currentAccount.cancelPractice()
         }
         .lifecycleLog(String(reflecting: Self.self))
         .lifecycleLog(name: practice.name)
-//        .onChange(of: isPrepared) {
-//            HapticManager.shared.fireHaptic(.notification(.success))
-//        }
+        .onChange(of: isPrepared) {
+            HapticManager.shared.fireHaptic(.notification(.success))
+        }
     }
     
     @ViewBuilder
@@ -151,9 +154,18 @@ struct PracticeScreen: View {
                 progressBar
                     .foregroundStyle(Color(UIColor.label)) //.white
             } else {
-                ProgressView() {
-                    Text("Загрузка...")
-                        .frame(maxWidth: .infinity)
+                if isError {
+//                    ContentUnavailableView {
+//                        Label("Практика недоступна", systemImage: "exclamationmark.triangle")
+//                    } description: {
+//                        Text("Ошибка загрузки.")
+//                    }
+                    Label("Практика недоступна", systemImage: "exclamationmark.triangle")
+                } else {
+                    ProgressView() {
+                        Text("Загрузка...")
+                            .frame(maxWidth: .infinity)
+                    }
                 }
             }
             
@@ -276,31 +288,34 @@ struct PracticeScreen: View {
         guard !isLoaded else { return }
         guard let mp3Url = try? await currentAccount.fetchAudioUrl(for: practice) else {
             //TODO: выдать сообщение об ошибке.
-            print("cant't get mp3Url")
+            logger.error("cant't get mp3Url")
+            isError = true
             return
         }
         
         let image = try? await currentAccount.fetchImage(for: practice.image)
         
-        print("mp3Url: \(mp3Url.absoluteString)")
+        logger.info("mp3Url: \(mp3Url.absoluteString)")
         do {
             //let mp3File = try await downloader.downloadMP3IfNeeded(from: mp3Url)
             //TODO: конечно токен надо брать "не так". переделать
             let mp3File = try await downloader.simpleDownloadMP3(from: mp3Url, token: AuthToken.load())
-            print("mp3File: \(mp3File.absoluteString)")
+            logger.info("mp3File: \(mp3File.absoluteString, privacy: .public)")
             withAnimation {
                 isLoaded = true
             }
             
             try audioPlayer.setupWithMetadata(localFileURL: mp3File, title: practice.name, artist: "Путь великанов", album: practice.group, artwork: image)
             
-            print("готов")
+            logger.info("ready")
             
             withAnimation {
                 isPrepared = true
             }
         } catch {
-            print(error)
+            logger.error("\(error, privacy: .public)")
+            isError = true
+            return
         }
         
         currentAccount.startPractice(practice)

@@ -4,9 +4,9 @@ import Models
 
 struct PracticeCard: View {
     @EnvironmentObject var currentAccount: CurrentAccount
+    @EnvironmentObject var tracker: SessionTracker
     
     let practice: Practice
-    @State var fullscreen = false
     
     var body: some View {
         HStack(spacing: 16) {
@@ -33,24 +33,16 @@ struct PracticeCard: View {
             Spacer()
         }
         .overlay(alignment: .topTrailing) {
-            if let p = currentAccount.tracker.progress[practice.id] {
-                HStack {
-                    Spacer()
-                    ProgressBadge(progress: .constant(p / Double(practice.audioDuration)))
-                        .foregroundStyle(Color.accentColor)
-                        .font(.body)
-                }
+            if let progress = tracker.progress[practice.id] {
+                ProgressBadge(progress: .constant(progress / Double(practice.audioDuration)))
+                    .foregroundStyle(Color.accentColor)
+                    .font(.body)
             }
         }
+        .contentShape(Rectangle())
         .onTapGesture {
-            fullscreen.toggle()
+            tracker.start(practice: practice)
             HapticManager.shared.fireHaptic(.buttonPress)
-        }
-        .fullScreenCover(isPresented: $fullscreen) {
-            NavigationStack {
-                PracticeScreen(practice: practice)
-            }
-            .navigationViewStyle(.stack)
         }
     }
 }

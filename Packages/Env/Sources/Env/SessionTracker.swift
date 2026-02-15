@@ -5,7 +5,7 @@ import Models
 /// Накапливает прогресс текущей сессии
 /// Хранит прогресс по прослушанному
 @MainActor
-public class SessionTracker: ObservableObject {
+public class SessionTracker: ObservableObject, Loggable {
     /// Кэш програсса
     @Published public private(set) var progress: [PracticeID : TimeInterval] = [:]
     /// Текущая сессия
@@ -23,8 +23,22 @@ public class SessionTracker: ObservableObject {
         progress = storage.progress
     }
     
+    /// computed binding для SwiftUI
+    public var currentPracticeBinding: Binding<Practice?> {
+        Binding(
+            get: { self.current },
+            set: { newValue in
+                if let practice = newValue {
+                    self.start(practice: practice)
+                } else {
+                    self.cancel()
+                }
+            }
+        )
+    }
+    
     /// Начать сессию по практике c ID `practice`
-    func start(practice: Practice) {
+    public func start(practice: Practice) {
         current = practice
         /// подгружаем текущий прогресс
         currentTime = progress[current!.id] ?? 0.0
@@ -50,10 +64,10 @@ public class SessionTracker: ObservableObject {
     
     /// Закрыть сессию, сохранить
     /// `isComplete` показывает завершена или нет
-    func close() {
+    public func close() {
         precondition(current != nil)
         progress[current!.id] = currentTime
-        print("session for \(current!.id) closed: \(currentTime) / \(current!.audioDuration)")
+        logger.info("session for \(self.current!.id, privacy: .public) closed: \(self.currentTime, privacy: .public) / \(self.current!.audioDuration, privacy: .public)")
         saveProgress()
         currentTotal = 0.0
         currentTime = 0.0
@@ -61,7 +75,7 @@ public class SessionTracker: ObservableObject {
     }
     
     /// Отменить сессию. Обнулить прогресс и не сохранять.
-    func cancel() {
+    public func cancel() {
         currentTotal = 0.0
         currentTime = 0.0
         current = nil
@@ -70,7 +84,7 @@ public class SessionTracker: ObservableObject {
     /// Сохранение прогресса
     private func saveProgress() {
         storage.progress = progress
-        print("progress: \(progress)")
+        logger.info("progress: \(self.progress, privacy: .public)")
     }
 }
 

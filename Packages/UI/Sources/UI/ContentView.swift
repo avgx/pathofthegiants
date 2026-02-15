@@ -33,6 +33,7 @@ public struct ContentView: View {
         .environmentObject(settingsManager)
         .environmentObject(healthKitManager)
         .environmentObject(notificationManager)
+        .environmentObject(currentAccount.tracker)
         .preferredColorScheme(themeManager.selectedTheme)
         //.tint перекрашивает и кнопки в тулбаре
         .accentColor(currentAccentColor)
