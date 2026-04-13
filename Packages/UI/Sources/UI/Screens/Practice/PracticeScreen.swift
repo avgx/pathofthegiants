@@ -91,7 +91,7 @@ struct PracticeScreen: View, Loggable {
             await load()
         }
         .onAppear {
-            guard let modules = currentAccount.regular?.data else { return }
+            guard let modules = currentAccount.regularModules else { return }
             guard let module = modules.first(where: { $0.practicesIDS.contains(practice.id) }) else { return }
             guard let index = module.practicesIDS.firstIndex(of: practice.id) else { return }
             print("\(module.name) \(index)")

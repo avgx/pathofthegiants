@@ -9,8 +9,8 @@ struct DouScreen: View, Loggable {
     var body: some View {
         NavigationStack {
             Group {
-                if let modules = currentAccount.regular {
-                    ModuleListView(modules: modules.data)
+                if let modules = currentAccount.regularModules {
+                    ModuleListView(modules: modules)
                 } else {
                     ContentUnavailableView("Путь скрыт", systemImage: "exclamationmark.triangle")
                 }

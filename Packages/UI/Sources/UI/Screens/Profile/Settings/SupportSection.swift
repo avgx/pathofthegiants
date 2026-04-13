@@ -50,7 +50,7 @@ struct SupportSection: View {
                 Label("Сообщить об ошибке", systemImage: "ladybug")
             })
             .buttonStyle(.plain)
-            
+#if DEBUG
             Button(action: { showLogs.toggle() }) {
                 Label("Отладка", systemImage: "list.bullet.clipboard")
             }
@@ -58,6 +58,7 @@ struct SupportSection: View {
             .sheet(isPresented: $showLogs) {
                 LogsSheetView()
             }
+#endif
             Button(action: { SKStoreReviewController.requestReview() }) {
                 /// Rate app
                 Label("Оценить приложение", systemImage: "star")

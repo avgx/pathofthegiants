@@ -76,30 +76,31 @@ struct LoginScreen: View, Loggable {
             
             loginButton
             
-            
-            Section {
-                Button(action: { signup.toggle() }) {
+            if !Bundle.main.isReaderApp {
+                Section {
+                    Button(action: { signup.toggle() }) {
+                        HStack {
+                            Spacer()
+                            Text("Зарегистрироваться")
+                                .minimumScaleFactor(0.7)
+                            Spacer()
+                        }
+                        .compositingGroup()
+                        .padding(8)
+                    }
+                    .buttonStyle(.glass)
+                } header: {
                     HStack {
                         Spacer()
-                        Text("Зарегистрироваться")
-                            .minimumScaleFactor(0.7)
+                        Text("Нет аккаунта?")
+                            .font(.footnote)
                         Spacer()
                     }
-                    .compositingGroup()
-                    .padding(8)
                 }
-                .buttonStyle(.glass)
-            } header: {
-                HStack {
-                    Spacer()
-                    Text("Нет аккаунта?")
-                        .font(.footnote)
-                    Spacer()
-                }
+                .listRowBackground(Color.clear)
+                .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
+                .listRowSeparator(.hidden)
             }
-            .listRowBackground(Color.clear)
-            .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
-            .listRowSeparator(.hidden)
             
             trialButton
         }
@@ -190,7 +191,7 @@ struct LoginScreen: View, Loggable {
         } footer: {
             HStack(spacing: 16) {
                 Spacer()
-                Text("Эти практики доступны без регистрации.")
+                Text("Эти практики доступны без аккаунта.")
                     .foregroundStyle(.secondary)
                     .lineLimit(1)
                     .minimumScaleFactor(0.5)

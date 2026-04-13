@@ -16,4 +16,8 @@ extension Bundle {
     public var appStoreId: String {
         infoDictionary?["APPSTORE_ID"] as? String ?? "Unknown"
     }
+    
+    public var isReaderApp: Bool {
+        true
+    }
 }

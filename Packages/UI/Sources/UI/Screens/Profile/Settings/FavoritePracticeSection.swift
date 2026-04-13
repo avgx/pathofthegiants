@@ -10,7 +10,7 @@ struct FavoritePracticeSection: View {
         Section {
             if let stat {
                 if let favoritePractice = stat.favoritePractice {
-                    if let p = currentAccount.practices?.data.first(where: { $0.id == favoritePractice.practiceID }) {
+                    if let p = currentAccount.practices?.first(where: { $0.id == favoritePractice.practiceID }) {
                         PracticeCard(practice: p)
                             .id(p.id)
                     } else {
@@ -20,7 +20,7 @@ struct FavoritePracticeSection: View {
                     Text("Пока отсутствует")
                 }
             } else {
-                if let p = currentAccount.practices?.data.first {
+                if let p = currentAccount.practices?.first {
                     PracticeCard(practice: p)
                         .redacted(reason: .placeholder)
                         .disabled(true)

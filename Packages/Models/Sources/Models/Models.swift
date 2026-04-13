@@ -236,6 +236,22 @@ public struct ModuleData: Codable, Identifiable, Sendable {
         case isPaid = "IsPaid"
         case whenCreated = "WhenCreated"
     }
+    
+    public func hijacked() -> ModuleData {
+        return ModuleData(
+            id: self.id,
+            name: self.name,
+            description: self.description,
+            image: self.image,
+            opened: self.opened,
+            trial: self.trial,
+            orderNumber: self.orderNumber,
+            practicesIDS: self.practicesIDS,
+            practices: self.practices.map({ $0.hijacked() }),
+            isPaid: false,
+            whenCreated: self.whenCreated
+        )
+    }
 }
 
 extension ModuleData: Hashable {
@@ -287,6 +303,23 @@ public struct Practice: Codable, Identifiable, Sendable {
         case complication = "Complication"
         case subscriptionLevel = "SubscriptionLevel"
         case whenCreated = "WhenCreated"
+    }
+    
+    public func hijacked() -> Practice {
+        Practice(
+            id: id,
+            name: name,
+            briefDescription: briefDescription,
+            description: description,
+            image: image,
+            audio: audio,
+            audioDuration: audioDuration,
+            group: group,
+            pose: pose,
+            complication: complication,
+            subscriptionLevel: 0,
+            whenCreated: whenCreated
+        )
     }
 }
 

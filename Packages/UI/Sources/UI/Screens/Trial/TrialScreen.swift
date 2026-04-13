@@ -3,12 +3,13 @@ import Env
 
 struct TrialScreen: View {
     @EnvironmentObject var currentAccount: CurrentAccount
+    @EnvironmentObject var tracker: SessionTracker
     
     var body: some View {
         NavigationStack {
             Group {
-                if let trial = currentAccount.trial {
-                    TrialListView(trialData: trial.data)
+                if let trial = currentAccount.trialModules {
+                    TrialListView(trialData: trial)
                 } else {
                     ContentUnavailableView("ничего нет", systemImage: "magnifyingglass")
                 }
@@ -23,6 +24,12 @@ struct TrialScreen: View {
                         Text("Закрыть")
                     }
                 }
+            }
+            .fullScreenCover(item: tracker.currentPracticeBinding) { practice in
+                NavigationStack {
+                    PracticeScreen(practice: practice)
+                }
+                .navigationViewStyle(.stack)
             }
         }
         .navigationViewStyle(.stack)

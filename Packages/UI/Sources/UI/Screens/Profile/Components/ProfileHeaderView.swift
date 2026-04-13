@@ -94,13 +94,18 @@ struct ProfileHeaderView: View {
                 }
             }
         } else {
-            Button(action:{ notImpl.toggle() }) {
-                Text("Подписка")
+            
+            if Bundle.main.isReaderApp {
+                EmptyView()
+            } else {
+                Button(action:{ notImpl.toggle() }) {
+                    Text("Подписка")
+                }
+                .buttonStyle(.borderedProminent)
+                .tint(.purple)
+                .disabled(true)
+                .toast(isPresented: $notImpl, message: "пока не реализовано")
             }
-            .buttonStyle(.borderedProminent)
-            .tint(.purple)
-            .disabled(true)
-            .toast(isPresented: $notImpl, message: "пока не реализовано")
         }
     }
 }

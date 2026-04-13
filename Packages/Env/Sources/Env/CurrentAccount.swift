@@ -10,9 +10,9 @@ public class CurrentAccount: ObservableObject {
     @Published public private(set) var token: AuthToken?
     @Published public private(set) var accountInfo: AccountInfo?
     @Published public private(set) var avatarImage: UIImage?
-    @Published public private(set) var practices: Practices?
-    @Published public private(set) var trial: Trial?
-    @Published public private(set) var regular: Regular?
+    @Published public private(set) var practices: [Practice]?
+    @Published public private(set) var trialModules: ModuleData?
+    @Published public private(set) var regularModules: [ModuleData]?
     private var currentPractice: Practice? {
         tracker.current
     }
@@ -32,8 +32,8 @@ public class CurrentAccount: ObservableObject {
         token = nil
         AuthToken.delete()
         accountInfo = nil
-        trial = nil
-        regular = nil
+        trialModules = nil
+        regularModules = nil
         practices = nil
     }
     
@@ -64,9 +64,10 @@ public class CurrentAccount: ObservableObject {
         let practicesResponse = try await http2.send(Api.practices())
         let regularResponse = try await http2.send(Api.modulesRegular())
         
-        self.regular = regularResponse.value
+        let subscriptionLevel = infoResponse.value.data.subscriptionLevel
         self.accountInfo = infoResponse.value
-        self.practices = practicesResponse.value
+        self.practices = Self.limit(practicesResponse.value.data, to: subscriptionLevel)
+        self.regularModules = Self.limit(regularResponse.value.data, to: subscriptionLevel)
         
         self.http = http2
         self.token = token
@@ -76,12 +77,41 @@ public class CurrentAccount: ObservableObject {
         }
     }
     
+    private static func limit(_ moduleData: [ModuleData], to subscriptionLevel: Int) -> [ModuleData] {
+        moduleData
+            .filter({ $0.opened })
+            .map({ Self.hijackIfFlo($0) })
+            .filter({ $0.practices.contains(where: { $0.subscriptionLevel <= subscriptionLevel })})
+    }
+    
+    private static func hijackIfFlo(_ moduleData: ModuleData) -> ModuleData {
+        if moduleData.id == 8 {
+            return moduleData.hijacked()
+        } else {
+            return moduleData
+        }
+    }
+    
+    private static func limit(_ practices: [Practice], to subscriptionLevel: Int) -> [Practice] {
+        practices
+            .map({ Self.hijackIfFlo($0) })
+            .filter({ $0.subscriptionLevel <= subscriptionLevel })
+    }
+    
+    private static func hijackIfFlo(_ practice: Practice) -> Practice {
+        if [24, 25, 26, 27, 28, 29, 30, 31, 32].contains(practice.id) {
+            return practice.hijacked()
+        } else {
+            return practice
+        }
+    }
+    
     /// Подключиться `попробовать` без аккаунта
     public func setTrial() async throws {
         let http = HttpClient5(baseURL: Api.baseURL, sessionConfiguration: .withCache)
         
         let trialResponse = try await http.send(Api.modulesTrial())
-        self.trial = trialResponse.value
+        self.trialModules = trialResponse.value.data
         
         self.http = http
         isTrial = true

@@ -12,7 +12,7 @@ struct BagScreen: View, Loggable {
         NavigationStack {
             Group {
                 if let practices = currentAccount.practices {
-                    PracticeGroupListView(practices: practices.data, subtitle: subtitle)
+                    PracticeGroupListView(practices: practices, subtitle: subtitle)
                 } else {
                     ContentUnavailableView("Практики недоступны", systemImage: "exclamationmark.triangle")
                 }

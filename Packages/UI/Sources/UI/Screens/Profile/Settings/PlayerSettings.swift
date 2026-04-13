@@ -55,7 +55,7 @@ struct PlayerCachedFilesView: View {
     var body: some View {
         List {
             //TODO: тут еще есть файлы практик "вне модулей"
-            if let modules = currentAccount.regular?.data.filter({ $0.practices.count > 0 }) {
+            if let modules = currentAccount.regularModules?.filter({ $0.practices.count > 0 }) {
                 ForEach(modules.sorted(using: KeyPathComparator(\.id, order: .forward)), id: \.id) { module in
                     Section {
                         ForEach(module.practices, id: \.id) { practice in
