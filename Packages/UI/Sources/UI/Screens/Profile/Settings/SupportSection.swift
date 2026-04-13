@@ -2,12 +2,15 @@ import SwiftUI
 import Env
 import DeviceKit
 import LivsyToast
+import StoreKit
 
 struct SupportSection: View {
     @EnvironmentObject var currentAccount: CurrentAccount
     @EnvironmentObject var settingsManager: SettingsManager
     @State var notImpl = false
     @State var showLogs = false
+    @State private var showingShareSheet = false
+    let appStoreURL = "https://apps.apple.com/app/\(Bundle.main.appStoreId)"
     
     var body: some View {
         Section {
@@ -55,12 +58,12 @@ struct SupportSection: View {
             .sheet(isPresented: $showLogs) {
                 LogsSheetView()
             }
-            Button(action: { notImpl.toggle() }) {
+            Button(action: { SKStoreReviewController.requestReview() }) {
                 /// Rate app
                 Label("Оценить приложение", systemImage: "star")
             }
             .buttonStyle(.plain)
-            Button(action: { notImpl.toggle() }) {
+            Button(action: { showingShareSheet.toggle() }) {
                 /// Share the app
                 Label("Поделиться", systemImage: "square.and.arrow.up")
             }
@@ -70,5 +73,8 @@ struct SupportSection: View {
             Text("Поддержка")
         }
         .toast(isPresented: $notImpl, message: "пока не реализовано")
+        .sheet(isPresented: $showingShareSheet) {
+            ShareSheet(activityItems: [URL(string: appStoreURL)!])
+        }
     }
 }

@@ -12,4 +12,8 @@ extension Bundle {
     public var versionBuild: String {
         "\(appVersion) (\(buildNumber))"
     }
+    
+    public var appStoreId: String {
+        infoDictionary?["APPSTORE_ID"] as? String ?? "Unknown"
+    }
 }
