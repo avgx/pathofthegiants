@@ -1,0 +1,12 @@
+{
+  "images" : [
+    {
+      "filename" : "custom.pose.pdf",
+      "idiom" : "universal"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}

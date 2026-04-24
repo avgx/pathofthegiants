@@ -121,9 +121,9 @@ struct PracticeScreen: View, Loggable {
                 .lineLimit(1)
                 .minimumScaleFactor(0.8)
             VStack(alignment: .leading) {
-                Label(practice.group, systemImage: "ellipsis.bubble")
-                Label("Сложность \(practice.complication)/5", systemImage: "brain.head.profile")
-                Label(practice.pose, systemImage: "figure.mind.and.body")
+                Label(practice.group, image: "custom.group")
+                Label("Сложность \(practice.complication)/5", image: "custom.complication")
+                Label(practice.pose, image: "custom.pose")
             }
             .font(.footnote)
             .minimumScaleFactor(0.8)
