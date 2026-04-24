@@ -7,10 +7,8 @@ import StoreKit
 struct SupportSection: View {
     @EnvironmentObject var currentAccount: CurrentAccount
     @EnvironmentObject var settingsManager: SettingsManager
-    @State var notImpl = false
     @State var showLogs = false
     @State private var showingShareSheet = false
-    let appStoreURL = "https://apps.apple.com/app/\(Bundle.main.appStoreId)"
     
     var body: some View {
         Section {
@@ -69,13 +67,12 @@ struct SupportSection: View {
                 Label("Поделиться", systemImage: "square.and.arrow.up")
             }
             .buttonStyle(.plain)
+            .sheet(isPresented: $showingShareSheet) {
+                ShareSheet(activityItems: [Bundle.main.appStoreURL])
+            }
         } header: {
             ///Support
             Text("Поддержка")
-        }
-        .toast(isPresented: $notImpl, message: "пока не реализовано")
-        .sheet(isPresented: $showingShareSheet) {
-            ShareSheet(activityItems: [URL(string: appStoreURL)!])
-        }
+        }        
     }
 }

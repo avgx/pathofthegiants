@@ -15,6 +15,22 @@ struct MainBackground: View {
                 Image(uiImage: image)
                     .resizable()
                     .scaledToFill()
+                    .overlay(
+                        Color(UIColor.systemBackground).opacity(0.5)
+                            .mask(
+                                LinearGradient(
+                                    colors: [
+                                        .clear,
+                                        .black.opacity(0.7),
+                                        .black.opacity(0.7),
+                                        .black.opacity(0.7),
+                                        .clear
+                                    ],
+                                    startPoint: .top,
+                                    endPoint: .bottom
+                                )
+                            )
+                    )
                     .ignoresSafeArea()
             } else {
                 Rectangle()

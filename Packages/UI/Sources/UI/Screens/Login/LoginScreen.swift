@@ -26,17 +26,17 @@ struct LoginScreen: View, Loggable {
                 .onDisappear {
                     savedUser = user
                 }
-            .scrollBounceBehavior(.basedOnSize)
-            .scrollContentBackground(.hidden) // This hides the default form background
-            .background(MainBackground())
-            .navigationTitle("Путь великанов")
-            .toolbarTitleDisplayMode(.inlineLarge)
-            .sheet(isPresented: $signup, content: {
-                SignupScreen()
-            })
-            .sheet(isPresented: $restore, content: {
-                RestoreScreen(email: $user, pass: $pass)
-            })
+                .scrollBounceBehavior(.basedOnSize)
+                .scrollContentBackground(.hidden) // This hides the default form background
+                .background(MainBackground())
+                .navigationTitle("Путь великанов")
+                .toolbarTitleDisplayMode(.inlineLarge)
+                .sheet(isPresented: $signup, content: {
+                    SignupScreen()
+                })
+                .sheet(isPresented: $restore, content: {
+                    RestoreScreen(email: $user, pass: $pass)
+                })
         }
         .navigationViewStyle(.stack)
         .lifecycleLog(String(reflecting: Self.self))
@@ -46,18 +46,22 @@ struct LoginScreen: View, Loggable {
     var form: some View {
         List {
             Section {
-                TextField("email", text: $user, prompt: Text("email"))
+                TextField("email", text: $user, prompt: Text("Email"))
                     .autocorrectionDisabled()
                     .textInputAutocapitalization(.never)
                     .textContentType(.emailAddress)
                     .keyboardType(.default)
                     .submitLabel(.next)
-                SecureField("password", text: $pass, prompt: Text("пароль"))
+                    .padding(.vertical, 8)
+                
+                SecureField("password", text: $pass, prompt: Text("Пароль"))
                     .autocorrectionDisabled()
                     .textInputAutocapitalization(.never)
                     .textContentType(.password)
                     .keyboardType(.default)
                     .submitLabel(.done)
+                    .padding(.vertical, 8)
+                
             } header: {
                 HStack {
                     Spacer()
@@ -76,31 +80,24 @@ struct LoginScreen: View, Loggable {
             
             loginButton
             
-            if !Bundle.main.isReaderApp {
-                Section {
-                    Button(action: { signup.toggle() }) {
-                        HStack {
-                            Spacer()
-                            Text("Зарегистрироваться")
-                                .minimumScaleFactor(0.7)
-                            Spacer()
-                        }
-                        .compositingGroup()
-                        .padding(8)
-                    }
-                    .buttonStyle(.glass)
-                } header: {
+            
+            Section {
+                Button(action: { signup.toggle() }) {
                     HStack {
                         Spacer()
-                        Text("Нет аккаунта?")
-                            .font(.footnote)
+                        Text("Зарегистрироваться")
+                            .minimumScaleFactor(0.7)
                         Spacer()
                     }
+                    .compositingGroup()
+                    .padding(8)
                 }
-                .listRowBackground(Color.clear)
-                .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
-                .listRowSeparator(.hidden)
+                .buttonStyle(.glass)
             }
+            .listRowBackground(Color.clear)
+            .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
+            .listRowSeparator(.hidden)
+            
             
             trialButton
         }
@@ -168,7 +165,7 @@ struct LoginScreen: View, Loggable {
             }, label: {
                 HStack {
                     Spacer()
-                    Text("Практики вне Пути")
+                    Text("Попробовать без регистрации")
                     Spacer()
                 }
                 .compositingGroup()
@@ -180,23 +177,22 @@ struct LoginScreen: View, Loggable {
             //.buttonStyle(.borderedProminent)
             .buttonStyle(.glass)
         } header: {
-            HStack(spacing: 16) {
-                Spacer()
-                Text("или посмотреть")
-                    .font(.footnote)
-                Spacer()
+            HStack(spacing: 0) {
+                Color.secondary
+                    .frame(height: 1)
+                    .padding(.horizontal)
+                    .opacity(0.5)
+                Text("или")
+                //.padding(.horizontal)
+                Color.secondary
+                    .frame(height: 1)
+                    .padding(.horizontal)
+                    .opacity(0.5)
             }
+            .font(.footnote)
+            .foregroundStyle(.secondary)
             .compositingGroup()
             .padding(.bottom, 8)
-        } footer: {
-            HStack(spacing: 16) {
-                Spacer()
-                Text("Эти практики доступны без аккаунта.")
-                    .foregroundStyle(.secondary)
-                    .lineLimit(1)
-                    .minimumScaleFactor(0.5)
-                Spacer()
-            }
         }
         .listRowBackground(Color.clear)
         .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))

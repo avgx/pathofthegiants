@@ -13,9 +13,10 @@ extension Bundle {
         "\(appVersion) (\(buildNumber))"
     }
     
-    public var appStoreId: String {
-        infoDictionary?["APPSTORE_ID"] as? String ?? "Unknown"
+    public var appStoreURL: URL {
+        URL(string: "https://apps.apple.com/app/id\(bundleIdentifier ?? "")")!
     }
+    
     
     public var isReaderApp: Bool {
         true
