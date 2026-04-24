@@ -80,26 +80,27 @@ struct LoginScreen: View, Loggable {
             
             loginButton
             
-            
-            Section {
-                Button(action: { signup.toggle() }) {
-                    HStack {
-                        Spacer()
-                        Text("Зарегистрироваться")
-                            .minimumScaleFactor(0.7)
-                        Spacer()
+            if !Bundle.main.isReaderApp {
+                Section {
+                    Button(action: { signup.toggle() }) {
+                        HStack {
+                            Spacer()
+                            Text("Зарегистрироваться")
+                                .minimumScaleFactor(0.7)
+                            Spacer()
+                        }
+                        .compositingGroup()
+                        .padding(8)
                     }
-                    .compositingGroup()
-                    .padding(8)
+                    .buttonStyle(.glass)
                 }
-                .buttonStyle(.glass)
+                .listRowBackground(Color.clear)
+                .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
+                .listRowSeparator(.hidden)
+                
+                
+                trialButton
             }
-            .listRowBackground(Color.clear)
-            .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
-            .listRowSeparator(.hidden)
-            
-            
-            trialButton
         }
     }
     
