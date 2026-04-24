@@ -63,11 +63,13 @@ struct PracticeScreen: View, Loggable {
                     .ignoresSafeArea()
                 
                 PracticeImage(practice: practice)
+                    .scaleEffect(1.3, anchor: .center)
                     .aspectRatio(contentMode: .fill)
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
                     .clipped()
                     .blur(radius: settingsManager.practiceBackgroundBlur)
                     .opacity(settingsManager.practiceBackgroundImageOpacity)
+                    .ignoresSafeArea()
             }
         )
         .id(practice.id)
@@ -140,8 +142,9 @@ struct PracticeScreen: View, Loggable {
                 .lineLimit(4)
                 .minimumScaleFactor(0.8)
                 .font(.footnote)
+                .multilineTextAlignment(.center)
                 .fontWeight(.light)
-                .foregroundStyle(.secondary)
+//                .foregroundStyle(.secondary)
                 //.frame(width: 240)
                 .padding(.horizontal)
         }

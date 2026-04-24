@@ -62,25 +62,25 @@ public class SettingsManager: ObservableObject {
         }
     }
     
-    @Published public var practiceBackgroundBlur = 54.0 {
+    @Published public var practiceBackgroundBlur = 50.0 {
         didSet {
             storage.practiceBackgroundBlur = practiceBackgroundBlur
         }
     }
     
-    @Published public var practiceBackgroundImageOpacity = 1.0 {
+    @Published public var practiceBackgroundImageOpacity = 0.80 {
         didSet {
             storage.practiceBackgroundImageOpacity = practiceBackgroundImageOpacity
         }
     }
     
-    @Published public var practiceBackgroundWhiteOpacity = 0.0 {
+    @Published public var practiceBackgroundWhiteOpacity = 0.20 {
         didSet {
             storage.practiceBackgroundWhiteOpacity = practiceBackgroundWhiteOpacity
         }
     }
     
-    @Published public var practiceBackgroundBlackOpacity = 0.24 {
+    @Published public var practiceBackgroundBlackOpacity = 0.20 {
         didSet {
             storage.practiceBackgroundBlackOpacity = practiceBackgroundBlackOpacity
         }
@@ -189,10 +189,10 @@ public class SettingsManager: ObservableObject {
             moduleBackground = true
             moduleBackgroundBlur = 12
             moduleImage = false
-            practiceBackgroundBlur = 54
-            practiceBackgroundImageOpacity = 1.0
-            practiceBackgroundWhiteOpacity = 0.0
-            practiceBackgroundBlackOpacity = 0.24
+            practiceBackgroundBlur = 50
+            practiceBackgroundImageOpacity = 0.80
+            practiceBackgroundWhiteOpacity = 0.20
+            practiceBackgroundBlackOpacity = 0.20
             practiceGlassEffectOnCard = false
             practiceGlassEffectOnControls = false
             zoomNavigationTransition = false
@@ -201,10 +201,10 @@ public class SettingsManager: ObservableObject {
             listRowMaterialBackground = false
             moduleBackground = false
             moduleImage = false
-            practiceBackgroundBlur = 54
-            practiceBackgroundImageOpacity = 1.0
-            practiceBackgroundWhiteOpacity = 0.0
-            practiceBackgroundBlackOpacity = 0.24
+            practiceBackgroundBlur = 50
+            practiceBackgroundImageOpacity = 0.80
+            practiceBackgroundWhiteOpacity = 0.20
+            practiceBackgroundBlackOpacity = 0.20
             practiceGlassEffectOnCard = false
             practiceGlassEffectOnControls = false
             zoomNavigationTransition = false
@@ -214,10 +214,10 @@ public class SettingsManager: ObservableObject {
             moduleBackground = true
             moduleBackgroundBlur = 12
             moduleImage = true
-            practiceBackgroundBlur = 54
-            practiceBackgroundImageOpacity = 1.0
-            practiceBackgroundWhiteOpacity = 0.0
-            practiceBackgroundBlackOpacity = 0.24
+            practiceBackgroundBlur = 50
+            practiceBackgroundImageOpacity = 0.80
+            practiceBackgroundWhiteOpacity = 0.20
+            practiceBackgroundBlackOpacity = 0.20
             practiceGlassEffectOnCard = true
             practiceGlassEffectOnControls = true
             zoomNavigationTransition = true
@@ -240,10 +240,10 @@ extension SettingsManager {
         @AppStorage("settings.moduleBackground")        var moduleBackground: Bool = true
         @AppStorage("settings.moduleBackgroundBlur")    var moduleBackgroundBlur: Double = 12
         @AppStorage("settings.moduleImage")             var moduleImage: Bool = true
-        @AppStorage("settings.practiceBackgroundBlur")  var practiceBackgroundBlur = 54.0
-        @AppStorage("settings.practiceBackgroundImageOpacity") var practiceBackgroundImageOpacity = 1.0
-        @AppStorage("settings.practiceBackgroundWhiteOpacity") var practiceBackgroundWhiteOpacity = 0.0
-        @AppStorage("settings.practiceBackgroundBlackOpacity") var practiceBackgroundBlackOpacity = 0.24
+        @AppStorage("settings.practiceBackgroundBlur")  var practiceBackgroundBlur = 50.0
+        @AppStorage("settings.practiceBackgroundImageOpacity") var practiceBackgroundImageOpacity = 0.80
+        @AppStorage("settings.practiceBackgroundWhiteOpacity") var practiceBackgroundWhiteOpacity = 0.20
+        @AppStorage("settings.practiceBackgroundBlackOpacity") var practiceBackgroundBlackOpacity = 0.20
         @AppStorage("settings.practiceGlassEffectOnCard") var practiceGlassEffectOnCard = false
         @AppStorage("settings.practiceGlassEffectOnControls") var practiceGlassEffectOnControls = false
         @AppStorage("settings.zoomNavigationTransition")  var zoomNavigationTransition: Bool = false
